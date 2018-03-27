@@ -20,10 +20,10 @@ title: Nayo
 # 作者信息
 # author为空时 Hexo/_config.yml 配置有效
 profile: 
-  logo: Nayo
+  logo: Huangxsu
   author: Lemon
   avatar: /images/header.jpg  
-  location: GuangZhou CN
+  location: FuZhou CN
   description: hi,i am lemon
 
 # site favicon
@@ -33,7 +33,7 @@ favicon: /images/favicon.png
 
 # social link
 social:  
-  Github: https://github.com/Lemonreds  
+  Github: https://github.com/huangxsu
   Zhihu:
   Weibo:
   Facebook:
