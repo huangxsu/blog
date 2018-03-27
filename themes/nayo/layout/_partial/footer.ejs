@@ -1,0 +1,51 @@
+<footer id="footer">
+	   
+   	 
+
+	  <% if (theme.busuanzi){%>
+	   	<div>	
+
+		    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+		   
+			    <span class="iconfont icon-pv"></span>
+			    <span id="busuanzi_value_site_pv"></span>
+			 
+			    <span class="iconfont icon-uv"></span>
+			    <span id="busuanzi_value_site_uv"></span>
+
+		</div>
+	 <% }  %>	
+   	
+	   
+      	 
+
+	<% var since = theme.footer.since %>
+	<% var year = date(new Date(), 'YYYY') %>
+
+	 <div>
+	 	&copy;
+		<% if (since < year){%>		
+		<%= since %>-
+		<% }%>
+		<%= year %>			
+	
+		
+		<%= theme.footer.author || theme.profile.author || config.author %>	 
+
+	 </div>
+	
+   
+   	 <div>
+	
+	 <a href="http://hexo.io/" target="_blank">Hexo</a>
+
+	 <%= __('Theme') %>
+
+	 <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a> 
+
+	 </div>	
+
+
+	
+	
+</footer>

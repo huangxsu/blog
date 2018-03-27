@@ -1,0 +1,40 @@
+<div class="meta-info">
+	
+	<span class="iconfont icon-date"></span>
+	<time class="meta-time">
+		<%- date(page.date, "YYYY/MM/DD")%> 	
+	</time>
+
+	<% if( post.categories && post.categories.length > 0 ) {%>
+		<span class="iconfont icon-category"></span>
+
+		<span class="meta-link">		
+		<%-  list_categories( post.categories ,{
+			show_count:false,
+			style:'none',
+			separator:" ",
+			class: ""
+		}) %> 	
+		</span>
+	<% }%>	
+
+	<% if( post.tags &&  post.tags.length > 0 ) {%>
+		<span class="iconfont icon-tag"></span>
+		<span class="meta-link">		
+			<%- list_tags( post.tags ,{
+			show_count:false,
+			style:'none',
+			separator:" ",
+			class: ""
+			}) %>
+		</span>
+	<% }%>	
+
+	<%  var length = raw_length(post.content) %>
+	<% if ( length > 0 ){%>
+		<span class="iconfont icon-words"></span>
+		<span class="meta-words">
+			<%= length %>
+		</span>
+	<% }%>
+</div>

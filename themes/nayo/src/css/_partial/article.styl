@@ -1,0 +1,88 @@
+
+
+.article 
+  margin-bottom 80px
+  padding 18px 0 
+  border-bottom 1px solid $line-clr
+  opacity 0 
+
+.article-header    
+   padding 1rem 1.5rem 
+   margin-bottom 2rem
+   border-bottom 1px solid $line-clr
+   & time,& span
+     color rgba(0,0,0,.65)  
+     font-size .825rem     
+   & span:before  
+     border-left 1px solid gray
+      
+.article-title     
+    display block      
+    font-size 2.15rem 
+    margin .4rem 0     
+    color $article-clr  
+ 
+
+.article-excerpt
+    margin 1rem 0
+    padding 0 1.5rem 
+    font-size 1rem
+    color rgba(0,0,0,.9)
+    & p
+      margin 12px 0
+    & a
+      color $thr-clr !important  
+      &:hover    
+        color $main-clr !important  
+
+.article-readmore 
+    display block
+    width 66px
+    margin 4rem auto 0 auto
+    font-size .85rem 
+    letter-spacing .8px
+    padding 8px 10px 
+    border-radius 999rem
+    border 1px solid $line-clr
+    background rgba(255,255,255,.1)
+    box-sizing content-box
+    text-align center
+    &:link,&:visited,&:active 
+      color $light-gray 
+    &:hover
+      color $bgr 
+      background-color $shallow 
+
+    
+
+.thumb
+    margin 1.5rem 1rem 0 1rem  
+    @media mq-mobile 
+      margin .5rem
+  
+ 
+.banner    
+    position relative
+    left -1%   
+    width 102%
+    height 22.5rem  
+    background-size cover
+    background-position center
+    background-repeat no-repeat
+    border-radius 2px
+    @media mq-mobile 
+      width 100%
+      max-height 12rem
+
+.gallery  
+    border-radius 2px
+    display inline-block
+    width 11.24rem
+    height 11.24rem   
+    background-size cover
+    background-position center
+    background-repeat no-repeat
+    @media mq-mobile
+      margin-bottom .5rem
+      width 48%
+      height 10rem 

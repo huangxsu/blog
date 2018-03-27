@@ -1,0 +1,12 @@
+<% if (page.total > 1){ %> 
+
+  <nav class="paginator scrollIn">
+    <%- paginator({
+      prev_text: __('Paginator.Prev'),
+      next_text: __('Paginator.Next'),
+      mid_size: 3,
+      end_size: 2
+    }) %>
+  </nav>
+  
+<% } %>

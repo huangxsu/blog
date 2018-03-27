@@ -1,0 +1,21 @@
+<% var profile = theme.profile %>
+
+<div class="profile sildeUpMin">
+
+	<img class="avatar" src="<%- url_for(profile.avatar) %>"  >
+					
+		<p class="author"><%= profile.author || config.author %></p>
+
+		<% if(profile.location) {%>
+			<p class="location"><span class="iconfont icon-location"></span><%= profile.location%></p>
+		<% }%>
+	
+		<div class="social">
+   		<% for (var i in theme.social) { %>   
+   		<span data-hover="<%= i %>">
+			<a class="iconfont icon-<%= i %>" target="_blank" href="<%- (theme.social[i]) %>" >		
+			</a>
+		</span>
+	    <% } %>
+    </div>		
+</div>

@@ -1,0 +1,59 @@
+    
+#toc
+    padding 1.8em 0    
+    position absolute
+    width 250px   
+    height 100%
+    top 16%
+    left 80%     
+    overflow hidden
+    @media mq-mobile 
+      display none
+	  
+.toc-container
+	display none
+	width 100%
+	height 100%	
+	overflow-y auto
+.toc-contents
+	display block	
+	font-size 1rem
+	color rgba(0,0,0,.5)
+	cursor pointer
+.toc-list
+    list-style-type none    
+      
+.toc-item 
+	@extend $oneline
+	padding-left 0 
+	font-size .95rem
+	margin 10px 0
+	color rgba(0,0,0,.8)
+	letter-spacing .5px
+.toc-item 
+	&:hover
+		cursor pointer
+		color $thr-clr 		
+		 
+.toc-subitem 	
+	@extend $oneline
+	display block
+	font-size  .85rem
+	color rgba(0,0,0,.6)
+	margin 10px 0 10px 6px	
+	
+.toc-subitem 	
+	&:hover
+		cursor pointer
+		color  $thr-clr 	
+
+//----------js
+.toc-fixed	
+	position fixed 
+	top 1%
+	left 80%	
+	height 86%
+	
+.toc-active		
+	color $thr-clr 		
+	

@@ -1,0 +1,134 @@
+*  
+  box-sizing border-box
+
+html,body
+  height 100%
+  width 100%
+  background $bgr
+  letter-spacing .3px
+  margin 0 
+  padding  0
+ 
+body
+  clearfix()  
+  overflow-x hidden
+  font  300 $font-size $font
+  margin 0 
+  padding 0
+      
+@media mq-desktop 
+    html
+      font-size 19px 
+
+  
+a
+ text-decoration none   
+ transition all .2s ease
+ &:link,&:visited,&:active 
+   color rgba(0,0,0,.7)
+ &:hover
+   color $thr-clr
+img
+  display block
+  max-width 100% 
+  margin 15px auto 15px auto
+  opacity .95
+  border-radius 3px
+     
+time
+  font-size 0.825rem
+  font-family $time-font  
+  &:hover   
+    color $thr-clr
+
+section  
+  margin .8rem 0 
+  padding .6rem
+
+
+.page-title 
+   display block  
+   text-align center  
+   margin-bottom 1.5em
+   letter-spacing .6px
+   color rgba(0,0,0,.5)
+   font-size 1.25rem   
+   &:hover
+      color $thr-clr
+
+.left
+  float left
+.right
+  float right
+.center
+  text-align center
+ 
+.mask
+  display none
+  position fixed
+  top 0
+  left 0
+  width 100%
+  height 100%
+  z-index 998
+  background-color rgba(0,0,0,.13)
+  
+#backTop    
+    opacity 0
+    position fixed   
+    cursor pointer
+    z-index 20
+    bottom 4%
+    right 3rem
+    padding 2px 8px        
+    @media mq-mobile 
+        bottom 3%
+        right 2%
+        font-size 2rem
+           
+.container    
+  margin-top 1.8rem
+  padding 0 1.8rem 
+
+
+  
+.main   
+    margin 0 auto
+    padding-top 15px
+    width 54%    
+#footer	
+	display flex
+	justify-content space-between	  
+	line-height 3rem
+	margin 4rem 15% 1rem 15%
+	padding 3rem 0 .8rem
+	font-size .85rem
+	color rgba(0,0,0,.5)
+	& a	
+		color $thr-clr
+		&:hover
+			color $main-clr
+
+    
+::selection 
+  background $sub-clr
+  color $white
+
+::-webkit-scrollbar 
+    width 8px 
+    height 6px 
+    background-color #ccc
+    
+::-webkit-scrollbar  
+    @media mq-mobile
+      width 2px
+      height 2px
+
+::-webkit-scrollbar-track  
+    box-shadow inset 0 0 6px rgba(0,0,0,0.3)  
+    background-color  #fff
+
+::-webkit-scrollbar-thumb  
+    border-radius 3px
+    box-shadow  inset 0 0 6px rgba(0,0,0,.3)  
+    background-color #555  
