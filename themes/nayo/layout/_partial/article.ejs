@@ -1,17 +1,10 @@
-<article class="article">		
-	   
-	<div class="article-header">
-	    
-	     <a class="article-title"  href="<%- url_for(post.path) %>"><%= post.title || __('Untitled') %></a>  
-	       
-		 <%	var date_format = config.date_format %>
-
-		 <time>Posted in <%= date(post.date,  "MMM Do YYYY") %> </time>
-		 <i class="iconfont icon-star"></i>
-		 <span>Words: <%- raw_length(post.content)%></span> 
-	</div>
-
-
-    <%- partial('_partial/_article/excerpt',{post:post}) %>		
-    
+<article class="article">
+    <div class="article-header">
+        <a class="article-title" href="<%- url_for(post.path) %>"><%= post.title || __('Untitled') %></a>
+        <% var date_format = config.date_format %>
+        <time>Posted in <%= date(post.date, "MMM Do YYYY") %> </time>
+        <i class="iconfont icon-star"></i>
+        <span>Words: <%- raw_length(post.content) %></span>
+    </div>
+    <%- partial('_partial/_article/excerpt', {post: post}) %>
 </article>

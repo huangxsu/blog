@@ -1,7 +1,11 @@
 {
-  "name": "hexo-site",
-  "version": "0.0.0",
+  "name": "blog.huangxsu.com",
+  "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "server": "hexo server",
+    "generate": "hexo generate"
+  },
   "hexo": {
     "version": "3.6.0"
   },

@@ -1,13 +1,7 @@
-<% if(post) {%>	
-
-	   <% var  date_format = config.date_format  %>
-
-	   <div class="item slideDownMin">   	
-
-        <span class="item-date"> <%= date(post.date, date_format || 'YYYY-MM-DD' ) %></span>    
-
-        <a class="item-title" href="<%- url_for(post.path) %>"><%= post.title || __('Untitled')%></a>
-
-      </div>
-
+<% if(post) { %>
+<% var date_format = config.date_format %>
+<div class="item slideDownMin">
+    <span class="item-date"> <%= date(post.date, date_format || 'YYYY-MM-DD') %></span>
+    <a class="item-title" href="<%- url_for(post.path) %>"><%= post.title || __('Untitled') %></a>
+</div>
 <% } %>

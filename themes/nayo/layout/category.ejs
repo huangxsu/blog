@@ -1,41 +1,23 @@
 <section>
-
-  <% if( is_category()){ %>
-
-  	<span class="page-title"><%=  "# "+ page.category %></span>
-
-  	 <% page.posts.each(function (post) { %>  
-
-        <%- partial('_partial/_common/item',{post:post}) %>       
-
-  	 <% }) %> 	
-
-  <%} else {%>	  
-
-
-      <span class="page-title"><%=  __('Page.Categories') %></span>  
-
-      <div class="cate-container">
-        <% site.categories.sort('length',-1).each( function ( category ){%>           
-             
-
-            <a  href="<%- url_for(category.path)%>">    
-              <div class="cate-inner">
-
-                <div class="cate-info">  
-                     <span class="iconfont icon-category"></span>       
-                     <span class="cate-name"><%- category.name %></span>            
-                 
-                </div>  
-               
-                  <span class="cate-count"><%- category.length %> <span class="iconfont icon-posts"/></span> 
-
-              </div>
-            </a>
-          
-         <%}) %>
-
-      </div>
-  <%}%>
-  
+    <% if( is_category()){ %>
+    <span class="page-title"><%= "# " + page.category %></span>
+    <% page.posts.each(function (post) { %>
+    <%- partial('_partial/_common/item', {post: post}) %>
+    <% }) %>
+    <% } else { %>
+    <span class="page-title"><%= __('Page.Categories') %></span>
+    <div class="cate-container">
+        <% site.categories.sort('length', -1).each( function (category){ %>
+        <a href="<%- url_for(category.path) %>">
+            <div class="cate-inner">
+                <div class="cate-info">
+                    <span class="iconfont icon-category"></span>
+                    <span class="cate-name"><%- category.name %></span>
+                </div>
+                <span class="cate-count"><%- category.length %> <span class="iconfont icon-posts"/></span>
+            </div>
+        </a>
+        <% }) %>
+    </div>
+    <% } %>
 </section>

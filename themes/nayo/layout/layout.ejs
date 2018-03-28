@@ -1,36 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <%- partial('_partial/head') %>  
-  <body>   
-    <%- partial('_partial/header', null, {cache: !config.relative_link}) %>   
-
-    <div class="container">       
-      
-        <% if (is_post() || is_home()) { %>
-
-          <section class="main">  
-
-        <% } else{ %>
-
-          <section class="main slideDownMin" >
-
-        <% }%>
-
-        <%-body%>
-        </section> 
-
-    </div>        
-
-    
-    
-    <div id="backTop" class="iconfont icon-backtotop"></div> 
-
-
-    <%- partial('_partial/search-container') %>
-    <%- partial('_partial/slide-menu') %>        
-    <%- partial('_partial/after-footer') %>     
-    
-    <%- js('main.bundle')%>        
-    <%- partial('_partial/footer') %>   
-  </body>        
+<%- partial('_partial/head') %>
+<body>
+<%- partial('_partial/header', null, {cache: !config.relative_link}) %>
+<div class="container">
+    <% if (is_post() || is_home()) { %>
+    <section class="main"></section>
+    <% } else{ %>
+    <section class="main slideDownMin"></section>
+    <% } %>
+    <%- body %>
+</div>
+<div id="backTop" class="iconfont icon-backtotop"></div>
+<%- partial('_partial/search-container') %>
+<%- partial('_partial/slide-menu') %>
+<%- partial('_partial/after-footer') %>
+<%- js('main.bundle') %>
+<%- partial('_partial/footer') %>
+</body>
 </html>

@@ -12,7 +12,7 @@ menu:
 # site title 
 # 页面的标题
 # title为空时 Hexo/_config.yml 配置有效
-title: Nayo
+title: Huangxsu
 
 
 # author profile
@@ -21,7 +21,7 @@ title: Nayo
 # author为空时 Hexo/_config.yml 配置有效
 profile: 
   logo: Huangxsu
-  author: Lemon
+  author: Alexander Huang
   avatar: /images/header.jpg  
   location: FuZhou CN
   description: hi,i am lemon
