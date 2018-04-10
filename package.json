@@ -7,7 +7,7 @@
     "generate": "hexo generate"
   },
   "hexo": {
-    "version": "3.6.0"
+    "version": "3.7.0"
   },
   "dependencies": {
     "hexo": "^3.2.0",
