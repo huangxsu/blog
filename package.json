@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "server": "hexo server",
+    "server": "hexo server -p 5000",
     "generate": "hexo generate"
   },
   "hexo": {
-    "version": "3.7.0"
+    "version": "3.6.0"
   },
   "dependencies": {
     "hexo": "^3.2.0",
