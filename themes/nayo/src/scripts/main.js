@@ -14,15 +14,17 @@ import Lazyload from './lazyload'
 
 const $ = require('expose-loader?$!./jquery.js')
 
+
+
 $(function () {
 
 
     let init = (funcs => {
 
         for (let fn of funcs) {
-            fn.init();
+            fn.init()
         }
 
-    })([Index, Mobile, Search, Anm, Post, Lazyload,Hover, Gallery]);
+    })([Index, Mobile, Search, Anm, Post, Lazyload, Hover, Gallery])
 
 })

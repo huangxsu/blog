@@ -33,7 +33,10 @@ function initActiveMenu() {
             break;
         }
     }
-    $('#header-menu-'.concat(activeMenuItem)).addClass(acitveClass);
+
+    let item = $('#header-menu-'.concat(activeMenuItem))
+    item.length != 0 ? item.addClass(acitveClass) : $('#header-menu-home').addClass(acitveClass)
+    
 }
 
 
@@ -68,7 +71,7 @@ function listenerScroll() {
 
     let resetBackToTop = function () {
         if ($(window).scrollTop() > 800) {
-            
+
             $backTop.removeClass('rightOut').addClass('leftIn')
 
         } else if ($backTop.hasClass('leftIn')) {
@@ -125,5 +128,4 @@ function fixedHeader() {
 }
 
 // just say hi....
-console.log('%c Nayo %c', 'background:#000; color:#fff', '', 'Alexander Huang & Penny Su');
-console.log('%c Mail %c', 'background:#000; color:#fff', '', 'hjl4347570@163.com');
+console.log('Hexo Theme Nayo, By Lemonreds.');

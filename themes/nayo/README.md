@@ -31,7 +31,9 @@ theme: Nayo
 当然如果你还能点个star的话 就非常的可爱和谢谢啦 :)
 
 
-## Modify theme
+## Modify theme 
+
+修改主题。
 
 install dependencies
 ```

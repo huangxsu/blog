@@ -3,35 +3,22 @@
 @import '../_import/valine.styl'
 
 .post-header
-  position relative
-  &:after
-    position absolute
-    content " "
-    bottom -2rem
-    left 10%
-    width 80%
-    height 1px
-    background $line-clr
-    
-.post-title 
-  display block
-  font-size 2.6rem
-  font-weight 200
-  color rgba(0,0,0,.7)
-  margin 1rem 0 3.5rem 0   
+  position relative 
+  margin 3rem 0 2.5rem
+  padding 10px 0 
+  border-bottom 1px solid $line-clr 
+  & > .post-title 
+    font-size 2rem 
+    margin 0 0 1rem
+    color rgba(0,0,0,.9) 
+  & > .meta-info
+    & > span
+      margin-right 12px
 
-//
-//post
-//
 .post-content
-  margin 5.5rem 0 2rem
-  & p a 
-    @extend $toRight
-  & p a,& li a
-    &:link,&:visited,&:active 
-      color $thr-clr    
-    &:hover    
-      color $main-clr    
+  min-height 20vh
+  margin 2rem 0 
+ 
 
 
     
@@ -39,15 +26,18 @@
 // button
 //
 .donate-btn,.share-btn 
-  @extend $tips-min   
   cursor pointer
   margin 0 14px
+  &:hover
+      color $thr-clr
 //-------------donate
 #donate-box  
   display none
   fixed-center(440px,380px)  
   padding 20px 0
   text-align center
+  border-radius: 10px   
+  box-shadow: 0 5px 10px 0 rgba(0,0,0,0.05)
  
 .donate-cancel
   position absolute
@@ -56,7 +46,9 @@
   width 12px  
 .donate-img-box
   width 260px
-  margin 0 auto 
+  margin 0 auto
+.donate-img
+  margin-top 0
 .donate-word
   display inline-block 
   font-weight 300 
@@ -74,24 +66,21 @@
   display none    
   padding 20px 0   
   text-align center
-
+  border-radius: 10px   
+  box-shadow: 0 5px 10px 0 rgba(0,0,0,0.05)
  
 
 .-mob-share a 
   padding 4px
   font-size 1.28rem 
+  display inline-block
+  width 80px   
+  padding 4px 6px
+  margin 4px 
+  border-radius 4px
   &:hove
     color $thr-clr 
-
-.-mob-share div 
-   @extend $tips-min 
-   cursor pointer
-   display inline-block
-   width 80px 
-   border 1px solid $gray 
-   padding 4px 6px
-   margin 4px 
-   border-radius 4px
+  cursor pointer
   
 
 .-mob-share-weixin-qrcode-bg    
@@ -100,17 +89,23 @@
      
 
 
+.post-meta
+  margin 5rem 0 1rem
+  & > a
+      @extend $item
+    
 .post-footer
   width 100%
   height 160px
   position relative
-  border-top  1px solid  $line-clr
-  border-bottom 1px solid $line-clr
+  border-top  .5px solid  $line-clr
+  border-bottom .5px solid $line-clr
   display flex 
   justify-content space-between 
   align-items center
   padding 22px 0
-  margin 4.8rem 0 8rem
+  margin-bottom 4rem 
+  margin-bttom 8rem
   text-align right 
   box-sizing content-box
   & > div
@@ -128,7 +123,7 @@
 .pf-left
   text-align center
   & .pf-des
-    color rgba(0,0,0,.85)
+    color rgba(0,0,0,.65)
     font-size .95rem
     overflow hidden
 
@@ -146,7 +141,9 @@
   align-items flex-end
   & a
     @extend $tips
-    border-radius 4px
+    @extend $fade
+    border-radius 4px 
+    padding 6px 12px 
     border 1px solid $line-clr
-    padding 8px 12px
     margin 0 6px  
+   

@@ -48,11 +48,12 @@ function search(path, search_id, content_id) {
             var datas = $('entry', xmlResponse).map(function () {
                 return {
                     title: $('title', this).text(),
-                    content: $('content', this).text(),
+                    content: $("content",this).text(),
                     url: $('link', this).attr('href')
                 };
             }).get();
 
+           
             var $input = document.getElementById(search_id);
             var $resultContent = document.getElementById(content_id);
 

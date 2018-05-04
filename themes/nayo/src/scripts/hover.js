@@ -2,10 +2,10 @@ import Style from '../css/_import/hover.styl'
 
 exports.init = () => {
     let $socials = $('.social a'),
-        $shares = $('.-mob-share div');
+        $shares = $('.-mob-share div')
 
-    registerHoverItem($socials);
-    registerHoverItem($shares);
+    registerHoverItem($socials)
+    registerHoverItem($shares)
 }
 
 /**

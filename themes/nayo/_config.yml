@@ -4,7 +4,6 @@
 menu:
   home: /
   archives: archives
-#  categories: categories  
   tags: tags
   about: about
   search: search
@@ -12,7 +11,7 @@ menu:
 # site title 
 # 页面的标题
 # title为空时 Hexo/_config.yml 配置有效
-title: Huangxsu
+
 
 
 # author profile
@@ -21,26 +20,24 @@ title: Huangxsu
 # author为空时 Hexo/_config.yml 配置有效
 profile: 
   logo: Huangxsu
-  author: Alexander Huang & Penny Su
+  author: Huangxsu
   avatar: /images/header.jpg  
-  location: FuZhou CN
-  description: hi,i am lemon
+  description: Hi, I'm doggy
 
 # site favicon
 # source/imgaes/
 # 站点图标
-favicon: /images/favicon.png
+favicon: /images/favicon.jpg
 
 # social link
 social:  
   Github: https://github.com/huangxsu
-  Zhihu:
-  Weibo:
-  Facebook:
-  Twitter:
-  Instagram:
-  LinkedIn:
-  Others:
+  #Weibo:
+  #Zhihu:
+  #Facebook:
+  #Twitter:
+  #Instagram:
+  #LinkedIn:
 
 
 # toc
@@ -52,7 +49,7 @@ toc:
 # 站点访问统计
 # [ analytics id ]
 baidu_analytics:
-  #636802045446222199ae541e32c8133e 
+ 636802045446222199ae541e32c8133e 
 google_analytics: 
 
 # comment
@@ -102,19 +99,19 @@ donate:
 mathjax:
   enable: true
   
+# excerpt_ignore [boolean]
+# increase at the top of your article
+# Does this article need to hide the excerpt ?
+# 在文章头部中增加此配置 
+# 文章是否需要显示摘要 默认为显示
 
 # footer
 # 底部信息
 footer:
-  author: Lemon
-  since: 2017
-
-# busuanzi site count
-# 底部访客记录
-busuanzi:
-  false
+  author: Huangxsu
+  since: 2018
 
 
 #theme version
 version:
-  0.1.8
+  0.2.0

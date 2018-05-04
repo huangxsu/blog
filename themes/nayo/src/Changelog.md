@@ -1,8 +1,6 @@
 
 # Changes Log
 
-
-
 ## [0.1.0]
 
 ### Added
@@ -68,3 +66,20 @@
 
 ### Changed
 - 重做了部分样式
+
+## [0.1.9]
+
+### Added
+- 代码类型提示
+
+### Removeed
+- busuanzi
+- category page
+
+## [0.2.0] 20180422
+
+### Added
+- 文章摘要显示 
+
+### Fixed
+- 搜索框乱码的问题

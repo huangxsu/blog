@@ -79,3 +79,7 @@ theme: nayo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type:
+# search
+search:
+  path: search.xml
+  field: post

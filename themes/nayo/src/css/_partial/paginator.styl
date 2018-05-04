@@ -1,31 +1,35 @@
 
 .paginator
-	margin 8rem 0 2rem
-	font-size .95rem
+	position relative
+	margin 8rem 0 
 	text-align center
-	border-top 1px solid $line-clr
-	border-bottom 1px solid $line-clr
-	
-.page-number,.prev,.next	
-	display inline-block
-	padding 12px 10px 
-	margin 0 2px
-	line-height 1
-   
-.extend
-	margin 0 8px 
-	letter-spacing .8px
+	font-size 14px
+	color $sub-clr
+	height 40px
 
+
+.prev,.next	
+	@extend $fade
+	display inline-block
+	padding 4px 12px 
+	border 1px solid $line-clr
+	border-radius 4px
+	
 
 .prev  
-	float left  
+	position absolute
+	left 2px
 .next  
-	float right
+	position absolute
+	right 2px
+	
 
-.current
-	color $thr-clr
+.page-number
+	display inline-block
+	min-width 100px
+	height 100%
+	padding 6px 2px	
+	font-size 12px	
+	line-height 30px
 
-.page-number:hover,.extend:hover
-	color $gray
-	background-color $shallow 
-
+	

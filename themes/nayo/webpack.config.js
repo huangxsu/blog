@@ -12,7 +12,7 @@
      },
      output: {
          path: path.resolve(__dirname, 'source'),
-         filename: '[name].bundle.js'
+         filename: 'nayo.bundle.js'
      },
      module: {
          rules: [{
@@ -77,7 +77,7 @@
          ]
      },
      plugins: [
-         new ExtractTextPlugin('style.min.css'),
+         new ExtractTextPlugin('nayo.min.css'),
          new CleanPlugin('./source', {
              exclude: ['images', 'fonts']
          }),

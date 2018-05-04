@@ -3,12 +3,6 @@
 // tag 
 //
 
-	
-.meta-name	
-	margin 1em 	
-	letter-spacing 1px
-	font-size 1rem 
-	
 .tag-wrap	
 	@extend $tags  
 	display inline-block		
@@ -21,57 +15,27 @@
 	font-size 0.825rem
 	
 
+//
+// archive
+//
 
-.cate-inner
-	padding .8rem .6rem
-	margin .5rem 1rem 2rem 1rem
-	border-top 1px solid $line-clr
-	border-bottom 1px solid $line-clr
-	border-radius 2px
-	display flex
-	justify-content space-between
-	cursor pointer
-	&:hover		
-		box-shadow 0 4px 2px 3px rgba(0,0,0,.05)
+.archive-year
+	font-size 1.1rem
+	margin 2rem 3rem 1rem 		
+	color rgba(0,0,0,0.7)
+	text-align center	
 	
-		
-.cate-info	
-	display inline-block 
-	@extend $oneline
-	margin .5rem 0  .3rem 4rem 	
-	font-size 1.03rem
-	& .cate-name
-		padding-left 16px
-	
-.cate-count
-	display inline-block
-	text-align right
-	font-size 0.825rem	
-
-
-
-
-.archive-year	
-	font-size 1.3rem
-	text-align center
-	margin 2rem 0  
-	padding .8rem 0 1rem
-	cursor pointer
-	color rgba(0,0,0,0.5)	
-	border-top 1px solid $line-clr
-	border-bottom 1px solid $line-clr
-	@extend $tips-min
 	
 .archive-item			
 	position relative		
-	padding 1.4rem 0 1.4rem 4rem
+	padding 1rem 0 1rem 3rem
 
 
 .archive-time		
 	position  absolute
 	left 7.5rem
-	top 28px
-	font-size 1rem
+	top 21px
+	font-size .92rem
 	line-height 1
 	color rgba(0,0,0,.5)
 	
@@ -80,5 +44,5 @@
 	display inline-block
 	margin-left 12.5rem	
 	& a
-		font-size 1.25rem
+		font-size 1.1rem
 		letter-spacing 1px
