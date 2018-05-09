@@ -3,7 +3,8 @@ title: Grid Layout
 date: 2018-05-02 17:46:36
 tags:
 - CSS3
-- Grid Layout
+- Grid
+- Layout
 ---
 本文通过阅读文献，总结 `grid layout` 基本语法与实践应用。
 
@@ -40,17 +41,17 @@ Grid容器的直系子元素，如下，`.item`是grid项目，`sub-item`就不�
 ## Grid Line 线
 一条条横竖相交的分界线构成网格，如下，黄色的线是网格中一条竖线。
 
-![grid line](/images/grid-line.png)
+{% asset_img slug grid-line.png grid-line %}
 
 ## Grid Track 轨道
 轨道是什么？在现实生活中，轨道可以是两条平行的铁轨，而在grid布局中，轨道指的是两条相邻的网格线，比如行或列。如下，黄色区域（第二行）是第二、三条横线组成的轨道。
 
-![grid track](/images/grid-track.png)
+{% asset_img slug grid-track.png grid-track %}
 
 ## Grid Cell 格
 网格中的格子。两条相邻行和两条相邻列之间区域。
 
-![grid cell](/images/grid-cell.png)
+{% asset_img slug grid-cell.png grid-cell %}
 
 ## Grid Area 区域
 由四条网格线（两条横线、两条竖线）环绕形成的区域，可能会包含多个网格。
@@ -58,7 +59,7 @@ Grid容器的直系子元素，如下，`.item`是grid项目，`sub-item`就不�
 ## Grid Gutters 栏距
 网格线的大小，也可以理解为行与行或列与列之间的距离。`grid-row-gap`和`grid-column-gap`，简写：`grid-gap`。
 
-![grid area](/images/grid-area.png)
+{% asset_img slug grid-area.png grid-area %}
 
 # CSS Grid Layout
 ## 定义一个网格布局  
@@ -227,7 +228,7 @@ HTML结构：
 **[点击看效果](https://codepen.io/pennySU/pen/odozRr)**
 ## 使用grid-template-area实现三栏布局
 实现效果如图：
-![grid nested](/images/grid-nested.png)
+{% asset_img slug grid-nested.png grid-nested %}
 HTML结构：
 ```html
 <div class="wrapper">
@@ -301,7 +302,7 @@ HTML结构：
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 ```
-![auto-fill&auto-fit](/images/auto-fill&auto-fit.png)
+{% asset_img slug auto-fill&auto-fit.png auto-fill&auto-fit %}
 从图中可以看出， 当视口的宽度可以容纳多余的列时，`auto-fill` 和 `auto-fit`的区别是：
 
 `auto-fill` 会尽可能多的创建列去填充一整行，所以可能会创建出多余的空列，即隐式的列。
@@ -412,7 +413,7 @@ HTML结构：
 `Flex` 属于一维布局，适用于许多布局，以及线性的页面组件。 `Grid` 属于二维布局，主要用于整个页面布局，以及非线性的复杂的页面组件。
 
 让我们来实现一个 `Grid` 和 `Flex` 结合使用的网页布局，**[点击看效果](https://codepen.io/pennySU/pen/odpLqw)**，效果如图：
-![grid&flex](/images/grid&flex.png)
+{% asset_img slug grid&flex.png grid&flex %}
 这个布局共有五个部分组成：头、左侧大图、右侧简介、图片列表、尾部组成。整体布局以及响应式布局变化可以使用 `Grid`布局；头、图片列表属于线性布局，可以使用 `Flex`布局轻松实现。
 部分代码片段：
 ```css
