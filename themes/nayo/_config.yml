@@ -48,15 +48,14 @@ toc:
 # site analytics 
 # 站点访问统计
 # [ analytics id ]
-baidu_analytics:
- 636802045446222199ae541e32c8133e 
+baidu_analytics: 636802045446222199ae541e32c8133e
 google_analytics: 
 
 # comment
 
 # disqus(https://disqus.com/)
 disqus:
-  comment: true
+  comment: false
   shortname: lemonreds
 
 # valine(https://github.com/xCss/Valine)
@@ -88,8 +87,8 @@ share_item:
 donate:
   enable: true
   word: 世界美好 你也是
-  wechat: /images/donate1.png
-  alipay: /images/donate2.png
+  wechat: /images/wechat.png
+  alipay: /images/alipay.png
 
 # mathjax 
 # 渲染LateX公式
