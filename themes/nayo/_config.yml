@@ -5,7 +5,7 @@ menu:
   home: /
   archives: archives
   tags: tags
-  about: about
+  #about: about
   search: search
 
 # site title 
