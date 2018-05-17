@@ -2,7 +2,8 @@ let LazyLoad = (function () {
 
 
     const defaults = {
-            src: 'data-src'
+            src: 'data-src',
+            nolazy: 'noLazyLoad'
         },
         root = window;
 
@@ -49,8 +50,26 @@ let LazyLoad = (function () {
                 });
             }, observerConfig);
 
-            this.images.forEach(function (image) {
-                self.observer.observe(image);
+
+            this.images.forEach(image => {
+
+                if (this.isNolazy(image)) {
+
+                    let src = image.getAttribute(self.settings.src);
+
+                    if (src) {
+                        if ("img" === image.tagName.toLowerCase()) {
+
+                            image.src = src;
+                            image.removeAttribute(self.settings.src);
+                        } else {
+                            image.style.backgroundImage = "url(" + src + ")";
+                            image.removeAttribute(self.settings.src);
+                        }
+                    }
+                } else {
+                    self.observer.observe(image);
+                }
             });
 
         },
@@ -75,6 +94,9 @@ let LazyLoad = (function () {
                 }
 
             });
+        },
+        isNolazy: function (image) {
+            return image.className.split(' ').indexOf(this.settings.nolazy) !== -1
         }
         // ,
 

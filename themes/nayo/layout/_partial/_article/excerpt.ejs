@@ -1,9 +1,0 @@
-<%- partial('_partial/_article/gallery', {post: post}) %>
-<div class="article-excerpt">
-    <% if (post.excerpt) { %>
-    <%- post.excerpt %>
-    <% } else { %>
-    <%- post.content %>
-    <% } %>
-</div>
-<a class="article-readmore" href="<%- url_for(post.path) %>"><%= __('ReadMore') %></a> 

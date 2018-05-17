@@ -14,7 +14,7 @@ exports.init = () => {
 
 function initPost() {
 
-    initPostTitle();
+    //initPostTitle();
 
     initDonate();
     initShare();

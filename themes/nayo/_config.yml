@@ -55,8 +55,8 @@ google_analytics:
 
 # disqus(https://disqus.com/)
 disqus:
-  comment: false
-  shortname: lemonreds
+  comment: true
+  shortname: huangxsu
 
 # valine(https://github.com/xCss/Valine)
 # 创建 leancloud 应用 获取 id|key 填入即可

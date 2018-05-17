@@ -126,6 +126,3 @@ function fixedHeader() {
         .removeClass('slideUp')
         .removeClass('slideDown');
 }
-
-// just say hi....
-console.log('Hexo Theme Nayo, By Lemonreds.');

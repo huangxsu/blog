@@ -3,7 +3,10 @@
 <div class="profile sildeUpMin">
 
 		
-		<img class="avatar" src="<%- url_for(profile.avatar) %>">
+		<a href="<%- url_for() %>" >
+			<img class="avatar"src="<%- url_for(profile.avatar) %>">
+		</a>
+		
 		<p class="author"><%= profile.author || config.author %></p>
 		
 		<div class="social">
