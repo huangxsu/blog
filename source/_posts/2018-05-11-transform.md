@@ -215,6 +215,14 @@ HTML 结构：
 
 通过`transform-origin`更改变化的原点，`translateX`进行移动来实现。**[点击看效果](https://codepen.io/pennySU/pen/GdGeOg)**
 
+## transform-origin
+
+设置元素在形变时的基点，比如旋转时的选择中心。
+
+```css
+transform-origin: bottom right 60px;
+```
+
 ## transform-style
 
 设置元素的子元素是位于 3D 空间还是位于 2D 平面空间被扁平化，有三种取值：
@@ -638,3 +646,5 @@ var r = Math.round((cellSize / 2) / Math.tan (Math.PI / numberOfCells )
 4.  **[MDN will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change)**
 5.  **[CSS-TRICKS will-change](https://css-tricks.com/almanac/properties/w/will-change/)**
 6.  **[MDN backface-visibility](https://developer.mozilla.org/zh-CN/docs/Web/CSS/backface-visibility)**
+7.  **[CSS3 的 3D 立方体旋转动画](https://www.jianshu.com/p/92c1ae12c158)**
+8.  **[MDN transform-origin](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin)**
