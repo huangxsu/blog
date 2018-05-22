@@ -64,8 +64,8 @@ transition-duration: 10s, 230ms;
 6.  `cubic-bezier(n,n,n,n)`：三次贝塞尔曲线可以实现更复杂的渡效果的速度变化。可以使用**[cubic-bezier 工具](http://cubic-bezier.com/#.72,.26,.65,.86)**得出想要的效果
 7.  `step-start`：直接跳到最终状态
 8.  `step-end`：保持初始状态，到达持续时间时，立刻变成最终状态
-9.  `step(number,start)`：分几步完成过渡，变化发生在间隔开始时
-10. `step(number,end)`：变化发生在间隔结束时
+9.  `steps(number,start)`：分几步完成过渡，变化发生在间隔开始时
+10. `steps(number,end)`：变化发生在间隔结束时
 
 **[点击看效果](https://codepen.io/pennySU/pen/XqxvgE)**
 
@@ -326,7 +326,185 @@ cubic-bezier(.8,-.5,.2,1.4)
 
 为小风扇设置两个`transition`，打开的时候先收缩一下。
 
+## 其他应用
+
+1.  **[5 种 hover 效果](https://codepen.io/pennySU/pen/NMoBZe)**
+
+    {% asset_img OriginalHoverEffect.jpg hover effects %}
+
+2.  **[picture wall](https://codepen.io/pennySU/pen/QrYrEX)**
+
+    {% asset_img picture-wall.jpg picture wall %}
+
+3.  **[扭曲拉直效果](https://codepen.io/pennySU/pen/qYgxJG)**
+
+    {% asset_img skew.jpg skew %}
+
+4.  **[弹钢琴效果](https://codepen.io/pennySU/pen/KRJZKj)**
+
+    {% asset_img boom.png boom %}
+
+5.  **[翻日历效果](https://codepen.io/pennySU/pen/JvxONd)**
+
+    {% asset_img calendar.jpg calendar %}
+
 # Animation
+
+定义一个动画需要设置`animation`子属性来配置动画的时间、时长等其他细节，动画的实际表现，是由`@keyframes`规则实现的。
+
+## 语法
+
+```css
+@keyframes Animation-name {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+#box {
+  animation: Animation-name 5s infinite; /*多个动画可用逗号分隔*/
+}
+```
+
+简写：
+
+```css
+animation: duration | timing-function | delay | iteration-count | direction |
+  fill-mode | play-state | name;
+```
+
+## animation-name
+
+动画名字，由`@keyframes`定义的动画序列。
+
+## animation-duration
+
+动画的周期时长。
+
+```css
+#box {
+  animation-duration: 1s, 120ms;
+}
+```
+
+## animation-timing-function
+
+每个关键帧周期动画执行的节奏。取值可见上面的`transition-timing-function`，此外，还有一个`frames()`属性：
+
+1.  frames(2) 将按照给定的数值分成几个相等长度的时间。
+
+来看一下`steps()`和`frames()`的区别：
+{% asset_img step-timing-func-examples.svg 400 step-timing-func-examples %}
+{% asset_img frames-timing-func-examples.svg 400 frames-timing-func-examples %}
+
+帧定时函数和步进定时函数的区别是，帧定时函数会在闭区间[0,1]之间按输入的数值平均分成若干份。这个特性在循环播放的动画中，第一帧和最后一帧执行的时间一样时很适用。
+
+## animation-delay
+
+动画应用在元素到动画开始的时间。
+
+```css
+#box {
+  animation-delay: 2s;
+}
+```
+
+## animation-iteration-count
+
+动画运行的次数。
+
+```css
+#box {
+  animation-iteration-count: infinite | 2.3 | 0;
+}
+```
+
+## animation-direction
+
+动画的播放顺序：
+
+1.  `normal` 每个动画循环结束，动画重置到起点重新开始。
+2.  `alternate`动画交替反向运行。
+3.  `reverse` 每个周期有尾到头运行。
+4.  `alternate-reverse` 第一次反向运行，第二次正向，后面依次循环。
+
+**[点击看效果](https://codepen.io/pennySU/pen/VxRrEK)**
+
+## animation-fill-mode
+
+设置动画执行之前和之后如何给动画应用样式：
+
+1.  `none` 动画执行前后不改变任何样式。
+2.  `forwards` 动画完成后最后一帧的样式，最后一帧取决于`animation-direction`和`animation-iteration-count`。
+3.  `backwards` 在`animation-delay`时间内，动画的样式，保持第一帧的样式，取决于`animation-direction`。
+4.  `both` `forwards` 和 `backwards`都会执行。
+
+**[点击看效果](https://codepen.io/pennySU/pen/MGxQKJ)**
+
+## animation-play-state
+
+设置动画是执行还是暂停。
+
+```css
+animation-play-state: running | paused;
+```
+
+## 微博点赞效果
+
+{% asset_img animation-like.gif animation-like %}
+
+HTML 结构：
+
+```html
+<div class="like"></div>
+```
+
+下图是用来实现动效的图片：
+
+{% asset_img steps_praised.png steps_praised %}
+
+我们的思路是，点赞时，让图片从左到右按一定的速度动起来，实现动画效果，首先定义动画帧：
+
+```css
+@keyframes steps {
+  0% {
+    background-position: left;
+  }
+  100% {
+    background-position: right;
+  }
+}
+```
+
+动画帧很简单，从左到右移动即可。设置动画执行的属性：
+
+```scss
+.like {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 23px;
+    height: 28px;
+    background-image: url(/steps_praised.png);
+    background-repeat: no-repeat;
+    background-size: 483px 28px;
+  }
+  &.active {
+    background-position: right;
+    &:before {
+      animation: 0.65s steps(20) 1 forwards steps;
+    }
+  }
+}
+```
+
+首先，给`.like`元素的伪元素`:before`设置点赞按钮的初始状态，当点击元素时，为元素添加`.active`类，执行动画。动画共进行`0.65s`，分`20`步，共执行`1`次，执行完保持最后一帧的状态。`steps(20)`等同于`steps(20,end)`。
+
+背景图片`steps_praised.png`宽`966px`,共有 21 帧，设置`background-size: 483px 28px;`后，每帧动画的宽为`483 / 21 = 23px`，还记得上面`steps(3,end)`的图吗?变化发生在间隔结束时，最后一点
+**[点击看效果](https://codepen.io/pennySU/pen/qYvMmr)**
 
 # 参考文献
 
@@ -336,3 +514,8 @@ cubic-bezier(.8,-.5,.2,1.4)
 4.  **[CSS TRICKS transition-timing-function](https://css-tricks.com/almanac/properties/t/transition-timing-function/)**
 5.  **[Maintaining CSS Style States using “Infinite” Transition Delays](http://joelb.me/blog/2012/maintaining-css-style-states-using-infinite-transition-delays/)**
 6.  **[CSS3 Animation – Creating a Fan-Out With Bounce Effect Using Bezier Curve](https://www.hongkiat.com/blog/css3-fan-out-bounce-effect-animation/)**
+7.  **[Typography Effects with CSS3 and jQuery](https://tympanus.net/codrops/2011/11/28/typography-effects-with-css3-and-jquery/)**
+8.  **[Original Hover Effects with CSS33](https://tympanus.net/codrops/2011/11/02/original-hover-effects-with-css3/)**
+9.  **[MDN CSS Animation](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations)**
+10. **[Keyframe Animation Syntax](https://css-tricks.com/snippets/css/keyframe-animation-syntax/)**
+11. **[CSS DRAFTS typedef-timing-function](https://drafts.csswg.org/css-timing-1/#typedef-timing-function)**

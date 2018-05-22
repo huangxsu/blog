@@ -25,6 +25,9 @@ tags:
 ```
 
 {% asset_img skew.png skew %}
+**[点击看效果](https://codepen.io/pennySU/pen/jxxEqX)**
+{% asset_img skewY.png skewY %}
+**[点击看效果](https://codepen.io/pennySU/pen/qYgxJG)**
 
 ## rotate
 
@@ -62,6 +65,9 @@ tags:
   transform: scale(1.2);
 }
 ```
+
+{% asset_img scale.png scale %}
+**[点击看效果](https://codepen.io/pennySU/pen/QrYrEX)**
 
 ## matrix
 
@@ -648,3 +654,4 @@ var r = Math.round((cellSize / 2) / Math.tan (Math.PI / numberOfCells )
 6.  **[MDN backface-visibility](https://developer.mozilla.org/zh-CN/docs/Web/CSS/backface-visibility)**
 7.  **[CSS3 的 3D 立方体旋转动画](https://www.jianshu.com/p/92c1ae12c158)**
 8.  **[MDN transform-origin](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-origin)**
+9.  **[Typography Effects with CSS3 and jQuery](https://tympanus.net/codrops/2011/11/28/typography-effects-with-css3-and-jquery/)**
