@@ -405,6 +405,8 @@ animation: duration | timing-function | delay | iteration-count | direction |
 
 动画应用在元素到动画开始的时间。
 
+定义一个负值会让动画立即开始，但是动画会从动画序列的某处开始，如，设-1s，动画会从动画序列的第 1 秒位置处立即开始。
+
 ```css
 #box {
   animation-delay: 2s;
@@ -461,7 +463,7 @@ HTML 结构：
 <div class="like"></div>
 ```
 
-下图是用来实现动效的图片：
+下图是用来实现动效的图片`steps_praised.png`：
 
 {% asset_img steps_praised.png steps_praised %}
 
@@ -501,10 +503,13 @@ HTML 结构：
 }
 ```
 
-首先，给`.like`元素的伪元素`:before`设置点赞按钮的初始状态，当点击元素时，为元素添加`.active`类，执行动画。动画共进行`0.65s`，分`20`步，共执行`1`次，执行完保持最后一帧的状态。`steps(20)`等同于`steps(20,end)`。
+首先，给`.like`元素的伪元素`:before`通过`background-image`的方式设置点赞按钮的初始状态，当点击元素时，为元素添加`.active`类，执行动画。动画共进行`0.65s`，分`20`步，执行`1`次，执行完保持最后一帧的状态。`steps(20)`等同于`steps(20,end)`。
 
-背景图片`steps_praised.png`宽`966px`,共有 21 帧，设置`background-size: 483px 28px;`后，每帧动画的宽为`483 / 21 = 23px`，还记得上面`steps(3,end)`的图吗?变化发生在间隔结束时，最后一点
-**[点击看效果](https://codepen.io/pennySU/pen/qYvMmr)**
+背景图片`steps_praised.png`宽`966px`,共有 21 帧，设置`background-size: 483px 28px;`后，每帧动画的宽为`483 / 21 = 23px`，即`:before`的宽为`23px`。初始状态已经展示一帧了，所以只需展示剩下的 20 帧即可，故设置`step(20)`,动画结束时保存最后一帧的状态。**[点击看效果](https://codepen.io/pennySU/pen/qYvMmr)**
+
+使用雪碧图制作动画，可减少 gif 的使用，一般 gif 文件的大小要大于雪碧图。**[雪碧图动画](https://codepen.io/pennySU/pen/rvbYpQ)**
+
+## Loading
 
 # 参考文献
 

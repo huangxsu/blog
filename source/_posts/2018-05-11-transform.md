@@ -223,10 +223,10 @@ HTML 结构：
 
 ## transform-origin
 
-设置元素在形变时的基点，比如旋转时的选择中心。
+设置元素在形变时的基点，比如旋转时的选择中心。水平和垂直方向的偏移量以形变元素的左上角为基点。
 
 ```css
-transform-origin: bottom right 60px;
+transform-origin: bottom right 60px; // x y z
 ```
 
 ## transform-style
