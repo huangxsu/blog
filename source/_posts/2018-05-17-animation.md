@@ -145,7 +145,7 @@ $(function() {
 }
 ```
 
-一般我们不会在`:hover`时设置`transition`，这时，鼠标移动进入元素，元素按照`:hover`里定义的样式发生形变，鼠标移除元素时，元素的样式会过渡变回初始状态，如图：
+一般我们不会在`:hover`时设置`transition`，这时，鼠标移动进入元素，元素按照`:hover`里定义的样式发生形变，鼠标移出移出元素时，元素的样式会过渡变回初始状态，如图：
 
 {% asset_img hover-on.gif hover-on %}
 
@@ -313,7 +313,7 @@ cubic-bezier(.8,-.5,.2,1.4)
 
 {% asset_img cubic-bezier-4.gif cubic-bezier-4 %}
 
-细心的观察，小风扇打开和收起时的弹跳效果并不完全一样，这里需要用到上一节说到的`on and off transition`：
+细心的观察，小风扇打开和收起时的弹跳效果并不完全一样，这里需要用到上一节说到的`hover on and off transition`：
 
 ```css
 .leaf {
@@ -403,7 +403,7 @@ animation: duration | timing-function | delay | iteration-count | direction |
 
 ## animation-delay
 
-动画应用在元素到动画开始的时间。
+动画从应用在元素到开始的时间。
 
 定义一个负值会让动画立即开始，但是动画会从动画序列的某处开始，如，设-1s，动画会从动画序列的第 1 秒位置处立即开始。
 
@@ -511,6 +511,336 @@ HTML 结构：
 
 ## Loading
 
+{% asset_img animation-loading-jump.gif animation jump %}
+
+JSFiddle 的 loading 效果。
+
+HTML 结构：
+
+```html
+<div class="jump">
+  <svg class="loader"></svg>
+  <span class="shadow"></span>
+</div>
+```
+
+一个蓝胖子，一个阴影元素。蓝胖子上下有移动，也有缩小和放大，阴影有明暗和大小的变化。所以分别为它两定义动画的表现：
+
+```css
+@keyframes jump {
+  from {
+    transform: translateY(0) scale(1.15, 0.8);
+  }
+  20% {
+    transform: translateY(-35px) scaleY(1.1);
+  }
+  50% {
+    transform: translateY(-50px) scale(1);
+  }
+  80% {
+    transform: translateY(-35px) scale(1);
+  }
+  to {
+    transform: translateY(0) scale(1.15, 0.8);
+  }
+}
+```
+
+动画`jump`从下到上，再从上到下移动，同时由“矮”“胖”到“高”再到“正常”最后又变为“矮”“胖”。
+
+```css
+@keyframes scale-shadow {
+  from {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+```
+
+动画`scale-shadow`先变小然后恢复，透明度先变淡再变深。
+
+```css
+.loader {
+  animation: jump 0.8s ease-in infinite;
+}
+.shadow {
+  animation: scale-shadow 0.8s ease-in infinite;
+}
+```
+
+设置`animation`属性使动画动起来。**[点击看效果](https://codepen.io/pennySU/pen/deLZrG)**
+
+{% asset_img animation-loading-roller.gif animation roller %}
+
+再介绍一个利用负动画延迟`animation-delay`实现的 loading 效果。
+
+HTML 结构：
+
+```html
+<div class="roller" title="roller">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+```
+
+一个`roller`容器，八个点点。
+
+动画效果其实很简单，八个点点旋转完整的一圈：
+
+```css
+@keyframes roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+```
+
+定义动画`roller`旋转 360°。
+
+为容器和点点设置一些样式：
+
+```css
+.roller {
+  width: 64px;
+  height: 64px;
+}
+.roller div {
+  margin: -3px 0 0 -3px;
+  transform-origin: 32px 32px;
+}
+```
+
+从效果图中，可以看出，八个点点的旋转中心是容器的中点，`transform-origin`是根据元素的左上角定位的，即八个`div`元素的位置必须是在同一个位置，这样它们才能有相同的旋转中心。所以我们用`:before`伪元素实现圆点的效果并且绝对定位形成一个半圆弧形状，保证八个`div`元素没有宽高使得它们都在同一个位置拥有相同的旋转中心。
+
+```scss
+div {
+  margin: -3px 0 0 -3px;
+  transform-origin: 32px 32px;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  &:nth-child(1) {
+    &:before {
+      background-color: #ff2121;
+      left: 50px;
+      top: 50px;
+    }
+  }
+  &:nth-child(2) {
+    &:before {
+      background-color: #ff7200;
+      top: 54px;
+      left: 45px;
+    }
+  }
+  &:nth-child(3) {
+    &:before {
+      background-color: #ffdc59;
+      top: 57px;
+      left: 39px;
+    }
+  }
+  &:nth-child(4) {
+    &:before {
+      background-color: #84d458;
+      top: 58px;
+      left: 32px;
+    }
+  }
+  &:nth-child(5) {
+    &:before {
+      background-color: #7bc576;
+      top: 57px;
+      left: 25px;
+    }
+  }
+  &:nth-child(6) {
+    &:before {
+      background-color: #2e89c1;
+      top: 54px;
+      left: 19px;
+    }
+  }
+  &:nth-child(7) {
+    &:before {
+      background-color: #2b52c6;
+      top: 50px;
+      left: 14px;
+    }
+  }
+  &:nth-child(8) {
+    &:before {
+      background-color: #8366af;
+      top: 45px;
+      left: 10px;
+    }
+  }
+}
+```
+
+{% asset_img animation-loading-roller-1.png 八个 div 位置相同 %}
+
+接下来，为每个点点设置不同的延迟(由小到大)：
+
+```css
+div {
+  animation: roller 1.2s ease-in-out infinite;
+  &:nth-child(1) {
+    animation-delay: -0.036s;
+  }
+  &:nth-child(2) {
+    animation-delay: -0.072s;
+  }
+  &:nth-child(3) {
+    animation-delay: -0.108s;
+  }
+  &:nth-child(4) {
+    animation-delay: -0.144s;
+  }
+  &:nth-child(5) {
+    animation-delay: -0.18s;
+  }
+  &:nth-child(6) {
+    animation-delay: -0.216s;
+  }
+  &:nth-child(7) {
+    animation-delay: -0.252s;
+  }
+  &:nth-child(8) {
+    animation-delay: -0.288s;
+  }
+}
+```
+
+现在，八个点点就排着队转起来了。
+
+{% asset_img animation-loading-disk.gif disk %}
+
+最后介绍一个不同阶段使用不同`animation-timing-function`效果的 loading。
+
+HTML 结构：
+
+```html
+<div class="disk" title="disk"></div>
+```
+
+html 结构很简单，只有一个`disk`圆盘元素。
+
+从效果图可以看出，圆盘元素旋转了很多圈，但是旋转速度有很明显的快慢的区别：
+
+```css
+@keyframes disk {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(1800deg);
+    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+  }
+  100% {
+    transform: rotateY(3600deg);
+  }
+}
+```
+
+`disk`动画分三阶段：初始阶级，50%旋转 1800°=5 圈，100%旋转 3600°=10 圈。每个阶段有自己的`animation-timing-function`，可以使用 cubic-bezier 工具查看这两个函数的效果：**[cubic-bezier(0.5, 0, 1, 0.5)](http://cubic-bezier.com/#.5,0,1,.5)**、**[cubic-bezier(0, 0.5, 0.5, 1)](http://cubic-bezier.com/#0,.5,.5,0)**，前五圈由慢到快，后五圈由快到慢。
+
+```css
+.disk {
+  animation: disk 2.4s infinite;
+}
+```
+
+利用`animation`可以实现很多有趣的 loading 效果，更多可以**[点击看效果](https://codepen.io/pennySU/pen/deLZrG/)**。
+
+## 其他应用
+
+1.  **[动画弹跳](https://codepen.io/pennySU/pen/NMoBZe)**
+
+{% asset_img animation-transition-bounce.gif animation&transition %}
+
+上面提到过`hover on and hover off`的`transition`，其实，`hover on`时定义`animation`也可以覆盖`transition`的效果，同时`hover off`是依然可以展示`transition`设置的动效：
+
+```css
+.mask {
+  transform: translateY(-200px);
+  opacity: 0;
+  transition: all 0.3s ease-out 0.5s;
+}
+.mask:hover {
+  opacity: 1;
+  transform: translateY(0px);
+  transition-delay: 0s;
+  animation: bounceY 0.9s linear;
+}
+```
+
+`.mask`鼠标移入`hover`时，设置`transition`要执行动效的初始状态：`opacity: 1;transform: translateY(0px);;`，并执行`animation`动画；鼠标移出时，执行`transition`动效。
+
+2.  **[backwards](https://codepen.io/pennySU/pen/WJBgjJ)**
+
+{% asset_img animation-mask-image.gif mask-image %}
+
+文字的效果使用了`mask-image`属性，顾名思义，使图片作为元素的蒙版图层，很神奇的属性，**[张鑫旭](http://www.zhangxinxu.com/wordpress/2017/11/css-css3-mask-masks/)**和**[大漠](https://www.w3cplus.com/css3/css-masking.html)**都有相应的文章。
+
+这里主要想说一说`backwards`的作用：
+
+```css
+span {
+  color: #444;
+  text-shadow: 0 0 2px #444, 1px 1px 4px rgba(0, 0, 0, 0.7);
+  -webkit-mask-image: url(https://tympanus.net/Tutorials/TypographyEffects/images/mask2.png);
+  animation: sharpen 0.6s linear backwards;
+}
+```
+
+```css
+@keyframes sharpen {
+  0% {
+    opacity: 0;
+    color: transparent;
+    text-shadow: 0 0 100px #444;
+  }
+  90% {
+    opacity: 0.9;
+    color: transparent;
+    text-shadow: 0 0 10px #444;
+  }
+  100% {
+    opacity: 1;
+    color: #444;
+    text-shadow: 0px 0px 2px #444, 1px 1px 4px rgba(0, 0, 0, 0.7);
+  }
+}
+```
+
+在动画延迟期间，保存动画第一帧的样式。如果不设置`backwards`，文字在动画开始前将保持默认状态，即`color 、text-shadow 、mask-image`共同作用的状态(非隐藏)，而不是效果图中开始时隐藏的状态。设置了`backwards`之后，会在延迟期间保持 `0%` 时设置的状态。
+
 # 参考文献
 
 1.  **[USING CSS3 TRANSITIONS: A COMPREHENSIVE GUIDE](https://www.adobe.com/devnet/archive/html5/articles/using-css3-transitions-a-comprehensive-guide.html)**
@@ -524,3 +854,4 @@ HTML 结构：
 9.  **[MDN CSS Animation](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Animations/Using_CSS_animations)**
 10. **[Keyframe Animation Syntax](https://css-tricks.com/snippets/css/keyframe-animation-syntax/)**
 11. **[CSS DRAFTS typedef-timing-function](https://drafts.csswg.org/css-timing-1/#typedef-timing-function)**
+12. **[Loading.IO](https://loading.io/css/)**
