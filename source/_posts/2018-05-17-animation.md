@@ -3,8 +3,8 @@ title: Transition and Animation
 date: 2018-05-17 11:53:24
 tags:
 - CSS3
-- transition
-- animation
+- Transition
+- Animation
 ---
 
 本文主要介绍`transition`与`animation`的应用。
