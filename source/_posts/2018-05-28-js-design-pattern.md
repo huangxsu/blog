@@ -6,7 +6,7 @@ tags:
 - 设计模式
 ---
 
-JavaScript 设计模式探索。
+JavaScript 设计模式探索。《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。
 
 <!--more-->
 
