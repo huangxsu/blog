@@ -3,7 +3,7 @@ title: What is Virtual Dom 虚拟DOM
 date: 2018-06-05 11:15:19
 banner: /2018/06/05/virtual-dom/bg.png
 tags:
-- Javascript
+- JavaScript
 - Virtual Dom
 ---
 
