@@ -7,7 +7,7 @@ tags:
 - Virtual Dom
 ---
 
-虚拟 DOM 的概念最初是由 React 框架提示出。本文先介绍时下很火的“js 框架存在的根本原因（deepest reason）”，然后一起探索虚拟 DOM 的核心思想。
+虚拟 DOM 的概念最初是由 React 框架提示出。先介绍时下很火的“js 框架存在的根本原因（deepest reason）”，然后一起探索虚拟 DOM 的核心思想。
 
 <!--more-->
 
@@ -58,11 +58,9 @@ JS 框架其他的优点：
 5.  适合做单页面应用
 6.  强大的社区支持
 
-下面我们开始介绍虚拟 DOM 的核心思想。
-
 # 原生 DOM
 
-先开始探索虚拟 DOM 技术之前，让我们先来回顾一下原始 DOM。
+开始探索虚拟 DOM 技术之前，让我们先来回顾一下原始 DOM。
 
 DOM 代表文档结构模型（Document Object Model），是用对象来表示结构化文档的一种方式。DOM 具有跨平台、语言独立的特点，它可以用来处理数据在 HTML、XML 等文件中的交互。浏览器处理的 DOM 实现的细节，所以我们可以使用 JS 和 CSS 与进行它交互。我们可以对 DOM 进行查看、更新、删除、插入等操作。
 
@@ -145,51 +143,7 @@ document.body.appendChild(root)
 
 {% asset_img diff.png Virtual Dom的diff算法示意图 %}
 
-1、 深度优先遍历，记录差异
-
-{% asset_img depth-first.png 深度优先遍历 %}
-
-```js
-function diff(oldTree, newTree){
-    var index = 0 // 当前节点的标志
-    var patches = {} // 记录每个节点差异的对象
-    dfsWalk(oldTree, newTree, index, patches)
-    return patches
-}
-
-//深度优先遍历
-function dfsWalk(oldNode, newNode, index, patches){
-    // 记录每个节点的差异
-    patches[index]=[...]
-
-    diffChildren(oldNode.children, newNode.children, index, patches)
-}
-
-//遍历子节点
-function diffChildren(oldChildren, newChildren, index, patches){
-
-    var leftNode = null //记录上一次遍历的节点
-    var currentNodeIndex = index
-    oldChildren.forEach(function(child, i){
-        var newChild = newChildren[i]
-        currentNodeIndex = (leftNode && leftNode.count) // 计算节点的标识 count 代表子节点的个数
-            ? currentNodeIndex + leftNode.count + 1
-            : currentNodeIndex + 1
-        dfsWalk(child, newChild, currentNodeIndex, patches) // 深度遍历子节点的子节点
-        leftNode = child
-    })
-}
-```
-
-在记录差异过程中，新旧两棵树进行深度优先遍历，每遍历到一个节点就进行差异对比。例如，上面`div`和新的`div`有差异，当前标记是 0：
-
-```js
-patches[0] = [{...},{...}]
-```
-
-同理`p`是`patches[1]`，`ul`是`patches[3]`。
-
-2、 差异类型
+1、 差异类型
 
 我们说对比两棵树的差异并记录，都有哪些差异呢？
 
@@ -220,9 +174,255 @@ patches[2]=[{
 }]
 ```
 
+2、 深度优先遍历，记录差异
+
+{% asset_img depth-first.png 深度优先遍历 %}
+
+```js
+function diff(oldTree, newTree) {
+  var index = 0 // 当前节点的标志
+  var patches = {} // 记录每个节点差异的对象
+  dfsWalk(oldTree, newTree, index, patches)
+  return patches
+}
+
+//深度优先遍历
+function dfsWalk(oldNode, newNode, index, patches) {
+  // 这里分四种情况：
+  // 1. 如果没有新节点，保持原样即可
+  // 2. 如果新旧节点是字符串，即文本节点，对比文本节点差异： patch.TEXT
+  // 3. 如果新旧节点相同，对比属性差异：diffProps()，再对比子节点：diffChildren()
+  // 4. 如果新旧节点不相同，替换旧节点： patch.REPLACE
+  if (newNode === null) {
+  } else if (_.isString(oldNode) && _.isString(newNode)) {
+    if (newNode !== oldNode) {
+      currentPatch.push({ type: patch.TEXT, content: newNode })
+    }
+  } else if (
+    oldNode.tagName === newNode.tagName &&
+    oldNode.key === newNode.key
+  ) {
+    var propsPatches = diffProps(oldNode, newNode)
+    if (propsPatches) {
+      currentPatch.push({ type: patch.PROPS, props: propsPatches })
+    }
+    diffChildren(
+      oldNode.children,
+      newNode.children,
+      index,
+      patches,
+      currentPatch
+    )
+  } else {
+    currentPatch.push({ type: patch.REPLACE, node: newNode })
+  }
+  // 记录每个节点的差异
+  if (currentPatch.length) {
+    patches[index] = currentPatch
+  }
+}
+
+//遍历子节点
+function diffChildren(oldChildren, newChildren, index, patches) {
+  // 同层列表节点对比差异 (REORDER)，见下小节
+  var diffs = listDiff(oldChildren, newChildren, 'key')
+  newChildren = diffs.children
+
+  if (diffs.moves.length) {
+    var reorderPatch = { type: patch.REORDER, moves: diffs.moves }
+    currentPatch.push(reorderPatch)
+  }
+  var leftNode = null //记录上一次遍历的节点
+  var currentNodeIndex = index
+  oldChildren.forEach(function(child, i) {
+    var newChild = newChildren[i]
+    currentNodeIndex =
+      leftNode && leftNode.count // 计算节点的标识 count 代表子节点的个数
+        ? currentNodeIndex + leftNode.count + 1
+        : currentNodeIndex + 1
+    dfsWalk(child, newChild, currentNodeIndex, patches) // 深度遍历子节点的子节点
+    leftNode = child
+  })
+}
+```
+
+在记录差异过程中，新旧两棵树进行深度优先遍历，每遍历到一个节点就进行差异对比。例如，上面`div`和新的`div`有差异，当前标记是 0：
+
+```js
+patches[0] = [{...},{...}]
+```
+
+同理`p`是`patches[1]`，`ul`是`patches[3]`。
+
+新旧两个节点相同时，我们还需要比对两个节点属性的差异`diffProps()`：
+
+```js
+function diffProps(oldNode, newNode) {
+  var count = 0 // 记录差异数
+  var oldProps = oldNode.props
+  var newProps = newNode.props
+
+  var key, value
+  var propsPatches = {}
+
+  // 遍历旧节点属性，找到需要更新的（update or remove）
+  for (key in oldProps) {
+    value = oldProps[key]
+    if (newProps[key] !== value) {
+      count++
+      propsPatches[key] = newProps[key]
+    }
+  }
+
+  // 遍历新节点属性，找到需要新增的（add）
+  for (key in newProps) {
+    value = newProps[key]
+    if (!oldProps.hasOwnProperty(key)) {
+      count++
+      propsPatches[key] = newProps[key]
+    }
+  }
+
+  if (count === 0) {
+    return null
+  }
+
+  return propsPatches
+}
+```
+
 3、 列表对比算法
 
-如果将子节点`p,ul,div`的顺序换成`div,p,ul`，这个对比该如何实现呢？这就是 Vritual Dom 技术 diff 算法需要解决的核心问题，也是对性能有很大影响的问题。在本文粗糙的实践中使用的是：字符串最小编辑距离问题，动态规划求解算法，该算法的问题是将移动操作拆分为删除和插入，损失性能。完整 diff 算法代码可见**[diff.js](https://github.com/PennySuu/virtual-dom/blob/master/src/diff.js)**。
+如果将子节点`p,ul,div`的顺序换成`div,p,ul`，这个对比该如何实现呢？这就是 Vritual Dom 技术 diff 算法需要解决的核心问题，也是对性能有很大影响的问题。这里引用的是 **[livoras](https://github.com/livoras/blog/issues/13)** 实现的方法：字符串最小编辑距离问题，动态规划求解算法，该算法的问题是将移动操作拆分为删除和插入，损失性能。完整 diff 算法代码可见**[diff.js](https://github.com/PennySuu/virtual-dom/blob/master/src/diff.js)**，**[list-diff.js](https://github.com/PennySuu/virtual-dom/blob/master/src/list-diff.js)**。
+
+```js
+function listDiff(oldList, newList, key) {
+  var oldMap = makeKeyIndexAndFree(oldList, key)
+  var newMap = makeKeyIndexAndFree(newList, key)
+
+  var newFree = newMap.free
+
+  var oldKeyIndex = oldMap.keyIndex
+  var newKeyIndex = newMap.keyIndex
+
+  var moves = []
+
+  var children = []
+  var i = 0
+  var item
+  var itemKey
+  var freeIndex = 0
+
+  // 这里分两步
+  // 1. 遍历旧列表，去除新列表中不存在的节点
+  // 2. 遍历新列表，插入新增节点，移动位置变化的节点（移动被拆分为：删除+插入）
+
+  //遍历旧列表，判断是否还存在于新列表中
+  while (i < oldList.length) {
+    item = oldList[i]
+    itemKey = getItemKey(item, key)
+    //有key的情况
+    if (itemKey) {
+      if (!newKeyIndex.hasOwnProperty(itemKey)) {
+        children.push(null) // 不存在的节点
+      } else {
+        var newItemIndex = newKeyIndex[itemKey]
+        children.push(newList[newItemIndex])
+      }
+    }
+    // 无key的情况
+    else {
+      var freeItem = newFree[freeIndex++]
+      children.push(freeItem || null)
+    }
+    i++
+  }
+
+  var simulateList = children.slice(0)
+  // 移除不存在的节点，并记录下来
+  i = 0
+  while (i < simulateList.length) {
+    if (simulateList[i] === null) {
+      remove(i)
+      removeSimulate(i)
+    } else {
+      i++
+    }
+  }
+  // 遍历新列表，i是新列表的指针，j是刚才处理过的旧列表的指针
+  var j = (i = 0)
+  while (i < newList.length) {
+    item = newList[i]
+    itemKey = getItemKey(item, key)
+
+    var simulateItem = simulateList[i]
+    var simulateItemKey = getItemKey(simulateItem, key)
+
+    // 有key的情况
+    if (simulateItem) {
+      // 新旧节点key相等时，保持原样
+      if (itemKey === simulateItemKey) {
+        j++
+      } else {
+        // 旧列表中没有时，插入
+        if (!oldKeyIndex.hasOwnProperty(itemKey)) {
+          insert(i, item)
+        } else {
+          var nextItemKey = getItemKey(simulateList[j + 1], key)
+          // 旧列表中有，且当前索引的下一项的key与新列表当前索引下的key相同
+          // 把当前项移除，旧列表当前索引项即和新列表相同
+          if (nextItemKey === itemKey) {
+            remove(i)
+            removeSimulate(j)
+            j++
+          }
+          // 旧列表中有，插入
+          else {
+            insert(i, item)
+          }
+        }
+      }
+    }
+    // 无key的情况
+    else {
+      insert(i, item)
+    }
+    i++
+  }
+
+  // 如果旧列表没有索引到最后，移除旧列表中剩余项
+  var k = simulateList.length - j
+  while (j++ < simulateList.length) {
+    k--
+    remove(k + i)
+  }
+
+  return {
+    moves: moves,
+    children: children
+  }
+}
+
+function makeKeyIndexAndFree(list, key) {
+  var keyIndex = {}
+  var free = []
+  for (var i = 0, len = list.length; i < len; i++) {
+    var item = list[i]
+    var itemKey = getItemKey(item, key)
+    if (itemKey) {
+      keyIndex[itemKey] = i
+    } else {
+      free.push(item)
+    }
+  }
+  return {
+    keyIndex: keyIndex,
+    free: free
+  }
+}
+```
+
+可以看出，有`key`和无`key`的差别，无`key`时所有节点都不会被复用。
 
 React 16 之前的版本，如果列表添加唯一`key`，通过节点在旧集合中的位置（\_mountIndex），与访问过的节点在旧集合中最右的位置（lastIndex）比较，判断节点是否需要移动，如图：
 
