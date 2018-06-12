@@ -22,7 +22,7 @@
         })
     }
     %>
-    <meta name="description" content="<%= description %>" />
+    <meta name="description" content="<%= description || config.description %>" />
     <title>
         <% if (title){ %>
         <%= title %> |
