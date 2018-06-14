@@ -307,4 +307,123 @@ func(3, 4)
 })(1, 2)
 ```
 
+# 闭包和高阶函数
+
+## 闭包 closure
+
+闭包的形成与变量的作用域和生存周期密切相关，下面我们先了解这两个知识点。
+
+1、 变量的作用域
+
+变量的作用域，就是指变量的有效范围。在全局下声明的变量可以在任何地方被访问，在函数内声明的变量，如果声明时没有带`var`，是全局变量，如果带`var`，是局部变量，可以在函数内的任何地方被访问到。此外，函数内如果没有声明某个变量，那么变量的搜索会沿着代码执行环境创建的作用域链忘外层逐层搜索，一直搜索到全局对象为止。
+
+```js
+var a = 1
+
+var func1 = function() {
+  var b = 2
+  var func2 = function() {
+    var c = 3
+    console.log(b) // 2
+    console.log(a) // 1
+  }
+  func2()
+  console.log(c) //Uncaught ReferenceError: c is not defined
+}
+
+func1()
+```
+
+2、 变量的生存周期
+
+全局变量的生存周期是永久的，而函数内用`var`声明的局部变量的生存周期随着函数调用的结束而销毁。
+
+在闭包中，局部变量的生存周期可以被延续，让我们看下面这个列子：
+
+假设页面上有 5 个`div`节点，我们通过循环来个每个`div`绑定`onclick`事件，按照索引顺序打印出各自的索引值。
+
+```html
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div>
+```
+
+下面这段代码，`for`循环里是一个立即执行函数，该立即执行函数里保存了`i`的引用，`for`循环将执行 5 次，每次循环的`i`值因为被立即执行函数引用无法销毁，所以被封闭起来。当事件函数顺着作用域链中从内到外查找变量`i`时，会先找到被封闭在闭包环境中的`i`。
+
+每次循环，会将立即执行函数以及`i`值存在堆栈中，当循环结束后，从堆栈中依次执行立即执行函数。
+
+```js
+var nodes = document.getElementsByTagName('div')
+
+for (var i = 0, len = nodes.length; i < len; i++) {
+  ;(function(i) {
+    nodes[i].onclick = function() {
+      console.log(i)
+    }
+  })(i)
+}
+```
+
+3、 闭包的更多作用
+
+1.  封装变量
+
+`mult`函数接收一些参数，返回这些参数的乘积。对于那些相同的参数，每次都进行计算是一种浪费，我们可以加入缓存机制来提高性能。可以想到，用来保存缓存的`cache`变量仅仅在`mult`函数中被使用，所以我们可以把`cache`变量封装在`mult`函数内部，既可以减少页面中全局变量，又可以避免`cache`被误改引发 bug：
+
+```js
+var mult = (function() {
+  var cache = {}
+
+  var calculate = function() {
+    var a = 1
+    for (var i = 0; i < arguments.length; i++) {
+      a = a * arguments[i]
+    }
+    return a
+  }
+  return function() {
+    var args = Array.prototype.join.call(
+      Array.prototype.sort.call(arguments),
+      ','
+    )
+    if (args in cache) {
+      return cache[args]
+    }
+    return (cache[args] = calculate.apply(null, arguments))
+  }
+})()
+```
+
+2.  延续局部变量的生存周期
+
+`img`对象经常用于进行数据上报：
+
+```js
+var report = function(src) {
+  var img = new Image()
+  img.src = src
+}
+
+report('http://xxx.com/getUserInfo')
+```
+
+但是通过查询后台的记录我们得知，因为一些低版本浏览器的实现存在 bug，在这些浏览器下使用`report`函数进行数据上报会丢失 30%左右
+的数据，也就是说，`report`函数并不是每一次都成功发起了 HTTP 请求。丢失数据的原因是`img`是`report`函数中的局部变量，
+当`report`函数的调用结束后，`img`局部变量随即被销毁，而此时或许还没来得及发出 HTTP 请求，所以此次请求就会丢失掉。
+
+现在我们把`img`变量用闭包封闭起来，就可以解决丢失的问题：
+
+```js
+var report = (function() {
+  var imgs = []
+  return function(src) {
+    var img = new Image()
+    imgs.push(img)
+    img.src = src
+  }
+})()
+```
+
 **(未完待续)**
