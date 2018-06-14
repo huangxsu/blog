@@ -426,4 +426,107 @@ var report = (function() {
 })()
 ```
 
+4、 闭包和面向对象设计
+
+对象以方法的形式包含了过程，而闭包则是在过程中以环境的形式包含了数据。通常用面向对象思想能实现的功能，用闭包也能实现。
+
+```js
+//闭包
+var extent = function() {
+  var value = 0
+  return {
+    call: function() {
+      value++
+      console.log(value)
+    }
+  }
+}
+var extent = extent()
+extent.call() // 1
+extent.call() // 2
+
+// 面向对象
+var extent = {
+  value: 0,
+  call: function() {
+    this.value++
+    console.log(this.value)
+  }
+}
+extent.call() // 1
+extent.call() // 2
+
+// 或者
+var Extent = function() {
+  this.value = 0
+}
+
+Extent.prototype.call = function() {
+  this.value++
+  console.log(value)
+}
+
+var extent = new Extent()
+extent.call() // 1
+extent.call() // 2
+```
+
+## 高阶函数
+
+高阶函数是指至少满足下列条件之一的函数：
+
+1.  函数可以作为参数被传递
+2.  函数可以作为返回值输出
+
+JavaScript 语言中的函数显然满足高阶函数的条件。下面就列举一些高阶函数的应用。
+
+1、 函数作为参数传递
+
+1.  回调函数
+2.  Array.prototype.sort
+
+```js
+//ajax回调函数
+var getUserInfo = function(userId, callback) {
+  $.ajax('http://xxx.com/getUserInfo?' + userId, function(data) {
+    if (typeof callback === 'function') {
+      callback(data)
+    }
+  })
+}
+getUserInfo(13157, function(data) {
+  alert(data.userName)
+})
+```
+
+```js
+//Array.prototype.sort接收一个函数当作参数，这个函数里封装了数组元素的排序规则
+;[1, 4, 3].sort(function(a, b) {
+  return a - b
+})
+;[1, 4, 3].sort(function(a, b) {
+  return b - a
+})
+```
+
+2、 函数作为返回值输出
+
+让函数继续返回一个可执行的函数，意味着运算过程是可延续的。
+
+1.  判断数据的类型
+2.  getSingle
+
+```js
+// 判断数据的类型
+
+var Type = {}
+for (var i = 0, type; (type = ['String', 'Array', 'Number'][i++]); ) {
+  ;(function(type) {
+    Type['is' + type] = function(obj) {
+      return Object.prototype.toString.call(obj) === '[object ' + type + ']'
+    }
+  })(type)
+}
+```
+
 **(未完待续)**
