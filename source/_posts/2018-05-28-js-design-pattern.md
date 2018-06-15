@@ -529,4 +529,116 @@ for (var i = 0, type; (type = ['String', 'Array', 'Number'][i++]); ) {
 }
 ```
 
+```js
+// 单例模式
+var getSingle = function(fn) {
+  var ret
+  return function() {
+    return ret || (ret = fn.apply(this, argument))
+  }
+}
+```
+
+3、 高阶函数实现 AOP
+
+AOP（面向切面编程）的主要作用是把一些跟核心业务逻辑无关的功能抽离出来，比如日志统计、安全控制、移动处理等。抽离出来后再通过“动态织入”的方式参入业务逻辑模块中。这样做的好处是可以保存业务逻辑模块的纯净和高内聚性，还可以复用日志统计等功能模块。
+
+在 JavaScript 中实现 AOP，都是指把一个函数“动态织入”到另外一个函数之中，这里通过扩展`Function.prototype`来实现：
+
+```js
+Function.prototype.before = function(beforefn) {
+  var __self = this // 保存原函数的引用
+  return function() {
+    // 返回包含了原函数和新函数的"代理"函数
+    beforefn.apply(this, arguments) // 执行新函数，修正this
+    return __self.apply(this, arguments) // 执行原函数
+  }
+}
+
+Function.prototype.after = function(afterfn) {
+  var __self = this
+  return function() {
+    var ret = __self.apply(this, arguments)
+    afterfn.apply(this, arguments)
+    return ret
+  }
+}
+
+var func = function() {
+  console.log(2)
+}
+
+func = func
+  .before(function() {
+    console.log(1)
+  })
+  .after(function() {
+    console.log(3)
+  })
+
+func() // 1 2 3
+```
+
+4、 高阶函数的其他应用
+
+1.  currying
+
+`currying`又称部分求值，一个`currying`的函数首先会接收一些参数，该函数并不会立即求值，而是继续返回另外一个函数，刚才传入的参数在函数形成的闭包中被保存起来。
+待到函数被真正需要求值的时候，之前传入的所以参数都会被一次性用于求值。
+
+我们通过一个列子来理解`currying`，假设我们要编写一个计算每月开销的`cost`函数，每天结束之前记录下进行花了多少钱，直到第 30 天才进行求值计算：
+
+```js
+var cost = (function() {
+  var args = []
+  return function() {
+    if (arguments.length === 0) {
+      var money = 0
+      for (var i = 0; i < args.length; i++) {
+        money += args[i]
+      }
+      return money
+    } else {
+      ;[].push.apply(args, arguments)
+    }
+  }
+})()
+
+cost(200) // 未真正求值
+cost(300) // 未真正求值
+cost(100) // 未真正求值
+
+console.log(cost()) // 600
+```
+
+接下来我们编写一个通用的`function currying(){}`，接收一个参数——将要被`currying`的函数：
+
+```js
+var currying = function(fn) {
+  var args = []
+  return function() {
+    if (arguments.length === 0) {
+      return fn.apply(this, args)
+    } else {
+      ;[].push.apply(args, arguments)
+      return arguments.callee
+    }
+  }
+}
+var cost = (function() {
+  var money = 0
+  return function() {
+    for (var i = 0; i < arguments.length; i++) {
+      money += arguments[i]
+    }
+    return money
+  }
+})()
+var cost = currying(cost)
+cost(100)
+cost(200)
+cost(300)
+console.log(cost)
+```
+
 **(未完待续)**
