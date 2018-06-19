@@ -586,6 +586,8 @@ func() // 1 2 3
 `currying`又称部分求值，一个`currying`的函数首先会接收一些参数，该函数并不会立即求值，而是继续返回另外一个函数，刚才传入的参数在函数形成的闭包中被保存起来。
 待到函数被真正需要求值的时候，之前传入的所以参数都会被一次性用于求值。
 
+柯里化是把接收多个参数的函数换成接收一个单一参数的函数，该函数返回一个可接收余下的参数并返回结果的新函数。
+
 我们通过一个列子来理解`currying`，假设我们要编写一个计算每月开销的`cost`函数，每天结束之前记录下进行花了多少钱，直到第 30 天才进行求值计算：
 
 ```js
@@ -641,4 +643,35 @@ cost(300)
 console.log(cost)
 ```
 
+2.  uncurrying
+
+反柯里化和柯里化的含义正好相反，如果说柯里化的作用是固定部分参数，使函数针对性更新，那么反柯里化的作用就是扩大一个函数的应用范围，使一个函数适用于其他对象。
+
+如果说`curry`是预先传入一些参数，那么`uncurrying`就是把原来已经固定的参数或者`this`上下文当做参数延迟到未来传递，也就是把`this.mothod`的调用模式转化成`method(this,arg1,arg2...)`。
+
+我们可以使用`call`或者`apply`改变函数运行时的`this`指向，而从可以使用其他对象的方法。那么有没有办法把泛化`this`的过程提取出来呢。`uncurrying`就是用来解决这个问题的。以下代码是`uncurrying`的实现方式之一：
+
+```js
+Function.prototype.uncurrying = function() {
+  var self = this
+  return function() {
+    var obj = Array.prototype.shift.call(arguments)
+    return self.apply(obj, arguments)
+  }
+}
+```
+
+当我们想使用`array`对象的`push`方法时，我们可能会这样实现：
+
+```js
+;(function() {
+  Array.prototype.push.call(arguments, 4)
+  console.log(arguments) // [1,2,3,4]
+})(1, 2, 3)
+```
+
 **(未完待续)**
+
+# 参考文献
+
+1.  tcatche github **[函数式编程-柯里化和反柯里化](https://github.com/tcatche/tcatche.github.io/issues/22)**
