@@ -15,11 +15,13 @@
     %>
 
     <%
-    var description = title
+    var description = page.description || page.title
     if (page.tags && page.tags.length) {
+        var tags = []
         page.tags.forEach((tag) => {
-            description += ',' + tag.name
+            tags.push(tag.name)
         })
+        description += ';' + tags.join(',')
     }
     %>
     <meta name="description" content="<%= description || config.description %>" />
