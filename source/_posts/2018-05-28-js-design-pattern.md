@@ -1,12 +1,14 @@
 ---
-title: JavaScript设计模式
-date: 2018-05-28 14:23:54
+title: JavaScript设计模式(上)
+date: 2018-06-20 14:23:54
 tags:
 - JavaScript
 - 设计模式
+- 单例模式
+- 闭包
 ---
 
-JavaScript 设计模式探索。JavaScript 代码看不懂，打开浏览器运行一下立刻可以理解了。《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。**（未完待续……）**
+JavaScript 设计模式探索。JavaScript 代码看不懂，打开浏览器运行一下立刻可以理解了。《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。
 
 <!--more-->
 
@@ -307,15 +309,13 @@ func(3, 4)
 })(1, 2)
 ```
 
-# 闭包和高阶函数
-
-## 闭包 closure
+# 闭包 closure
 
 闭包的形成与变量的作用域和生存周期密切相关，下面我们先了解这两个知识点。
 
-1、 变量的作用域
+## 变量的作用域
 
-变量的作用域，就是指变量的有效范围。在全局下声明的变量可以在任何地方被访问，在函数内声明的变量，如果声明时没有带`var`，是全局变量，如果带`var`，是局部变量，可以在函数内的任何地方被访问到。此外，函数内如果没有声明某个变量，那么变量的搜索会沿着代码执行环境创建的作用域链忘外层逐层搜索，一直搜索到全局对象为止。
+变量的作用域，就是指变量的有效范围。在全局下声明的变量可以在任何地方被访问，在函数内声明的变量，如果声明时没有带`var`，是全局变量，如果带`var`，是局部变量，可以在函数内的任何地方被访问到。此外，函数内如果没有声明某个变量，那么变量的搜索会沿着代码执行环境创建的作用域链往外层逐层搜索，一直搜索到全局对象为止。
 
 ```js
 var a = 1
@@ -334,7 +334,7 @@ var func1 = function() {
 func1()
 ```
 
-2、 变量的生存周期
+## 变量的生存周期
 
 全局变量的生存周期是永久的，而函数内用`var`声明的局部变量的生存周期随着函数调用的结束而销毁。
 
@@ -366,9 +366,9 @@ for (var i = 0, len = nodes.length; i < len; i++) {
 }
 ```
 
-3、 闭包的更多作用
+## 闭包的更多作用
 
-1.  封装变量
+1、 **封装变量**
 
 `mult`函数接收一些参数，返回这些参数的乘积。对于那些相同的参数，每次都进行计算是一种浪费，我们可以加入缓存机制来提高性能。可以想到，用来保存缓存的`cache`变量仅仅在`mult`函数中被使用，所以我们可以把`cache`变量封装在`mult`函数内部，既可以减少页面中全局变量，又可以避免`cache`被误改引发 bug：
 
@@ -396,7 +396,7 @@ var mult = (function() {
 })()
 ```
 
-2.  延续局部变量的生存周期
+2、 **延续局部变量的生存周期**
 
 `img`对象经常用于进行数据上报：
 
@@ -409,9 +409,7 @@ var report = function(src) {
 report('http://xxx.com/getUserInfo')
 ```
 
-但是通过查询后台的记录我们得知，因为一些低版本浏览器的实现存在 bug，在这些浏览器下使用`report`函数进行数据上报会丢失 30%左右
-的数据，也就是说，`report`函数并不是每一次都成功发起了 HTTP 请求。丢失数据的原因是`img`是`report`函数中的局部变量，
-当`report`函数的调用结束后，`img`局部变量随即被销毁，而此时或许还没来得及发出 HTTP 请求，所以此次请求就会丢失掉。
+但是通过查询后台的记录我们得知，因为一些低版本浏览器的实现存在 bug，在这些浏览器下使用`report`函数进行数据上报会丢失 30%左右的数据，也就是说，`report`函数并不是每一次都成功发起了 HTTP 请求。丢失数据的原因是`img`是`report`函数中的局部变量，当`report`函数的调用结束后，`img`局部变量随即被销毁，而此时或许还没来得及发出 HTTP 请求，所以此次请求就会丢失掉。
 
 现在我们把`img`变量用闭包封闭起来，就可以解决丢失的问题：
 
@@ -426,7 +424,7 @@ var report = (function() {
 })()
 ```
 
-4、 闭包和面向对象设计
+## 闭包和面向对象设计
 
 对象以方法的形式包含了过程，而闭包则是在过程中以环境的形式包含了数据。通常用面向对象思想能实现的功能，用闭包也能实现。
 
@@ -471,7 +469,7 @@ extent.call() // 1
 extent.call() // 2
 ```
 
-## 高阶函数
+# 高阶函数
 
 高阶函数是指至少满足下列条件之一的函数：
 
@@ -480,7 +478,7 @@ extent.call() // 2
 
 JavaScript 语言中的函数显然满足高阶函数的条件。下面就列举一些高阶函数的应用。
 
-1、 函数作为参数传递
+## 函数作为参数传递
 
 1.  回调函数
 2.  Array.prototype.sort
@@ -509,7 +507,7 @@ getUserInfo(13157, function(data) {
 })
 ```
 
-2、 函数作为返回值输出
+## 函数作为返回值输出
 
 让函数继续返回一个可执行的函数，意味着运算过程是可延续的。
 
@@ -539,9 +537,9 @@ var getSingle = function(fn) {
 }
 ```
 
-3、 高阶函数实现 AOP
+## 高阶函数实现 AOP
 
-AOP（面向切面编程）的主要作用是把一些跟核心业务逻辑无关的功能抽离出来，比如日志统计、安全控制、移动处理等。抽离出来后再通过“动态织入”的方式参入业务逻辑模块中。这样做的好处是可以保存业务逻辑模块的纯净和高内聚性，还可以复用日志统计等功能模块。
+AOP（面向切面编程）的主要作用是把一些跟核心业务逻辑无关的功能抽离出来，比如日志统计、安全控制、移动处理等。抽离出来后再通过“动态织入”的方式参入业务逻辑模块中。这样做的好处是可以保证业务逻辑模块的纯净和高内聚性，还可以复用日志统计等功能模块。
 
 在 JavaScript 中实现 AOP，都是指把一个函数“动态织入”到另外一个函数之中，这里通过扩展`Function.prototype`来实现：
 
@@ -579,12 +577,11 @@ func = func
 func() // 1 2 3
 ```
 
-4、 高阶函数的其他应用
+## 高阶函数的其他应用
 
-1.  currying
+1、 **currying**
 
-`currying`又称部分求值，一个`currying`的函数首先会接收一些参数，该函数并不会立即求值，而是继续返回另外一个函数，刚才传入的参数在函数形成的闭包中被保存起来。
-待到函数被真正需要求值的时候，之前传入的所以参数都会被一次性用于求值。
+`currying`又称部分求值，一个`currying`的函数首先会接收一些参数，该函数并不会立即求值，而是继续返回另外一个函数，刚才传入的参数在函数形成的闭包中被保存起来。待到函数被真正需要求值的时候，之前传入的所以参数都会被一次性用于求值。
 
 柯里化是把接收多个参数的函数换成接收一个单一参数的函数，该函数返回一个可接收余下的参数并返回结果的新函数。
 
@@ -643,9 +640,9 @@ cost(300)
 console.log(cost)
 ```
 
-2.  uncurrying
+2、 **uncurrying**
 
-反柯里化和柯里化的含义正好相反，如果说柯里化的作用是固定部分参数，使函数针对性更新，那么反柯里化的作用就是扩大一个函数的应用范围，使一个函数适用于其他对象。
+反柯里化和柯里化的含义正好相反，如果说柯里化的作用是固定部分参数，使函数针对性更强，那么反柯里化的作用就是扩大一个函数的应用范围，使一个函数适用于其他对象。
 
 如果说`curry`是预先传入一些参数，那么`uncurrying`就是把原来已经固定的参数或者`this`上下文当做参数延迟到未来传递，也就是把`this.mothod`的调用模式转化成`method(this,arg1,arg2...)`。
 
@@ -659,6 +656,14 @@ Function.prototype.uncurrying = function() {
     return self.apply(obj, arguments)
   }
 }
+//另一种实现
+
+Function.prototype.uncurrying = function() {
+  var self = this
+  return function() {
+    return Function.prototype.call.apply(self, arguments)
+  }
+}
 ```
 
 当我们想使用`array`对象的`push`方法时，我们可能会这样实现：
@@ -668,6 +673,301 @@ Function.prototype.uncurrying = function() {
   Array.prototype.push.call(arguments, 4)
   console.log(arguments) // [1,2,3,4]
 })(1, 2, 3)
+```
+
+使用反柯里化的方式，我们可以这样实现：
+
+```js
+var push = Array.prototype.push.uncurrying()
+;(function() {
+  push(arguments, 4)
+  console.log(arguments)
+})(1, 2, 3)
+```
+
+3、**函数节流**
+
+函数频繁地调用，会造成大的性能问题，比如`window.onresize`事件、`mousemove`事件等。
+
+假设我们需要在`window.onresize`事件中打印当前浏览器窗口大小，在通过拖拽改变窗口大小的时候，打印窗口的工作 1s 进行了 10 次，而实际 2 次就够了，我们可以按时间段来忽略一些事件请求，比如确保 500ms 内只打印一次，借助`setTimeout`可以实现。
+
+下面`throttle`函数的原理是，将即将被执行的函数用`setTimeout`延迟一段时间执行。如果该次延迟执行还没完成，则忽略接下来调用该函数的请求。`throttle`函数接收 2 个参数，第一个参数为需要被延迟执行的函数，第二个参数为延迟执行的时间：
+
+```js
+var throttle = function(fn, interval) {
+  var __self = fn,
+    timer,
+    firstTime = true
+  return function() {
+    var args = arguments,
+      __me = this
+    if (firstTime) {
+      __self.apply(__me, args)
+      return (firstTime = false)
+    }
+    if (timer) {
+      return false
+    }
+    timer = setTimeout(function() {
+      clearTimeout(timer)
+      timer = null
+      __self.apply(__me, args)
+    }, interval || 500)
+  }
+}
+
+window.onresize = throttle(function() {
+  console.log(1)
+}, 500)
+```
+
+4、 **分时函数**
+
+书中举例创建 DOM 节点时使用分时函数，个人觉得 DOM 节点可以使用`document.createDocumentFragment()`优化，所以这里只列出了分时函数的实现，具体应用还待探索中……`timeChunk`函数接收 3 个参数：全部数组、逻辑函数、分块数：
+
+```js
+var timeChunk = function(ary, fn, count) {
+  var t
+  var start = function() {
+    for (var i = 0; i < Math.min(count || 1, ary.length); i++) {
+      var obj = ary.shift()
+      fn(obj)
+    }
+  }
+  return function() {
+    t = setInterval(function() {
+      if (ary.length === 0) {
+        return clearInterval(t)
+      }
+      start()
+    }, 200)
+  }
+}
+
+var ary = []
+for (var i = 1; i <= 1000; i++) {
+  ary.push(i)
+}
+
+var renderFriendList = timeChunk(
+  ary,
+  function(n) {
+    var div = document.createElement('div')
+    div.innerHTML = n
+    document.body.appendChild(div)
+  },
+  8
+)
+renderFriendList()
+```
+
+5、 **惰性加载函数**
+
+因浏览器之间的实现差异，一些嗅探工作总是不可避免，比如我们需要一个在各个浏览器中能够通用的事件绑定函数`addEvent`，常见写法如下：
+
+```js
+var addEvent = function(elem, type, handler) {
+  if (window.addEventListener) {
+    return elem.addEventListener(type, handler, false)
+  } else if (window.attachEvent) {
+    return elem.attachEvent('on' + type, handler)
+  }
+}
+```
+
+这个函数的缺点是每次调用时都会执行`if`条件分支，虽然开销不大，但有一些方法可以避免重复的执行过程。
+
+第二种方案是这样，我们把嗅探浏览器的操作提前到代码加载的时候，在代码加载的时候立刻进行一次判断，以便让`addEvent`返回一个包含正确逻辑的函数：
+
+```js
+var addEvent = (function() {
+  if (window.addEventListener) {
+    return function(elem, type, handler) {
+      elem.addEventListener(type, handler, false)
+    }
+  } else if (window.attachEvent) {
+    return function(elem, type, handler) {
+      elem.attachEvent('on' + type, handler)
+    }
+  }
+})()
+```
+
+目前的`addEvent`函数依然有个缺点，也许我们从头到尾都没有使用过`addEvent`函数，这样看来，前一次的浏览器嗅探就是完全多余的了。
+
+第三种方案即是惰性载入函数方案。此时`addEvent`依然被声明为一个普通函数，在函数里依然有一些分支判断。但是在第一次进入条件分支之后，在函数内部会重写这个函数，重写之后的函数就是我们期望的`addEvent`函数，在下一次进入`addEvent`函数的时候，不会再存在条件分支语句：
+
+```js
+var addEvent = function(elem, type, handler){
+  if(window.addEventListener){
+    addEvent = function(elem, type. handler){
+      elem.addEventListener(type, handler, false)
+    }
+  }else if(window.attachEvent){
+    addEvent = function(elem, type, handler) {
+      elem.attachEvent('on' + type, handler)
+    }
+  }
+  addEvent(elem,type,handler)
+}
+```
+
+# 单例模式
+
+单例模式的定义是：保证一个类仅有一个实例，并提供一个访问它的全局访问点。
+
+## 实现单例模式
+
+要实现一个标准的单例模式并不复杂，用一个变量标志是否已经为某个类创建过对象，如果是，则直接返回该对象：
+
+```js
+var Singleton = function(name) {
+  this.name = name
+}
+Singleton.prototype.getName = function() {
+  console.log(this.name)
+}
+Singleton.getInstance = (function() {
+  var instance = null
+  return function(name) {
+    if (!instance) {
+      instance = new Singleton(name)
+    }
+    return instance
+  }
+})()
+
+var a = Singleton.getInstance('sven1')
+var b = Singleton.getInstance('sven2')
+console.log(a === b) // true
+```
+
+我们通过`Singleton.getInstance`来获取`Singleton`类的唯一对象，这种方式相对简单，但有一个问题，增加了这个类的“不透明性”。
+
+## 透明的单例模式
+
+在下面的例子中，我们将使用`CreateDiv`单例类，该类的作用是在页面中创建唯一的`div`节点：
+
+```js
+var CreateDiv = (function() {
+  var instance
+  var CreateDiv = function(html) {
+    if (instance) {
+      return instance
+    }
+    this.html = html
+    this.init()
+    return (instance = this)
+  }
+  CreateDiv.prototype.init = function() {
+    var div = document.createElement('div')
+  }
+})()
+```
+
+虽然上面的代码实现了透明的单例类，但它同样有一些缺点，`CreateDiv`的构造函数实际上负责了两件事：创建对象执行初始化方法，保证只有一个对象。没有遵循单一职责原则。
+
+## 用代理实现单例模式
+
+现在我们通过引入代理类的方式，解决上面提到的问题：
+
+```js
+var CreateDiv = function(html) {
+  this.html = html
+  this.init()
+}
+CreateDiv.prototype.init = function() {
+  var div = document.createElement('div')
+  div.innerHTML = this.html
+  document.body.appendChild(div)
+}
+```
+
+代理类`ProxySingletonCreateDiv`：
+
+```js
+var ProxySingletonCreateDiv = (function() {
+  var instance
+  return function(html) {
+    if (!instance) {
+      instance = new CreateDiv(html)
+    }
+    return instance
+  }
+})()
+
+var a = new ProxySingletonCreateDiv('sven1')
+var b = new ProxySingletonCreateDiv('sven2')
+alert(a === b)
+```
+
+现在我们把负责单例的逻辑移到了代理类`ProxySingletonCreateDiv`中，这样一来`CreateDiv`就变成了一个普通的类，它跟`ProxySingletonCreateDiv`组合起来可以达到单例模式的效果。
+
+## JavaScript 中的单例模式
+
+前面提到的几种单例模式的实现， 更多的是接近传统面向对象语言中的实现， 单例对象从“类”中创建而来。 在以类为中心的语言中， 这是很自然的做法。
+
+但 JavaScript 其实是一门无类（class-free） 语言， 也正因为如此， 生搬单例模式的概念并无意义。 在 JavaScript 中创建对象的方法非常简单， 既然我们只需要一个“唯一”的对象， 为什么要为它先创建一个“类”呢？
+
+全局变量不是单例模式， 但在 JavaScript 开发中， 我们经常会把全局变量当成单例来使用。 例如：
+
+```js
+var a = {}
+```
+
+当用这种方式创建对象 a 时， 对象 a 确实是独一无二的。 如果 a 变量被声明在全局作用域下， 则我们可以在代码中的任何位置使用这个变量， 全局变量提供给全局访问是理所当然的。 这样就满足了单例模式的两个条件。
+
+## 惰性单例
+
+惰性单例指的是在需要的时候才创建对象实例。下面我们将以 WebQQ 的登录浮窗为例， 介绍与全局变量结合实现惰性的单例，很明显这个浮窗在页面里总是唯一的：
+
+```js
+var createLoginLayer = function() {
+  var div = document.createElement('div')
+  div.innerHTML = '我是登录浮窗'
+  div.style.display = 'none'
+  document.body.appendChild(div)
+  return div
+}
+document.getElementById('loginBtn').onclick = function() {
+  var loginLayer = createLoginLayer()
+  loginLayer.style.display = 'block'
+}
+```
+
+## 通用的惰性单例
+
+上一节我们完成了一个可用的惰性单例， 但是它还有如下问题：
+
+1.  违反单一职责原则，创建对象和管理单例的逻辑都放在`createLoginLayer`对象内部
+2.  如果我们下次需要创建页面中唯一的 iframe，或者 script 标签，就必须得如法炮制，把 createLoginLayer 函数几乎照抄一遍。
+
+现在我们就把如何管理单例的逻辑从原来的代码中抽离出来， 这些逻辑被封装在 `getSingle` 函数内：
+
+```js
+var getSingle = function(fn){
+  var result
+  return function(){
+    return result || result = fn.apply(this, arguments)
+  }
+}
+```
+
+接下来将用于创建登录浮窗的方法用参数 fn 的形式传入 getSingle， 我们不仅可以传入 createLoginLayer， 还能传入 createScript 等。 之后再让 getSingle 返回一个新的函数， 并且用一个变量 result 来保存 fn 的计算结果。 result 变量因为身在闭包中， 它永远不会被销毁。 在将来的请求中， 如果 result 已经被赋值， 那么它将返回这个值。 代码如下：
+
+```js
+var createLoginLayer = function() {
+  var div = document.createElement('div')
+  div.innerHTML = '我是登录浮窗'
+  div.style.display = 'none'
+  document.body.appendChild(div)
+  return div
+}
+var createSingleLoginLayer = getSingle(createLoginLayer)
+document.getElementById('loginBtn').onclick = function() {
+  var loginLayer = createSingleLoginLayer()
+  loginLayer.style.display = 'block'
+}
 ```
 
 **(未完待续)**
