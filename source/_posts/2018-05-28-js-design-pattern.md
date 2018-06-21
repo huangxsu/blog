@@ -970,8 +970,6 @@ document.getElementById('loginBtn').onclick = function() {
 }
 ```
 
-**(未完待续)**
-
 # 参考文献
 
 1.  tcatche github **[函数式编程-柯里化和反柯里化](https://github.com/tcatche/tcatche.github.io/issues/22)**

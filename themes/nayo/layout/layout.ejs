@@ -7,10 +7,10 @@
     <% if (is_post() || is_home()) { %>
     <section class="main">
         <% } else{ %>
-        <section class="main slideDownMin"></section>
-        <% } %>
-        <%- body %>
-    </section>
+        <section class="main slideDownMin">
+            <% } %>
+            <%- body %>
+        </section>
 </div>
 <a id="backTop">
       <span>
