@@ -86,4 +86,18 @@ search:
 
 # Sitemap
 sitemap:
- path: sitemap.xml
+  path: sitemap.xml
+
+# Hexo Beautify
+beautify:
+  types:
+    - html
+  exclude:
+    - '*.min.css'
+    - '*.min.js'
+  html:
+    'indent_inner_html': false
+    'indent_size': 2
+    'indent_with_tabs': false
+    'preserve-newlines': false
+    'max_preserve_newlines': 0

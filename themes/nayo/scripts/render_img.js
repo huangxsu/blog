@@ -21,7 +21,7 @@ function renderImg(source) {
             $(element).attr({
                 'data-src': origin
             });
-            $(element).css('background-image', `url("${placeHolder}")`);
+            $(element).css('background-image', `url('${placeHolder}')`);
             $(element).addClass('lazyload');
         }
     });

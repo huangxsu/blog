@@ -4,7 +4,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <%
     var title = titlecase(page.title);
-
     if (is_archive()) {
         title = __('Page.Archives');
     } else if (is_category()) {
@@ -13,7 +12,6 @@
         title = __('Page.Tags') + ': ' + page.tag;
     }
     %>
-
     <%
     var description = page.description || page.title
     if (page.tags && page.tags.length) {
@@ -25,15 +23,9 @@
     }
     %>
     <meta name="description" content="<%= description || config.description %>" />
-    <title>
-        <% if (title){ %>
-        <%= title %> |
-        <% } %>
-        <%= theme.title || config.title %> </title>
-
+    <title><% if (title){ %><%= title %> |<% } %><%= theme.title || config.title %> </title>
     <% if (theme.favicon){ %>
     <link rel="icon" href="<%- url_for(theme.favicon) %>">
     <% } %>
-
     <%- css('nayo.min') %>
 </head>
