@@ -8,7 +8,7 @@ tags:
 - 闭包
 ---
 
-JavaScript 设计模式探索。JavaScript 代码看不懂，打开浏览器运行一下立刻可以理解了。《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。
+JavaScript 设计模式探索。JavaScript 代码看不懂，打开浏览器运行一下立刻可以理解了。《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
 
 <!--more-->
 
