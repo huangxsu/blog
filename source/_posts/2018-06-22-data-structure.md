@@ -23,7 +23,12 @@ tags:
 
 {% asset_img linked-list.svg 链表 %}
 
-Javascript 实现链表结构的核心代码：`LinkedListNode.js`和`LinkedList.js`。
+## 参考
+
+1.  **[trekhleb github](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/linked-list)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=njTh_OwMljA&index=2&t=1s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
+
+JavaScript 实现**链表**数据结构的核心代码：**[LinkedListNode.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedListNode.js)**和**[LinkedList.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedList.js)**。
 
 `LinkedListNode`类，用于构造节点，保存数据和指针：
 
@@ -198,29 +203,216 @@ export default class LinkedList {
 
     return deletedHead
   }
-  /**
-   *@description 转换为数组
-   * @return {LinkedListNode[]}
-   */
-  toArray() {
-    const nodes = []
+}
+```
 
-    let currentNode = this.head
-    while (currentNode) {
-      nodes.push(currentNode)
-      currentNode = currentNode.next
-    }
+# 队列 Queue
 
-    return nodes
+队列是一种特殊的抽象数据类型或集合，集合中的实体是有顺序的，并且规定只能在队尾新增元素——入队（enqueue），只能在对头移除元素——出队（dequeue）,因此队列是一种先进先出（FIFO: First-In-First-Out）的数据结构。第一个被添加的元素将是第一个被移除的元素，同理，新添加的元素需要等到它前面的所有元素都被移除了才可以被移除。`peek`方法允许在不移除获得对头元素的情况下获取其值。队列是一种线性数据结构，更确切的说是一种顺序集合。
+
+{% asset_img queue.svg 队列 %}
+
+## 参考
+
+1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/queue)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=wjI1WNcIntg&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=3&)**
+
+JavaScript 实现**队列**数据结构的核心代码： **[Queue.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/queue/Queue.js)**。
+
+```js
+import LinkedList from '../linked-list/LinkedList'
+
+export default class Queue {
+  constructor() {
+    this.linkedList = new LinkedList()
+  }
+  isEmpty() {
+    return !this.linkedList.tail
   }
   /**
-   * @param {function} [callback]
-   * @return {string}
+   * 获得对头元素的值
    */
-  toString(callback) {
-    return this.toArray()
-      .map(node => node.toString(callback))
-      .toString()
+  peek() {
+    if (!this.linkedList.head) {
+      return null
+    }
+    return this.linkedList.head.value
+  }
+  /**
+   * 入队
+   * @param {*} value
+   */
+  enqueue(value) {
+    this.linkedList.append(value)
+  }
+  /**
+   * 出队
+   */
+  dequeue() {
+    const removedHead = this.linkedList.deleteHead()
+    return removedHead ? removedHead.value : null
+  }
+}
+```
+
+队列操作方法的实现细节可复用上一节链表中定义的方法，`peek`方法是获取队列头部元素的值，`euqueue`入队方法是在队尾插入一个节点，`dequeue`方式是移除对头元素。
+
+# 栈 Stack
+
+栈和队列都是线性数据结构，栈和队列的区别在于移除元素的方式，栈只能移除最新添加的元素，即后进先出（LIFO: Last-In-First-Out）。栈对集合的操作只能在集合顶部进行，通过`push`在集合顶部添加元素，通过`pop`在集合顶部移除元素，通过`peek`方法可获取集合最顶部的元素值。第一个添加的元素只有等到上面的元素都移除后才能被移除。
+
+{% asset_img stack.png 栈 %}
+
+## 参考
+
+1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/stack)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=wjI1WNcIntg&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=3&)**
+
+JavaScript 实现**栈**数据结构的核心代码： **[Stack.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/stack/Stack.js)**。
+
+```js
+import LinkedList from '../linked-list/LinkedList'
+
+export default class Stack {
+  constructor() {
+    this.linkedList = new LinkedList()
+  }
+  isEmpty() {
+    return !this.linkedList.tail
+  }
+  /**
+   * 获取尾部元素值
+   */
+  peek() {
+    if (this.isEmpty()) {
+      return null
+    }
+    return this.linkedList.tail.value
+  }
+  /**
+   * 入栈
+   * @param {*} value
+   */
+  push(value) {
+    this.linkedList.append(value)
+  }
+  /**
+   * 出栈
+   */
+  pop() {
+    const removedTail = this.linkedList.deleteTail()
+    return removedTail ? removedTail.value : null
+  }
+}
+```
+
+和队列一样，这里我们同样可以复用链表的方法。
+
+# 哈希表 Hash Table
+
+哈希表，也叫散列表，是一种可以将键映射到值的数据结构。它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。
+
+一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表，在首字母为 W 的表中查找“王”姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。
+
+{% asset_img hash-table.svg 哈希表 %}
+
+理想情况下，散列函数会为每个键分配一个独一无二的存储桶，但是大多数哈希表设计使用了不完美的散列函数，这可能会导致哈希冲突，散列函数为多个 key 生成了相同的索引。
+
+{% asset_img hash-collision.svg 单独链表法 %}
+
+其中一种解决冲突（collisions）的方法是单独链表法：将散列到同一个存储位置的所有元素保存在一个链表中。
+
+## 参考
+
+1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/hash-table)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=shs0KM3wKv8&index=4&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
+
+JavaScript 实现**哈希表**数据结构的核心代码： **[HashTable.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/hash-table/HashTable.js)**。
+
+```js
+import LinkedList from '../linked-list/LinkedList'
+
+// 哈希表的大小直接影响冲突的个数
+// 哈希表越大冲突数越少
+// 为了演示冲突是何如处理的，把哈希表的大小设置为32，一个很小的值
+const defaultHashTableSize = 32
+
+export default class HashTable {
+  /**
+   * @param {number} hashTableSize
+   */
+  constructor(hashTableSize = defaultHashTableSize) {
+    // 创建一个特定大小的哈希表，每个桶填充一个空链表
+    this.buckets = Array(hashTableSize)
+      .fill(null)
+      .map(() => new LinkedList())
+
+    // 实际key与hashkey之间的映射
+    this.keys = {}
+  }
+  /**
+   * 将key转换为哈希值
+   * @param {string} key
+   * @returns {number}
+   */
+  hash(key) {
+    const hash = Array.from(key).reduce(
+      (hashAccumulator, keySymbol) => hashAccumulator + keySymbol.charCodeAt(0),
+      0
+    )
+
+    return hash % this.buckets.length
+  }
+
+  /**
+   * 新增元素
+   * @param {string} key
+   * @param {*} value
+   */
+  set(key, value) {
+    const keyHash = this.hash(key)
+    this.keys[key] = keyHash
+    const bucketLinkedList = this.buckets[keyHash]
+    const node = bucketLinkedList.find({
+      callback: nodeValue => nodeValue.key === key
+    })
+
+    if (!node) {
+      bucketLinkedList.append({ key, value })
+    } else {
+      node.value.value = value
+    }
+  }
+
+  /**
+   * 删除元素
+   * @param {string} key
+   * @return {*}
+   */
+  delete(key) {
+    const keyHash = this.hash(key)
+    delete this.keys[key]
+    const bucketLinkedList = this.buckets[keyHash]
+    const node = bucketLinkedList.find({
+      callback: nodeValue => nodeValue.key === key
+    })
+    if (node) {
+      return bucketLinkedList.delete(node.value)
+    }
+    return null
+  }
+
+  /**
+   * 获取某个元素值
+   * @param {string} key
+   * @return {*}
+   */
+  get(key) {
+    const bucketLinkedList = this.buckets[this.hash(key)]
+    const node = bucketLinkedList.find({
+      callback: nodeValue => nodeValue.key === key
+    })
+    return node ? node.value.value : undefined
   }
 }
 ```
