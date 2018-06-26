@@ -15,6 +15,8 @@ tags:
 
 # 链表 Linked List
 
+## 定义
+
 链表是一种线性表，但是并不会按线性顺序存储数据，而是每个节点里保存着到下一个节点的指针。由于不必须按顺序存储，链表在插入的时候可以达到 O(1) 的复杂度，但是查找一个节点或者访问特定编号的节点则需要 O(n) 的时间。
 
 链表是由一组代表队列的节点组成，在最简单的情形下，每个节点有数据和指向队列中下一个节点的指针组成。这种结构可以实现在任何位置高效的插入或删除，缺点是访问时间是线性的，随机访问不够灵活。
@@ -29,6 +31,8 @@ tags:
 2.  **[YouTuBe](https://www.youtube.com/watch?v=njTh_OwMljA&index=2&t=1s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
 
 JavaScript 实现**链表**数据结构的核心代码：**[LinkedListNode.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedListNode.js)**和**[LinkedList.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedList.js)**。
+
+## 实现
 
 `LinkedListNode`类，用于构造节点，保存数据和指针：
 
@@ -208,6 +212,8 @@ export default class LinkedList {
 
 # 队列 Queue
 
+## 定义
+
 队列是一种特殊的抽象数据类型或集合，集合中的实体是有顺序的，并且规定只能在队尾新增元素——入队（enqueue），只能在对头移除元素——出队（dequeue）,因此队列是一种先进先出（FIFO: First-In-First-Out）的数据结构。第一个被添加的元素将是第一个被移除的元素，同理，新添加的元素需要等到它前面的所有元素都被移除了才可以被移除。`peek`方法允许在不移除获得对头元素的情况下获取其值。队列是一种线性数据结构，更确切的说是一种顺序集合。
 
 {% asset_img queue.svg 队列 %}
@@ -216,6 +222,8 @@ export default class LinkedList {
 
 1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/queue)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=wjI1WNcIntg&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=3&)**
+
+## 实现
 
 JavaScript 实现**队列**数据结构的核心代码： **[Queue.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/queue/Queue.js)**。
 
@@ -259,6 +267,8 @@ export default class Queue {
 
 # 栈 Stack
 
+## 定义
+
 栈和队列都是线性数据结构，栈和队列的区别在于移除元素的方式，栈只能移除最新添加的元素，即后进先出（LIFO: Last-In-First-Out）。栈对集合的操作只能在集合顶部进行，通过`push`在集合顶部添加元素，通过`pop`在集合顶部移除元素，通过`peek`方法可获取集合最顶部的元素值。第一个添加的元素只有等到上面的元素都移除后才能被移除。
 
 {% asset_img stack.png 栈 %}
@@ -267,6 +277,8 @@ export default class Queue {
 
 1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/stack)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=wjI1WNcIntg&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=3&)**
+
+## 实现
 
 JavaScript 实现**栈**数据结构的核心代码： **[Stack.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/stack/Stack.js)**。
 
@@ -310,6 +322,8 @@ export default class Stack {
 
 # 哈希表 Hash Table
 
+## 定义
+
 哈希表，也叫散列表，是一种可以将键映射到值的数据结构。它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。
 
 一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表，在首字母为 W 的表中查找“王”姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。
@@ -326,6 +340,8 @@ export default class Stack {
 
 1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/hash-table)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=shs0KM3wKv8&index=4&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
+
+## 实现
 
 JavaScript 实现**哈希表**数据结构的核心代码： **[HashTable.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/hash-table/HashTable.js)**。
 
@@ -416,3 +432,49 @@ export default class HashTable {
   }
 }
 ```
+
+# 堆 Heap
+
+## 定义
+
+堆一种基于树形（二叉树）的数据结构，并且满足堆的规则：
+
+1.  任意节点小于（或大于）它的所有后裔，最小元（或最大元）在堆的根上（堆序性）。
+2.  堆总是一棵完全树。即除了最底层，其他层的节点都被元素填满，且最底层尽可能地从左到右填入。
+
+将根节点最大的堆叫做最大堆或大根堆，根节点最小的堆叫做最小堆或小根堆。
+
+{% asset_img heap.svg 大根堆%}
+
+## 用数组表示堆
+
+我们知道堆是一种基于二叉树的数据结构，叶子节点依照从左到右的规则填入，所以我们可以使用数组来表示一个堆结构：
+
+{% asset_img heapToArray.png 用数组表示堆 %}
+
+从图中可以得出，一只父节点的索引`index`，可以得到左子节点的索引`index*2+1`和右子节点的索引`index*2+2`，反之知道子节点的索引可以推出父节点的索引，然后根据索引可以得到在数组中对应的值。
+
+## 插入元素
+
+假设我们将插入一个值为 85 的元素，由于堆是树结构，新增的节点从最底层从左到右填入，如下图：
+
+{% asset_img heapAdd.png 交换算法 %}
+
+从图中可以看出，这是一个大根堆，我们首先将元素 85 插入最底层，然后和它的父节点做比较，如果比父节点值大，则和父节点进行交换，重复和父节点比较的过程直到父节点比其值大时停止交换，在这个例子中，我们交换了两次。
+
+## 删除根
+
+假设我们将大根堆的根节点删除，删除后将堆的最后一个节点放置到根节点的位置，如果有其他叶子节点，则此时的根节点一定不是最大值，如下图所示：
+
+{% asset_img heapRemove.png 删除根算法 %}
+
+我们首先比较根节点（30）左子节点和右子节点的大小，选两者中较大者和根节点比较，如果比根节点大，则和根节点（30）交换位置，交换后的节点（30）继续和左右子节点中较大者进行比较，交换，直到没有叶子节点或者叶子节点都比该节点（30）小，在这个列子中，30 总共交换了两次。
+
+## 参考
+
+1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/heap)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=t0Cq6tVNRBA&index=5&t=0s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
+
+## 实现
+
+JavaScript 实现**小根堆**数据结构的核心代码： **[HashTable.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/heap/MinHeap.js)**。由于篇幅有限，具体实现代码在此就不黏贴了。
