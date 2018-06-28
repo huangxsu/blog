@@ -1,8 +1,8 @@
 ---
-title: Javascript数据结构 Data Structure 
+title: Javascript数据结构（上）
 date: 2018-06-22 16:53:12
 tags:
-- JavaScript
+- JavaScript 
 - 数据结构
 - 链表/队列/栈
 - 哈希表
