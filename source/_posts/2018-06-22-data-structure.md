@@ -53,7 +53,7 @@ export default class LinkedListNode {
 
 ```js
 import LinkedListNode from './LinkedListNode'
-import Comparator from '../../utils/comparator/Comparator'
+import Comparator from '../../utils/Comparator'
 
 export default class LinkedList {
   /**
@@ -86,7 +86,7 @@ export default class LinkedList {
    *@return {LinkedList}
    */
   append(value) {
-    const newNodw = new LinkedListNode(value)
+    const newNode = new LinkedListNode(value)
 
     //如果没有头部节点，让刚才创建的新节点作为头部节点
     if (!this.head) {
@@ -114,7 +114,7 @@ export default class LinkedList {
     let deleteNode = null
 
     //如果删除的是头部节点，那么使下一个节点作为头部节点
-    while (this.head && this.compare.equal(this.head, value)) {
+    while (this.head && this.compare.equal(this.head.value, value)) {
       deleteNode = this.head
       this.head = this.head.next
     }
@@ -145,7 +145,7 @@ export default class LinkedList {
    * @param {function} [findParams.callback]
    * @return {LinkedListNode}
    */
-  find(value = undefined, callback = undefined) {
+  find({ value = undefined, callback = undefined }) {
     if (!this.head) {
       return null
     }
