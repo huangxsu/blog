@@ -23,8 +23,8 @@ tags:
 数据的逻辑结构是指各个元素之间的逻辑关系，按照逻辑关系的特性，可将数据结构分为以下 4 类：
 
 1.  线性结构： 元素之间存在“一对一”的关系。若非空结构，则有且只有一个开始节点和终端节点，开始节点没有前驱有一个后继，终端节点没有后继有一个前驱，其余节点有且只有一个前驱和一个后继。
-2.  树形结构： 元素之间存在“一对多”的关系。若非空结构，则有一个跟节点，该节点无前驱，其余节点有且只有一个前驱，所以节点都可以有多个后继。
-3.  图形结构： 元素之间存在“多对的”的关系。若非空结构，则任何节点都可能有多个前驱和后继。
+2.  树形结构： 元素之间存在“一对多”的关系。若非空结构，则有一个根节点，该节点无前驱，其余节点有且只有一个前驱，所以节点都可以有多个后继。
+3.  图形结构： 元素之间存在“多对多”的关系。若非空结构，则任何节点都可能有多个前驱和后继。
 4.  集合结构： 元素之间的关系是松散性的，元素之间除了“同属于一个集合”的特性之外，无其他关系
 
 {% asset_img logic.jpg 逻辑结构 %}
@@ -33,12 +33,12 @@ tags:
 
 ## 存储结构
 
-数据的存储结构（物理结构）是数据的逻辑结构在计算机中的实现。它包括数据元素值的表示和逻辑关系的表示两部分，是依赖于计算机的。通常有一下 4 种方式：
+数据的存储结构（物理结构）是数据的逻辑结构在计算机中的实现。它包括数据元素值的表示和逻辑关系的表示两部分，是依赖于计算机的。通常有以下 4 种方式：
 
 1.  顺序存储方式：将所有的数据元素存放在一个连续的存储空间中，并使逻辑上相邻的数据元素其对应的物理位置也相邻，即数据元素的逻辑位置关系和物理位置关系保持一致。
 2.  链式存储方式：不要求逻辑相邻的元素在物理位置上也相邻，元素可以存储在任意的物理位置上。每个数据元素的存储表示有两部分组成：元素值和存放表示逻辑关系的指针。
-3.  索引存储方式：在存储数据的同事，还增设了一个索引表。索引表中的每一项包括关键字和地址，关键字是能够唯一标识一个元素的数据项，地址是元素的存储地址或存储区的手地址。
-4.  散列村塾方式：也叫哈希存储，是指将数据元素存储在一片连续的区域内，每个元素的具体存储地址是根据该元素的关键字值，通过散列（哈希）函数直接计算出来的。
+3.  索引存储方式：在存储数据的同时，还增设了一个索引表。索引表中的每一项包括关键字和地址，关键字是能够唯一标识一个元素的数据项，地址是元素的存储地址或存储区的首地址。
+4.  散列存储方式：也叫哈希存储，是指将数据元素存储在一片连续的区域内，每个元素的具体存储地址是根据该元素的关键字值，通过散列（哈希）函数直接计算出来的。
 
 在以上 4 种存储方式中，顺序存储和链式存储是最基本、最常用的两种，索引存储和散列存储是为了提高查找效率而经常采用 的两种存储方式。
 
@@ -49,14 +49,12 @@ tags:
 1.  创建： 建立数据的存储
 2.  销毁： 对已经存在的存储结构将其所有空间释放
 3.  插入： 在数据存储结构的适当位置上加入一个指定的新的元素
-4.  删除： 蒋书记存储结构中某个满足指定条件的数据元素进行删除
+4.  删除： 将数据存储结构中某个满足指定条件的数据元素进行删除
 5.  查找： 在数据存储结构中查找满足指定条件的数据元素
 6.  修改： 修改数据存储结构中某个数据元素的值
 7.  遍历： 对数据存储结构中每一个数据元素按某种路径访问一次且仅访问一次。
 
 # 链表 Linked List
-
-## 定义
 
 链表是一种线性表，让我们先来了解一下线性表的概念，线性表是有 n（n>=0）个数据元素构成的有限序列。线性表在计算机中可以用顺畅存储和链式存储两种方式结构来表示，其中用顺序存储结构表示的线性表称为顺序表，用链式存储结构表示的线性表称为链表。链表有分为单链表、双向链表和循环链表。
 
@@ -68,30 +66,8 @@ tags:
 
 {% asset_img linked-list.svg 链表 %}
 
-## 参考
-
 1.  **[trekhleb github](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/linked-list)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=njTh_OwMljA&index=2&t=1s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
-
-JavaScript 实现**链表**数据结构的核心代码：**[LinkedListNode.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedListNode.js)**和**[LinkedList.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedList.js)**。
-
-## 实现
-
-`LinkedListNode`节点类，用于构造节点，保存数据和指针：
-
-```js
-export default class LinkedListNode {
-  constructor(value, next = null) {
-    this.value = value;
-    this.next = next;
-  }
-  toString(callback) {
-    return callback ? callback(this.value) : `${this.value}`;
-  }
-}
-```
-
-`LinkedList`类，实现链表的功能，由于单链表只需要一个头指针就能唯一标识他，所以单链表类的成员变量需要设置一个头指针。
 
 ## 单链表的操作
 
@@ -108,9 +84,29 @@ export default class LinkedListNode {
 
 4、 建立操作： 单链表是一种动态存储结构，他不需要预先分配存储空间。生成单链表的过程是一个节点“逐个插入”的过程，根据插入位置的不同，分为两种：头插法和尾插法。
 
+JavaScript 实现**链表**数据结构的核心代码：**[LinkedListNode.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedListNode.js)**和**[LinkedList.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/linked-list/LinkedList.js)**。
+
+## 实现
+
+`LinkedListNode`节点类，用于构造节点，保存数据和指针：
+
 ```js
-import LinkedListNode from "./LinkedListNode";
-import Comparator from "../../utils/Comparator";
+export default class LinkedListNode {
+  constructor(value, next = null) {
+    this.value = value
+    this.next = next
+  }
+  toString(callback) {
+    return callback ? callback(this.value) : `${this.value}`
+  }
+}
+```
+
+`LinkedList`类，实现链表的功能，由于单链表只需要一个头指针就能唯一标识他，所以单链表类的成员变量需要设置一个头指针。
+
+```js
+import LinkedListNode from './LinkedListNode'
+import Comparator from '../../utils/Comparator'
 
 export default class LinkedList {
   /**
@@ -118,24 +114,24 @@ export default class LinkedList {
    */
   constructor(comparatorFunction) {
     /** @var LinkedListNode */
-    this.head = null;
+    this.head = null
 
     /** @var LinkedListNode */
-    this.tail = null;
+    this.tail = null
 
-    this.compare = new Comparator(comparatorFunction);
+    this.compare = new Comparator(comparatorFunction)
   }
   //在头部插入一个节点
   prepend(value) {
     //构造一个新节点当做头部节点
-    const newNode = new LinkedListNode(value, this.head);
-    this.head = newNode;
+    const newNode = new LinkedListNode(value, this.head)
+    this.head = newNode
 
     //如果还没有尾部节点，让刚才创建的新节点作为尾部节点
     if (!this.tail) {
-      this.tail = newNode;
+      this.tail = newNode
     }
-    return this;
+    return this
   }
   /**
    *@description 在尾部插入一个节点
@@ -143,21 +139,21 @@ export default class LinkedList {
    *@return {LinkedList}
    */
   append(value) {
-    const newNode = new LinkedListNode(value);
+    const newNode = new LinkedListNode(value)
 
     //如果没有头部节点，让刚才创建的新节点作为头部节点
     if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
+      this.head = newNode
+      this.tail = newNode
 
-      return this;
+      return this
     }
 
     //将新节点作为尾部节点
-    this.tail.next = newNode;
-    this.tail = newNode;
+    this.tail.next = newNode
+    this.tail = newNode
 
-    return this;
+    return this
   }
   /**
    *@description 删除某个节点
@@ -166,34 +162,34 @@ export default class LinkedList {
    */
   delete(value) {
     if (!this.head) {
-      return null;
+      return null
     }
-    let deleteNode = null;
+    let deleteNode = null
 
     //如果删除的是头部节点，那么使下一个节点作为头部节点
     while (this.head && this.compare.equal(this.head.value, value)) {
-      deleteNode = this.head;
-      this.head = this.head.next;
+      deleteNode = this.head
+      this.head = this.head.next
     }
 
-    let currentNode = this.head;
+    let currentNode = this.head
 
     if (currentNode !== null) {
       while (currentNode.next) {
         //如果下一个节点将被删除，那么使下一个节点的下一下节点代替该节点
         if (this.compare.equal(currentNode.next.value, value)) {
-          deleteNode = currentNode.next;
-          currentNode.next = currentNode.next.next;
+          deleteNode = currentNode.next
+          currentNode.next = currentNode.next.next
         } else {
-          currentNode = currentNode.next;
+          currentNode = currentNode.next
         }
       }
     }
     //如果删除的是最后一个节点，更新this.tail
     if (this.compare.equal(this.tail.value, value)) {
-      this.tail = currentNode;
+      this.tail = currentNode
     }
-    return deleteNode;
+    return deleteNode
   }
   /**
    *@description 查找节点
@@ -204,21 +200,21 @@ export default class LinkedList {
    */
   find({ value = undefined, callback = undefined }) {
     if (!this.head) {
-      return null;
+      return null
     }
 
-    let currentNode = this.head;
+    let currentNode = this.head
     while (currentNode) {
       //如果有回调函数，使用回调函数去查找节点
       if (callback && callback(currentNode.value)) {
-        return currentNode;
+        return currentNode
       }
       if (value !== undefined && this.compare.equal(currentNode.value, value)) {
-        return currentNode;
+        return currentNode
       }
-      currentNode = currentNode.next;
+      currentNode = currentNode.next
     }
-    return null;
+    return null
   }
   /**
    *@description 删除尾部节点
@@ -226,24 +222,24 @@ export default class LinkedList {
    */
   deleteTail() {
     if (this.head === this.tail) {
-      const deletedTail = this.tail;
-      this.head = null;
-      this.tail = null;
+      const deletedTail = this.tail
+      this.head = null
+      this.tail = null
 
-      return deletedTail;
+      return deletedTail
     }
-    const deletedTail = this.tail;
+    const deletedTail = this.tail
 
-    let currentNode = this.head;
+    let currentNode = this.head
     while (currentNode.next) {
       if (!currentNode.next.next) {
-        currentNode.next = null;
+        currentNode.next = null
       } else {
-        currentNode = currentNode.next;
+        currentNode = currentNode.next
       }
     }
-    this.tail = currentNode;
-    return deletedTail;
+    this.tail = currentNode
+    return deletedTail
   }
   /**
    *@description 删除头部节点
@@ -251,19 +247,19 @@ export default class LinkedList {
    */
   deleteHead() {
     if (!this.head) {
-      return null;
+      return null
     }
 
-    const deletedHead = this.head;
+    const deletedHead = this.head
 
     if (this.head.next) {
-      this.head = this.head.next;
+      this.head = this.head.next
     } else {
-      this.head = null;
-      this.tail = null;
+      this.head = null
+      this.tail = null
     }
 
-    return deletedHead;
+    return deletedHead
   }
 }
 ```
@@ -286,37 +282,37 @@ export default class LinkedList {
 JavaScript 实现**队列**数据结构的核心代码： **[Queue.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/queue/Queue.js)**。
 
 ```js
-import LinkedList from "../linked-list/LinkedList";
+import LinkedList from '../linked-list/LinkedList'
 
 export default class Queue {
   constructor() {
-    this.linkedList = new LinkedList();
+    this.linkedList = new LinkedList()
   }
   isEmpty() {
-    return !this.linkedList.tail;
+    return !this.linkedList.tail
   }
   /**
    * 获得对头元素的值
    */
   peek() {
     if (!this.linkedList.head) {
-      return null;
+      return null
     }
-    return this.linkedList.head.value;
+    return this.linkedList.head.value
   }
   /**
    * 入队
    * @param {*} value
    */
   enqueue(value) {
-    this.linkedList.append(value);
+    this.linkedList.append(value)
   }
   /**
    * 出队
    */
   dequeue() {
-    const removedHead = this.linkedList.deleteHead();
-    return removedHead ? removedHead.value : null;
+    const removedHead = this.linkedList.deleteHead()
+    return removedHead ? removedHead.value : null
   }
 }
 ```
@@ -341,37 +337,37 @@ export default class Queue {
 JavaScript 实现**栈**数据结构的核心代码： **[Stack.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/stack/Stack.js)**。
 
 ```js
-import LinkedList from "../linked-list/LinkedList";
+import LinkedList from '../linked-list/LinkedList'
 
 export default class Stack {
   constructor() {
-    this.linkedList = new LinkedList();
+    this.linkedList = new LinkedList()
   }
   isEmpty() {
-    return !this.linkedList.tail;
+    return !this.linkedList.tail
   }
   /**
    * 获取尾部元素值
    */
   peek() {
     if (this.isEmpty()) {
-      return null;
+      return null
     }
-    return this.linkedList.tail.value;
+    return this.linkedList.tail.value
   }
   /**
    * 入栈
    * @param {*} value
    */
   push(value) {
-    this.linkedList.append(value);
+    this.linkedList.append(value)
   }
   /**
    * 出栈
    */
   pop() {
-    const removedTail = this.linkedList.deleteTail();
-    return removedTail ? removedTail.value : null;
+    const removedTail = this.linkedList.deleteTail()
+    return removedTail ? removedTail.value : null
   }
 }
 ```
@@ -404,12 +400,12 @@ export default class Stack {
 JavaScript 实现**哈希表**数据结构的核心代码： **[HashTable.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/hash-table/HashTable.js)**。
 
 ```js
-import LinkedList from "../linked-list/LinkedList";
+import LinkedList from '../linked-list/LinkedList'
 
 // 哈希表的大小直接影响冲突的个数
 // 哈希表越大冲突数越少
 // 为了演示冲突是何如处理的，把哈希表的大小设置为32，一个很小的值
-const defaultHashTableSize = 32;
+const defaultHashTableSize = 32
 
 export default class HashTable {
   /**
@@ -419,10 +415,10 @@ export default class HashTable {
     // 创建一个特定大小的哈希表，每个桶填充一个空链表
     this.buckets = Array(hashTableSize)
       .fill(null)
-      .map(() => new LinkedList());
+      .map(() => new LinkedList())
 
     // 实际key与hashkey之间的映射
-    this.keys = {};
+    this.keys = {}
   }
   /**
    * 将key转换为哈希值
@@ -433,9 +429,9 @@ export default class HashTable {
     const hash = Array.from(key).reduce(
       (hashAccumulator, keySymbol) => hashAccumulator + keySymbol.charCodeAt(0),
       0
-    );
+    )
 
-    return hash % this.buckets.length;
+    return hash % this.buckets.length
   }
 
   /**
@@ -444,17 +440,17 @@ export default class HashTable {
    * @param {*} value
    */
   set(key, value) {
-    const keyHash = this.hash(key);
-    this.keys[key] = keyHash;
-    const bucketLinkedList = this.buckets[keyHash];
+    const keyHash = this.hash(key)
+    this.keys[key] = keyHash
+    const bucketLinkedList = this.buckets[keyHash]
     const node = bucketLinkedList.find({
       callback: nodeValue => nodeValue.key === key
-    });
+    })
 
     if (!node) {
-      bucketLinkedList.append({ key, value });
+      bucketLinkedList.append({ key, value })
     } else {
-      node.value.value = value;
+      node.value.value = value
     }
   }
 
@@ -464,16 +460,16 @@ export default class HashTable {
    * @return {*}
    */
   delete(key) {
-    const keyHash = this.hash(key);
-    delete this.keys[key];
-    const bucketLinkedList = this.buckets[keyHash];
+    const keyHash = this.hash(key)
+    delete this.keys[key]
+    const bucketLinkedList = this.buckets[keyHash]
     const node = bucketLinkedList.find({
       callback: nodeValue => nodeValue.key === key
-    });
+    })
     if (node) {
-      return bucketLinkedList.delete(node.value);
+      return bucketLinkedList.delete(node.value)
     }
-    return null;
+    return null
   }
 
   /**
@@ -482,11 +478,11 @@ export default class HashTable {
    * @return {*}
    */
   get(key) {
-    const bucketLinkedList = this.buckets[this.hash(key)];
+    const bucketLinkedList = this.buckets[this.hash(key)]
     const node = bucketLinkedList.find({
       callback: nodeValue => nodeValue.key === key
-    });
-    return node ? node.value.value : undefined;
+    })
+    return node ? node.value.value : undefined
   }
 }
 ```
