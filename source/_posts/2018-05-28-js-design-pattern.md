@@ -1,5 +1,5 @@
 ---
-title: JavaScript设计模式(上)
+title: JavaScript设计模式（1）
 date: 2018-06-20 14:23:54
 tags:
 - JavaScript

@@ -1,10 +1,11 @@
 ---
-title: JavaScript设计模式(中)
+title: JavaScript设计模式（2）
 date: 2018-06-21 14:47:15
 tags:
 - JavaScript
 - 设计模式
 - 策略模式
+- 代理模式
 ---
 
 《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
@@ -456,6 +457,238 @@ var calculateBonus = function(func, salary) {
   return func(salary)
 }
 calculateBonus(S, 10000)
+```
+
+# 代理模式
+
+代理模式是为一个对象提供一个代用品或占位符，以便控制对它的访问。
+
+代理模式的关键是，当客户不方便直接访问一个对象或者不满足需要的时候，提供一个替身对象来控制对这个对象的访问，客户实际上访问的是替身对象。替身对象对请求做出一些处理之后，再把请求转交给本体对象。
+
+## 保护代理和虚拟代理
+
+保护代理用于控制不同权限的对象对目标对象的访问，但在 JavaScript 中并不容易实现保护代理，因为我们无法判断谁访问了某个对象。而虚拟代理是最常用的一种代理模式，虚拟代理把一个开销很大的对象，延迟到真正需要它的时候创建。
+
+## 虚拟代理实现图片预加载
+
+图片预加载是一种常用的技术，如果直接给`img`标签设置`src`属性，由于图片过大或者网络不佳，图片的位置往往有段时间是一片空白。常见的做法是用一张 loading 图片占位，异步加载图片，等图片加载好了再把他填充到`img`节点。这种场景就很适合使用虚拟代理。
+
+我们通过`proxyImage`间接访问`MyImage`。`proxyImage`控制了客户对`MyImage`的访问，并且在此过程中加入一些额外的操作，比如在真正的图片加载好之前，先把`img`节点的`src`设置为 loading 图片：
+
+```js
+var myImage = (function() {
+  var imgNode = document.createElement('img')
+  document.body.appendChild(imgNode)
+  return {
+    setSrc: function(src) {
+      imgNode.src = src
+    }
+  }
+})()
+var proxyImange = (function() {
+  var img = new Image()
+  img.onload = function() {
+    myImage.setSrc(this.src)
+  }
+  return {
+    setSrc: function(src) {
+      myImage.setSrc('loading.gif')
+      img.src = src
+    }
+  }
+})()
+proxyImage.setSrc('somepicture.png')
+```
+
+## 代理的意义
+
+为了说明代理的意义，我们先来了解一下面向对象设计的原则——单一职责原则：就一个类（通常也包括对象和函数等）而言，应该仅有一个引起他变化的原因。如果不使用代理模式，实现图片预加载的代码将是这样的：
+
+```js
+var MyImage = (function() {
+  var imgNode = document.createElement('img')
+  document.body.appendChild(imgNode)
+  var img = new Image()
+  img.onload = function() {
+    imgNode.src = img.src
+  }
+  return {
+    setSrc: function(src) {
+      imgNode.src = 'loading.gif'
+      img.src = src
+    }
+  }
+})()
+MyImage.setSrc('somepicture.png')
+```
+
+上段代码中的`MyImage`对象除了负责给`img`节点设置`src`外，还负责预加载图片。如果我们只是获取一些体积很小的图片或者未来不需要预加载，就不得不改动`MyImage`对象删掉预加载相关代码。
+
+实际上，我们需要的是给`img`节点设置`src`，预加载图片只是一个锦上添花的功能。于是代理的作用就体现出来了。代理负责预加载图片，预加载的操作完成之后，把请求重新交给本体`MyImage`。
+
+通过代理对象，在不改变或者增加`MyImage`的接口的情况下，给系统添加了新的行为。这符合开发——封闭原则。给`img`节点设置`src`和图片预加载这两个功能被隔离在两个对象里，互不影响。就算有一天不需要预加载，只需要改成请求本体而不是请求代理对象即可。
+
+## 代理和本体接口的一致性
+
+上一节说到，如果不需要预加载，直接请求本体即可，其中的关键是代理对象和本体都对外提供了`setSrc`方法，在客户看来，代理对象和本体是一致的。
+
+另外值得一提的是，如果代理对象和本体对象都为一个函数（函数也是对象），函数必然都能被执行，则可以认为他们也具有一致的“接口”，代码如下：
+
+```js
+var myImage = (function() {
+  var imgNode = document.createElement('img')
+  document.body.appendChild(imgNode)
+  return function(src) {
+    imgNode.src = src
+  }
+})()
+var proxyImage = (function() {
+  var img = new Image()
+  img.onload = function() {
+    myImage(this.src)
+  }
+  return function(src) {
+    myImage('loading.gif')
+    img.src = src
+  }
+})()
+proxyImage('somepicture.jpg')
+```
+
+## 虚拟代理合并 HTTP 请求
+
+我们通过代理函数`proxySynchronousFile`来收集一段时间之内的请求，最后一次性发给服务器：
+
+```js
+var synchronousFile = function(ids) {
+  console.log('向服务器发送请求：' + ids)
+}
+var proxySynchronousFile = (function() {
+  var cache = [], // 保存一段时间内需要同步的ID
+    timer // 定时器
+  return function(id) {
+    cache.push(id)
+    // 保证不会覆盖已经启动的定时器
+    if (timer) {
+      return
+    }
+    timer = setTimeout(function() {
+      synchronousFile(cache.join()) // 2 秒后向本体发送需要同步的ID 集合
+      clearTimeout(timer) // 清空定时器
+      timer = null
+      cache.length = 0 // 清空ID 集合
+    }, 2000)
+  }
+})()
+```
+
+## 虚拟代理在惰性加载中的应用
+
+假设有一个文件`miniConsole.js`，我们并不想一开始就加载，我们希望再有必要的时候才开始加载它，在加载之前，为了能让用户正常地使用里面的 API，通常我们的解决方案是用一个占位的 miniConsole 代理对象来给用户提前使用， 这个代理对象提供给用户的接口， 跟实际的 miniConsole 是一样的。等用户按下 F2 唤出控制台的时候， 才开始加载真正的 miniConsole.js 的代码， 加载完成之后将遍历 miniConsole 代理对象中的缓存函数队列， 同时依次执行它们。
+
+```js
+var miniConsole = (function(){
+  var cache = []
+  var handler = function(ev){
+    if(ev.keyCode === 113){
+      var script = document.createElement('script')
+      script.onload = function(){
+        for(var i = 0, fn; fn = cache[i++]){
+          fn()
+        }
+      }
+      script.src = 'miniConsole.js'
+      document.getElementsByTagName('head')[0].appendChild(script)
+      document.body.removeEventListener('keydown',handler)// 只加载一次miniConsole.js
+    }
+  }
+  document.body.addEventListener('keydown',handler,false)
+
+  return {
+    log: function(){
+      var args = arguments;
+      cache.push(function(){
+        return miniConsole.log.apply(miniConsole, args)
+      })
+    }
+  }
+})()
+
+miniConsole.log( 11 ); // 开始打印log
+// miniConsole.js 代码
+miniConsole = {
+  log: function(){
+  // 真正代码略
+  console.log( Array.prototype.join.call( arguments ) );
+}
+```
+
+## 缓存代理
+
+缓存代理可以为一些开销大的运算结果提供暂时的存储， 在下次运算时， 如果传递进来的参数跟之前一致， 则可以直接返回前面存储的运算结果。
+
+```js
+//举个粗糙的栗子。。。
+var mult = function() {
+  console.log('开始计算乘积')
+  var a = 1
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    a = a * arguments[i]
+  }
+  return a
+}
+var proxyMult = (function() {
+  var cache = {}
+  return function() {
+    var args = Array.prototype.join.call(arguments, ',')
+    if (args in cache) {
+      return cache[args]
+    }
+    return (cache[args] = mult.apply(this, arguments))
+  }
+})()
+
+proxyMult(1, 2, 3, 4) // 输出：24
+proxyMult(1, 2, 3, 4) // 输出：24
+```
+
+## 用高阶函数动态创建代理
+
+通过传入高阶函数这种更加灵活的方式， 可以为各种计算方法创建缓存代理。 现在这些计算方法被当作参数传入一个专门用于创建缓存代理的工厂中，这样一来， 我们就可以为乘法、 加法、 减法等创建缓存代理， 代码如下：
+
+```js
+/**************** 计算乘积 *****************/
+var mult = function() {
+  var a = 1
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    a = a * arguments[i]
+  }
+  return a
+}
+/**************** 计算加和 *****************/
+var plus = function() {
+  var a = 0
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    a = a + arguments[i]
+  }
+  return a
+}
+/**************** 创建缓存代理的工厂 *****************/
+var createProxyFactory = function(fn) {
+  var cache = {}
+  return function() {
+    var args = Array.prototype.join.call(arguments, ',')
+    if (args in cache) {
+      return cache[args]
+    }
+    return (cache[args] = fn.apply(this, arguments))
+  }
+}
+
+var proxyMult = createProxyFactory(mult),
+  proxyPlus = createProxyFactory(plus)
+alert(proxyMult(1, 2, 3, 4)) // 输出：24
+alert(proxyPlus(1, 2, 3, 4)) // 输出：10
 ```
 
 **未完待续**
