@@ -682,8 +682,6 @@ export default class HashTable {
 
 # 堆 Heap
 
-## 定义
-
 堆一种基于树的数据结构，并且满足堆的规则：
 
 1.  任意节点小于（或大于）它的所有后裔，最小元（或最大元）在堆的根上（堆序性）。
@@ -695,6 +693,9 @@ export default class HashTable {
 
 {% asset_img heap1.png 500 小根堆 %}
 
+1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/heap)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=t0Cq6tVNRBA&index=5&t=0s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
+
 ## 用数组表示堆
 
 我们知道堆是一种基于树的数据结构，叶子节点依照从左到右的规则填入，所以我们可以使用数组来表示一个堆结构：
@@ -703,7 +704,9 @@ export default class HashTable {
 
 从图中可以得出，已知父节点的索引`index`，可以得到左子节点的索引`index*2+1`和右子节点的索引`index*2+2`，反之知道子节点的索引可以推出父节点的索引，然后根据索引可以得到在数组中对应的值。
 
-## 插入元素
+## 操作
+
+1、 插入元素
 
 假设我们将插入一个值为 85 的元素，由于堆是树结构，新增的节点从最底层从左到右填入，如下图：
 
@@ -711,18 +714,13 @@ export default class HashTable {
 
 从图中可以看出，这是一个大根堆，我们首先将元素 85 插入最底层，然后和它的父节点做比较，如果比父节点值大，则和父节点进行交换，重复和父节点比较的过程直到父节点比其值大时停止交换，在这个例子中，我们交换了两次。
 
-## 删除根
+2、 删除根
 
 假设我们将大根堆的根节点删除，删除后将堆的最后一个节点放置到根节点的位置，如果有其他叶子节点，则此时的根节点一定不是最大值，如下图所示：
 
 {% asset_img heapRemove.png 删除根算法 %}
 
 我们首先比较根节点（30）左子节点和右子节点的大小，选两者中较大者和根节点比较，如果比根节点大，则和根节点（30）交换位置，交换后的节点（30）继续和左右子节点中较大者进行比较，交换，直到没有叶子节点或者叶子节点都比该节点（30）小，在这个列子中，30 总共交换了两次。
-
-## 参考
-
-1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/heap)**
-2.  **[YouTuBe](https://www.youtube.com/watch?v=t0Cq6tVNRBA&index=5&t=0s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
 
 ## 实现
 
@@ -738,6 +736,9 @@ JavaScript 实现**小根堆**数据结构的核心代码： **[MinHeap.js](http
 
 优先队列所以可以用堆来实现，但是优先队列和堆的概念完全不同。好比列表可以用链表或数组来实现，优先队列可以用堆或者无序数组来实现。
 
+1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/priority-queue)**
+2.  **[YouTuBe](https://www.youtube.com/watch?v=wptevk0bshY&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=6)**
+
 ## 操作
 
 优先队列至少需要支持下列三种操作：
@@ -745,11 +746,6 @@ JavaScript 实现**小根堆**数据结构的核心代码： **[MinHeap.js](http
 1.  插入带优先级的元素
 2.  取出优先级最高的元素
 3.  查看最高优先级的元素：o(1)时间复杂度
-
-## 参考
-
-1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/priority-queue)**
-2.  **[YouTuBe](https://www.youtube.com/watch?v=wptevk0bshY&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=6)**
 
 ## 实现
 

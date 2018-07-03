@@ -29,4 +29,92 @@ Trie 这个术语来自于 retrieval。根据词源学，trie 的发明者 Edwar
 ## 操作
 
 1、 插入操作
+
+假设我们准备插入一个单词`pea`，首先将单词转换为字符数组['p','e','a']，遍历字符数组创建节点，其中下一个节点是上一个节点的孩子节点，根据当前节点的索引可以此时是否是一个完整的单词，通过`isComplete`变量对当前节点进行标记
+
 2、 查找操作
+
+假设我们准备查找是否存在`pea`这个单词，和上面一样，首先需要转换为字符数组['p','e','a']，遍历数组，当前节点`p`是否有孩子节点`e`，如果有，当前节点重置为`e`，并判断当前节点`e`是否有孩子节点`a`如果有，则存在`pea`，迭代过程中哪一步返回结果为`false`则不存在单词`pea`。因为我们只需要判断是否有某个孩子节点，最快的查询方式应该使用哈希表来实现，所以本文中，我们使用哈希表来保存某个节点的孩子节点。
+
+JavaScript 实现**字典树**数据结构的核心代码：**[TrieNode.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/trie/TrieNode.js)**和**[Trie.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/trie/TrieNode.js)**。
+
+## 实现
+
+`TireNode`节点类，用于构造节点，保存字符，是否完成的标记和以该字符为前缀的孩子节点：
+
+```js
+import HasTable from '../hash-table/HashTable'
+
+export default class TrieNode {
+  constructor(character, isCompleteWord = false) {
+    this.character = character
+    this.isCompleteWord = isCompleteWord
+    this.children = new HasTable()
+  }
+  getChild(character) {
+    return this.children.get(character)
+  }
+  addChild(character, isCompleteWord = false) {
+    if (!this.children.has(character)) {
+      this.children.set(character, new TrieNode(character, isCompleteWord))
+    }
+    return this.children.get(character)
+  }
+  hasChild(character) {
+    return this.children.has(character)
+  }
+  suggestChildren() {
+    return [...this.children.getKeys()]
+  }
+  toString() {
+    let childrenAsString = this.suggestChildren().toString()
+    childrenAsString = childrenAsString ? `:${childrenAsString}` : ''
+    const isCompleteWord = this.isCompleteWord ? '*' : ''
+    return `${this.character}${isCompleteWord}${childrenAsString}`
+  }
+}
+```
+
+`Trie`类，实现字典树的功能，设置根节点为`*`代表空字符串：
+
+```js
+import TrieNode from './TrieNode'
+
+// 根节点值为空
+const HEAD_CHARACTER = '*'
+
+export default class Trie {
+  constructor() {
+    this.head = new TrieNode(HEAD_CHARACTER)
+  }
+  addWord(word) {
+    const characters = Array.from(word)
+    let currentNode = this.head
+    for (let charIndex = 0; charIndex < characters.length; charIndex++) {
+      const isComplete = charIndex === characters.length - 1
+      currentNode = currentNode.addChild(characters[charIndex], isComplete)
+    }
+  }
+  suggesNextCharacters(word) {
+    const lastCharacter = this.getLastCharacterNode(word)
+    if (!lastCharacter) {
+      return null
+    }
+    return lastCharacter.suggestChildren()
+  }
+  doesWordExist(word) {
+    return !!this.getLastCharacterNode(word)
+  }
+  getLastCharacterNode(word) {
+    const characters = Array.from(word)
+    let currentNode = this.head
+    for (let charIndex = 0; charIndex < characters.length; charIndex++) {
+      if (!currentNode.hasChild(characters[charIndex])) {
+        return null
+      }
+      currentNode = currentNode.getChild(characters[charIndex])
+    }
+    return currentNode
+  }
+}
+```
