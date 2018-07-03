@@ -266,20 +266,24 @@ export default class LinkedList {
 
 # 队列 Queue
 
-## 定义
+队列是一种特殊的抽象数据类型或集合，集合中的实体是有顺序的，并且规定只能在队尾新增元素——入队（enqueue），只能在对头移除元素——出队（dequeue）,因此队列是一种先进先出（FIFO: First-In-First-Out）的数据结构。第一个被添加的元素将是第一个被移除的元素，同理，新添加的元素需要等到它前面的所有元素都被移除了才可以被移除。队列是一种线性数据结构。
 
-队列是一种特殊的抽象数据类型或集合，集合中的实体是有顺序的，并且规定只能在队尾新增元素——入队（enqueue），只能在对头移除元素——出队（dequeue）,因此队列是一种先进先出（FIFO: First-In-First-Out）的数据结构。第一个被添加的元素将是第一个被移除的元素，同理，新添加的元素需要等到它前面的所有元素都被移除了才可以被移除。`peek`方法允许在不移除对头元素的情况下获取其值。队列是一种线性数据结构，更确切的说是一种顺序集合。
+事实上每一个时间生活中的排队都是一个队列。例如，在一些售票口排列的队伍都是队列，因为服务是先到先买票。
 
 {% asset_img queue.svg 队列 %}
-
-## 参考
 
 1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/queue)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=wjI1WNcIntg&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=3&)**
 
+## 操作
+
+1.  `enpqueue`入队： 在队尾 rear 插入一个元素
+2.  `dequeue`出队：删除（并返回）在队头 front 的元素
+3.  `peek`：获取队头元素的值
+
 ## 实现
 
-JavaScript 实现**队列**数据结构的核心代码： **[Queue.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/queue/Queue.js)**。
+对可以使用链式结构也可以使用数据实现，本文使用了链式结构。JavaScript 实现**队列**数据结构的核心代码： **[Queue.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/queue/Queue.js)**。
 
 ```js
 import LinkedList from '../linked-list/LinkedList'
@@ -317,24 +321,24 @@ export default class Queue {
 }
 ```
 
-队列操作方法的实现细节可复用上一节链表中定义的方法，`peek`方法是获取队列头部元素的值，`euqueue`入队方法是在队尾插入一个节点，`dequeue`方式是移除对头元素。
-
 # 栈 Stack
 
-## 定义
-
-栈和队列都是线性数据结构，栈和队列的区别在于移除元素的方式，栈只能移除最新添加的元素，即后进先出（LIFO: Last-In-First-Out）。栈对集合的操作只能在集合顶部进行，通过`push`在集合顶部添加元素，通过`pop`在集合顶部移除元素，通过`peek`方法可获取集合最顶部的元素值。第一个添加的元素只有等到上面的元素都移除后才能被移除。
+栈和队列都是线性数据结构，栈和队列的区别在于移除元素的方式，栈是限制插入和删除只能在一个位置上进行的表，该位置是表的末端，叫做栈的顶（top），即后进先出（LIFO: Last-In-First-Out）。第一个添加的元素只有等到上面的元素都移除后才能被移除。
 
 {% asset_img stack.png 栈 %}
-
-## 参考
 
 1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/stack)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=wjI1WNcIntg&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=3&)**
 
+## 操作
+
+1、 `push`进栈：在顶部添加元素
+2、 `pop`出栈：在顶部移除元素
+3、 `peek`：获取集合最顶部的元素值
+
 ## 实现
 
-JavaScript 实现**栈**数据结构的核心代码： **[Stack.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/stack/Stack.js)**。
+栈可以使用链式结构也可以使用数据实现，本文使用了链式结构。JavaScript 实现**栈**数据结构的核心代码： **[Stack.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/stack/Stack.js)**。
 
 ```js
 import LinkedList from '../linked-list/LinkedList'
@@ -372,25 +376,197 @@ export default class Stack {
 }
 ```
 
-和队列一样，这里我们同样可以复用链表的方法。
+## 应用
+
+1、 平衡符号
+
+每个右花括号、右方括号及右圆括号必然对应气相应的左括号。序列[()]是合法的，但是[(])是错误的。为简单起见，我们仅就圆括号、方括号和花括号进行检验，这个简单的算法用到一个栈：
+
+做一个空栈。读入字符知道文件结尾。如果字符是一个开放符号，则将其推入栈中。如果字符是一个封闭符号，则当栈空时报错。否则，将栈元素弹出。如果弹出的符号不是对应的开放符号，则报错。在文件结尾，如果栈非空则报错。
+
+2、 后缀表达式
+
+假设我们需要计算表达式：`4.99 *1.06 + 5.99 + 6.99 * 1.06 =` 科学计算器给出正确的答案（18.69）而在简单计算器上给出错误的答案（19.37）。该列的典型计算顺序可以是将 4.99 和 1.06 相乘并存为 A1，然后讲 5.99 和 A1 相加，在将结果存入 A1；我们再将 6.99 和 1.06 相乘存为 A2，最后将 A1 和 A2 相加并将最后结果放入 A1。操作顺序书写如下：
+
+`4.99 1.06 * 5.99 + 6.99 1.06 * +`
+
+这个记法叫做后缀或逆波兰记法。计算这个问题最容易的方法是使用一个栈。当见到一个数时，就把它推入栈中；在遇到一个运算符时该算符就作用于从该栈弹出两个数上，再将所得结果推入栈中。例如，上面的后缀表达式：
+
+前两个字符放入栈中，此时栈变成：
+
+| topOfStarck |
+| ----------- |
+| 1.06        |
+| 4.99        |
+
+下面读到一个`*`号，所以 1.06 和 4.99 从栈中弹出并且它们的乘积 5.2894 被压入栈中
+
+| topOfStarck |
+| ----------- |
+| 5.2894      |
+
+接着，5.99 入栈
+
+| topOfStarck |
+| ----------- |
+| 5.99        |
+| 5.2894      |
+
+现在见到一个`+`号，因此 5.99 和 5.2894 弹出并且它们的和 11.2794 入栈
+
+| topOfStarck |
+| ----------- |
+| 11.2794     |
+
+接着 6.99 和 1.06 入栈
+
+| topOfStarck |
+| ----------- |
+| 1.06        |
+| 6.99        |
+| 11.2794     |
+
+现在见到一个`*`号，因此 1.06 和 6.99 出栈并且它们的乘积 7.4094 入栈
+
+| topOfStarck |
+| ----------- |
+| 7.4094      |
+| 11.2794     |
+
+最后遇到一个`+`号，7.4094 和 11.2794 出栈，并将它们的和 18.6888 压进栈中
+
+| topOfStarck |
+| ----------- |
+| 18.6888     |
+
+计算后缀表达式的时间是 O(n)。当一个表达式以后缀记号给出时，没有必要知道任何优先规则，这是一个明显的优点。
+
+3、 中缀到后缀的转换
+
+我们通过只允许操作`*` `+` `(` `)`，并坚持普通的优先级法则而将一般的问题浓缩成小规模的问题。此外，还有进一步假设表达式是合法的。假设将中缀表达式 `a + b * c + (d * e + f) * g` 转换成后缀表达式。
+
+当读到一个数时，立即把它放到输出中。操作符不立即输出，而是推入栈中。
+
+如果遇到一个右括号，那么就将栈元素弹出，直至遇到一个左括号，但是左括号只弹出不输出。
+
+如果遇到任何其他符号`+` `*` `(`，那么我们从栈中弹出栈元素直到发现优先级更低的元素为止。有一个例外，除非是在处理右括号的时候，否则我们决不能从栈中移走左括号。`+`的优先级最低，`(`的优先级最高。当从栈弹出元素完成后，再将操作符压入栈中。
+
+最后，如果读到输入的末尾，我们将栈元素弹出直到该栈变成空栈，将符合写到输出中。
+
+我们把上面的中缀表达式转换成后缀形式。首先，a 被读入。于是它被传向输出，然后`+`被读入并被放入栈中。接下来 b 被读入并输出：
+
+| topOfStarck | output |
+| ----------- | ------ |
+| +           | a b    |
+
+接着`*`号被读入，由于操作符栈的栈顶元素比`*`的优先级低，故没有输出且`*`进栈，接着，c 被读入并输出：
+
+| topOfStarck | output |
+| ----------- | ------ |
+| \*          | a b c  |
+| +           |        |
+
+后面的符号是`+`号，检查一下栈我们发现，需要将`*`从栈弹出并放到输出中；弹出栈中剩下的`+`号和刚刚遇到的`+`号同级也被弹出并输入；然后将刚刚遇到的`+`号压入栈中：
+
+| topOfStarck | output     |
+| ----------- | ---------- |
+| +           | a b c \* + |
+
+下一个被读到的是`(`，由于有最高的优先级，因为它被放进栈中，然后，d 读入并输出：
+
+| topOfStarck | output       |
+| ----------- | ------------ |
+| (           | a b c \* + d |
+| +           |              |
+
+继续进行，读到一个`*`。由于除非正在处理闭括号，否则开括号不会从栈中弹出，因此没有输出。下一个是 e，被输出：
+
+| topOfStarck | output         |
+| ----------- | -------------- |
+| \*          | a b c \* + d e |
+| (           |                |
+| +           |                |
+
+再往后读到的是`+`号，我们将`*`弹出并输出，然后将`+`压入栈中。这以后，我们读到 f 并输出：
+
+| topOfStarck | output              |
+| ----------- | ------------------- |
+| +           | a b c \* + d e \* f |
+| (           |                     |
+| +           |                     |
+
+现在，我们读到一个`)`，因此将栈元素直到`(`弹出，我们将`+`号输出：
+
+| topOfStarck | output                |
+| ----------- | --------------------- |
+| +           | a b c \* + d e \* f + |
+
+下面又读到一个`*`，改算符被压入栈中。然后，g 被读入并输出：
+
+| topOfStarck | output                  |
+| ----------- | ----------------------- |
+| \*          | a b c \* + d e \* f + g |
+| +           |                         |
+
+现在输入为空，因此我们将栈中的符号全部弹出并输出，直到栈变成空栈：
+
+| topOfStarck | output                       |
+| ----------- | ---------------------------- |
+|             | a b c \* + d e \* f + g \* + |
+
+4、 方法调用
+
+调用栈最经常被用于存放子程序的返回地址。在调用任何子程序时，主程序都必须暂存子程序运行完毕后应该返回到的地址。因此，如果被调用的子程序还要调用其他的子程序，其自身的返回地址就必须存入调用栈，在其自身运行完毕后再行取回。在递归程序中，每一层次递归都必须在调用栈上增加一条地址，因此如果程序出现无限递归（或仅仅是过多的递归层次），调用栈就会产生栈溢出。
+
+下面以一段 Java 代码为例：
+
+```java
+class Student{
+    int age;
+    String name;
+
+    public Student(int Age, String Name)
+    {
+        this.age = Age;
+        setName(Name);
+    }
+    public void setName(String Name)
+    {
+        this.name = Name;
+    }
+}
+
+public class Main{
+    public static void main(String[] args) {
+            Student s;
+            s = new Student(23,"Jonh");
+    }
+}
+```
+
+上面这段代码运行的时候，首先调用 main 方法，里面需要生成一个 Student 的实例，于是又调用 Student 构造函数。在构造函数中，又调用到 setName 方法。
+
+{% asset_img call_stack.gif 调用栈 %}
+
+程序运行的时候，总是先完成最上层的调用，然后将它的值返回到下一层调用，直至完成整个调用栈，返回最后的结果。
 
 # 哈希表 Hash Table
 
-## 定义
-
 哈希表，也叫散列表，是一种可以将键映射到值的数据结构。它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。
 
-一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表，在首字母为 W 的表中查找“王”姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母”是这个例子中散列函数的函数法则，存放首字母的表对应散列表。关键字和函数法则理论上可以任意确定。
+理想的散列表数据结构只不过是一个包含一些项的具有固定大小的数组。通常查找是对项的某个部分进行的，这部分就叫做关键字（Key）。我们把表的大小记作 TableSize，每个关键字被映射从 0 到 TableSize-1 这个范围中的某个数，并且被放到适当的单元中。这个映射就叫散列函数（hash function），理想情况下它应该计算起来简单，并且保证任何两个不同的关键字映射到不同的单元，但这是不可能的，因为单元的数目是有限的，而关键字实际上是用不完的。因此我们寻找一个散列函数，该函数要在单元之间均匀的分配关键字。
+
+如果输入的关键字是整数，则一般合理的方法就是直接返回 key mod Tablesize。如果关键字是字符串，一种选择方法是把字符串中字符的 ASCII 吗值加起来，本文的实现是按这种方式，可以在后面的代码中看到。
+
+表的大小最好是素数，当输入的关键字是随机整数时，散列函数不仅计算提来简单而且关键字的分配也很均匀。
 
 {% asset_img hash-table.svg 哈希表 %}
 
-理想情况下，散列函数会为每个键分配一个独一无二的存储桶，但是大多数哈希表设计使用了不完美的散列函数，这可能会导致哈希冲突，散列函数为多个 key 生成了相同的索引。
+理想情况下，散列函数会为每个键分配一个独一无二的单元，但是大多数哈希表设计使用了不完美的散列函数，这可能会导致哈希冲突，散列函数为多个 key 生成了相同的索引。
 
 {% asset_img hash-collision.svg 单独链表法 %}
 
-其中一种解决冲突（collisions）的方法是单独链表法：将散列到同一个存储位置的所有元素保存在一个链表中。
-
-## 参考
+其中一种解决冲突（collisions）的方法是分离链表法：将散列到同一个存储位置的所有元素保存在一个链表中。
 
 1.  **[trekhleb gitbug](https://github.com/trekhleb/javascript-algorithms/tree/master/src/data-structures/hash-table)**
 2.  **[YouTuBe](https://www.youtube.com/watch?v=shs0KM3wKv8&index=4&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)**
@@ -404,8 +580,8 @@ import LinkedList from '../linked-list/LinkedList'
 
 // 哈希表的大小直接影响冲突的个数
 // 哈希表越大冲突数越少
-// 为了演示冲突是何如处理的，把哈希表的大小设置为32，一个很小的值
-const defaultHashTableSize = 32
+// 为了演示冲突是何如处理的，可以把哈希表的大小设置成一个很小的值
+const defaultHashTableSize = 31
 
 export default class HashTable {
   /**
@@ -483,6 +659,23 @@ export default class HashTable {
       callback: nodeValue => nodeValue.key === key
     })
     return node ? node.value.value : undefined
+  }
+
+  /**
+   * 判断是否存在某元素
+   * @param {string} key
+   * @return {boolean}
+   */
+  has(key) {
+    return Object.hasOwnProperty.call(this.keys, key)
+  }
+
+  /**
+   * 获取hash表中已存在的所有的key
+   * @return {string[]}
+   */
+  getKeys() {
+    return Object.keys(this.keys)
   }
 }
 ```
@@ -567,3 +760,5 @@ JavaScript 实现**优先队列**数据结构的核心代码： **[PriorityQueue
 # 参考文献
 
 1.  **[[数据结构和算法分析笔记]堆 Heap](http://blog.51cto.com/sauron/1227373)**
+2.  **[阮一峰 Stack 的三种含义](http://www.ruanyifeng.com/blog/2013/11/stack.html)**
+3.  《数据结构与算法分析——Java 语言描述》 第 2 版，作者：Mark Allen Weiss，译者：冯舜玺，机械工业出版社
