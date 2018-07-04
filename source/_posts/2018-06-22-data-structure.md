@@ -775,4 +775,4 @@ JavaScript 实现**优先队列**数据结构的核心代码： **[PriorityQueue
 1.  **[[数据结构和算法分析笔记]堆 Heap](http://blog.51cto.com/sauron/1227373)**
 2.  **[阮一峰 Stack 的三种含义](http://www.ruanyifeng.com/blog/2013/11/stack.html)**
 3.  《数据结构与算法分析——Java 语言描述》 第 2 版，作者：Mark Allen Weiss，译者：冯舜玺，机械工业出版社
-4.  《数据结构——Java 语言描述》 第 版，作者：刘小晶，清华大学出版社
+4.  《数据结构——Java 语言描述》 第 1 版，作者：刘小晶，清华大学出版社

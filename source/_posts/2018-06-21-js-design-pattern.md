@@ -6,9 +6,10 @@ tags:
 - 设计模式
 - 策略模式
 - 代理模式
+- 迭代器模式
 ---
 
-《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
+《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
 
 <!--more-->
 
@@ -689,6 +690,132 @@ var proxyMult = createProxyFactory(mult),
   proxyPlus = createProxyFactory(plus)
 alert(proxyMult(1, 2, 3, 4)) // 输出：24
 alert(proxyPlus(1, 2, 3, 4)) // 输出：10
+```
+
+# 迭代器模式
+
+迭代器模式是指提供一种方法顺序访问一个聚合对象中的各个元素，而又不需要暴露该对象的内部表示。
+
+现在我们来实现一个`each`函数，接收两个参数：被循环的数组；回调函数：
+
+```js
+var each = function(ary, callback) {
+  for (var i = 0; i < ary.length; i++) {
+    callback.call(ary[i], i, ary[i]) // 把下标和元素当作参数传给callback 函数
+  }
+}
+each([1, 2, 3], function(i, n) {
+  console.log([i, n])
+})
+```
+
+## 内部迭代器和外部迭代器
+
+1、 内部迭代器，内部已经定义好了迭代规则，它完全接手整个迭代过程，外部只需要一次初始化调用。这也是内部迭代器的缺点，无法自定义迭代的过程。比如，使用上面的`each`函数判断 2 个数组是否完全相等，我们只能这样写：
+
+```js
+var compare = function(ary1, ary2) {
+  if (ary1.length !== ary2.length) {
+    throw new Error('ary1 和ary2 不相等')
+  }
+  each(ary1, function(i, n) {
+    if (n !== ary2[i]) {
+      throw new Error('ary1 和ary2 不相等')
+    }
+  })
+  alert('ary1 和ary2 相等')
+}
+compare([1, 2, 3], [1, 2, 4]) // throw new Error ( 'ary1 和ary2 不相等' );
+```
+
+2、 外部迭代器，必须显示的请求迭代下一个元素，增加了一些调用的复杂度，但也增加了迭代器的灵活性，我们可以手动控制迭代的过程或者顺序：
+
+```js
+var Iterator = function(obj) {
+  var current = 0
+  var next = function() {
+    current += 1
+  }
+  var isDone = function() {
+    return obj[current]
+  }
+  var getCurrentItem = function() {
+    return obj[current]
+  }
+  return {
+    next: next,
+    isDone: isDone,
+    getCurrentItem: getCurrentItem
+  }
+}
+```
+
+使用上面的`Iterator`迭代器改写`compare`函数：
+
+```js
+var compare = function(iterator1, iterator2) {
+  while (!iterator1.isDone() && !iterator2.isDone()) {
+    if (iterator1.getCurrItem() !== iterator2.getCurrItem()) {
+      throw new Error('iterator1 和iterator2 不相等')
+    }
+    iterator1.next()
+    iterator2.next()
+  }
+  alert('iterator1 和iterator2 相等')
+}
+
+var iterator1 = Iterator([1, 2, 3])
+var iterator2 = Iterator([1, 2, 3])
+compare(iterator1, iterator2) // 输出：iterator1 和iterator2 相等
+```
+
+内部迭代器和外部迭代器在实际生产中没有优劣之分，究竟使用哪个根据需求场景而定吧~
+
+## 迭代类数组和字面量对象
+
+jQuery 中提供了$.each 函数来封装各种迭代行为：
+
+```js
+$.each = function(obj, callback) {
+  var value,
+    i = 0,
+    length = obj.length,
+    isArray = isArrayLike(obj)
+
+  if (isArray) {
+    // 迭代类数组
+    for (; i < length; i++) {
+      value = callback.call(obj[i], i, obj[i])
+      if (value === false) {
+        break
+      }
+    }
+  } else {
+    // 迭代object对象
+    for (i in obj) {
+      value = callback.call(obj[i], i, obj[i])
+      if (value === false) {
+        break
+      }
+    }
+  }
+  return obj
+}
+```
+
+## 中止迭代器
+
+迭代器可以想 for 循环中的 break 一样，跳出循环，上一节的代码中：
+
+```jd
+if(value === false){
+  break;
+}
+```
+
+约定如果回调函数的执行结果返回false，终止循环。我们也可以改写一下each函数：
+```js
+
 ```
 
 **未完待续**
