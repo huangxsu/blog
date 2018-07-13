@@ -101,3 +101,11 @@ beautify:
     'indent_with_tabs': false
     'preserve-newlines': false
     'max_preserve_newlines': 0
+
+# Hexo imagemin
+imagemin:
+  enable: true
+  interlaced: true
+  multipass: true
+  pngquant: true
+  progressive: true
