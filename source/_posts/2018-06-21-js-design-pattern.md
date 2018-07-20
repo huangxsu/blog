@@ -807,15 +807,99 @@ $.each = function(obj, callback) {
 
 迭代器可以想 for 循环中的 break 一样，跳出循环，上一节的代码中：
 
-```jd
+```js
 if(value === false){
   break;
 }
 ```
 
-约定如果回调函数的执行结果返回false，终止循环。我们也可以改写一下each函数：
-```js
+约定如果回调函数的执行结果返回 false，终止循环。我们也可以改写一下 each 函数：
 
+```js
+var each = function(ary, callback) {
+  for (var i = 0; i < ary.length; i++) {
+    if (callback(i, ary[i]) === false) {
+      break
+    }
+  }
+}
+
+each([1, 2, 3, 4, 5], function(i, n) {
+  if (n > 3) {
+    return false
+  }
+  console.log(n)
+})
 ```
 
-**未完待续**
+## 迭代器模式的应用举例
+
+假设我们要实现根据不同的浏览器获取相应的上传组件对象，我们先看看最直接的实现：
+
+```js
+var getUploadObj = function() {
+  try {
+    return new ActiveXObject('TXFTNAcTiveX.FTNUpload')
+  } catch (e) {
+    if (supportFlash()) {
+      var str = '<object type="application/x-shockwave-flash"></object>'
+      return $(str).appendTo($('body'))
+    } else {
+      var str = '<input name="file" type="file" />'
+      return $(str), appendTo($('body'))
+    }
+  }
+}
+```
+
+看看上面的代码，为了得到一个 upload 对象，这个 getUploadObj 函数里充斥了 try，catch 已经 if 条件分支。第一很难元旦，第二严重违反开闭元组。后来我们还增加支持了一些另外的上传方式，比如 HTML5，这时候唯一的办法是继续往 getUploadObj 函数里增加条件分支。
+
+现在来梳理一下问题，目前一共有 3 种可能的上传的方式，我们不知道目前正在使用的浏览器支持哪几种。就好比我们有一个钥匙串，我们想打开一扇门但是不知道该使用哪把钥匙，于是从第二把开始，迭代钥匙串进行尝试，直到找到了正确的钥匙为止。
+
+我们把每种获取 upload 对象的方法都封装在各自的函数里，然后使用迭代器，迭代获取这些 upload 对象，直到获取到一个可用的为止：
+
+```js
+var getActiveUploadObj = function() {
+  try {
+    return new ActiveXObject('TXFTNAcTiveX.FTNUpload')
+  } catch (e) {
+    return false
+  }
+}
+var getFlashUploadObj = function() {
+  if (supportFlash()) {
+    var str = '<object type="application/x-shockwave-flash"></object>'
+    return $(str).appendTo($('body'))
+  }
+  return false
+}
+var getFormUploadObj = function() {
+  var str = '<input name="file" type="file" />'
+  return $(str), appendTo($('body'))
+}
+
+// 迭代器
+var iteratorUploadObj = function(){
+  for(var i = 0, fn; fn = arguments[i++]){
+    var uploadObj = fn()
+    if(uploadObj !== false){
+      return uploadObj;
+    }
+  }
+}
+
+var uploadObj = iteratorUploadObj(getActiveUploadObj,getFlashUploadObj,getFormUploadObj)
+```
+
+现在，我们要增加 HTML5 上传，只需要增加 HTML5 上传对象，然后依照优先级添加进迭代器：
+
+```js
+var getHtml5UploadObj = function() {}
+
+var uploadObj = iteratorUploadObj(
+  getActiveUploadObj,
+  getFlashUploadObj,
+  getHtml5UploadObj,
+  getFormUploadObj
+)
+```
