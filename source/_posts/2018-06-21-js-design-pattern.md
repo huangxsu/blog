@@ -7,9 +7,10 @@ tags:
 - 策略模式
 - 代理模式
 - 迭代器模式
+- 发布——订阅模式
 ---
 
-《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
+《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式和发布——订阅模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
 
 <!--more-->
 
@@ -902,4 +903,85 @@ var uploadObj = iteratorUploadObj(
   getHtml5UploadObj,
   getFormUploadObj
 )
+```
+
+# 发布——订阅模式
+
+发布——订阅模式又叫观察者模式，它定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所以依赖于它的对象都将得到通知。在 JavaScript 开发中，我们一般用事件模型来代替传统的发布——订阅模式。
+
+发布——订阅模式可以广泛应用于异步编程，代替传递回调函数的方案。
+
+发布——订阅模式可以取代对象之间硬编码的通知机制，一个对象不用再显示地调用另外一个对象的某个接口。
+
+## DOM 事件
+
+只要我们曾经在 DOM 节点上面绑定过事件函数，我们就使用过发布——订阅模式。我们可以随意增加或删除订阅者，增加任何订阅者都不会影响发布者代码的编码：
+
+```js
+document.body.addEventListener(
+  'click',
+  function() {
+    alert(2)
+  },
+  false
+)
+document.body.addEventListener(
+  'click',
+  function() {
+    alert(3)
+  },
+  false
+)
+document.body.addEventListener(
+  'click',
+  function() {
+    alert(4)
+  },
+  false
+)
+document.body.click() // 模拟用户点击
+```
+
+## 自定义事件
+
+现在看看如何一步步实现发布——定于模式：
+
+1.  指定发布者。
+2.  给发布者添加一个缓冲列表，存放回调函数通知订阅者。
+3.  发布消息时，发布者遍历缓存列表，依次触发订阅者的回调函数。
+
+```js
+var salesOffices = {} // 定义发布者
+salesOffices.clientList = [] // 缓存列表， 存放订阅者的回调函数
+salesOffices.listen = function(fn) {
+  // 增加订阅者
+  this.clientList.push(fn) // 订阅的消息添加进缓存列表
+}
+salesOffices.trigger = function() {
+  // 发布消息
+  for (var i = 0, fn; (fn = this.clientList[i++]); ) {
+    fn.apply(this, arguments)
+  }
+}
+```
+
+我们发布两条消息消息，订阅者将收到我们发布的所有消息：
+
+```js
+// 小明订阅消息
+salesOffices.listen(function(price, squareMeter) {
+  console.log('价格= ' + price)
+  console.log('squareMeter= ' + squareMeter)
+})
+// 小红订阅消息
+salesOffices.listen(function(price, squareMeter) {
+  console.log('价格= ' + price)
+  console.log('squareMeter= ' + squareMeter)
+})
+salesOffices.trigger(2000000, 88) // 输出： 200万， 88平方米
+salesOffices.trigger(3000000, 110) // 输出：300 万，110 平方米
+```
+
+改进代码，是订阅者只接收其感兴趣的消息，而不是全部接收：
+
 ```
