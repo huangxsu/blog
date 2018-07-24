@@ -1,16 +1,16 @@
 ---
 title: JavaScript设计模式（2）
-date: 2018-06-21 14:47:15
+date: 2018-07-24 14:47:15
 tags:
 - JavaScript
 - 设计模式
 - 策略模式
 - 代理模式
 - 迭代器模式
-- 发布——订阅模式
+- 发布—订阅模式
 ---
 
-《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式和发布——订阅模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
+《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式和发布—订阅模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
 
 <!--more-->
 
@@ -399,7 +399,7 @@ validator.add(registerForm.userName, [
     errorMsg: '用户名不能为空'
   },
   {
-    strategy: 'minLength:6',
+    strategy: 'minLength:10',
     errorMsg: '用户名长度不能小于10 位'
   }
 ])
@@ -528,7 +528,7 @@ MyImage.setSrc('somepicture.png')
 
 实际上，我们需要的是给`img`节点设置`src`，预加载图片只是一个锦上添花的功能。于是代理的作用就体现出来了。代理负责预加载图片，预加载的操作完成之后，把请求重新交给本体`MyImage`。
 
-通过代理对象，在不改变或者增加`MyImage`的接口的情况下，给系统添加了新的行为。这符合开发——封闭原则。给`img`节点设置`src`和图片预加载这两个功能被隔离在两个对象里，互不影响。就算有一天不需要预加载，只需要改成请求本体而不是请求代理对象即可。
+通过代理对象，在不改变或者增加`MyImage`的接口的情况下，给系统添加了新的行为。这符合开放——封闭原则。给`img`节点设置`src`和图片预加载这两个功能被隔离在两个对象里，互不影响。就算有一天不需要预加载，只需要改成请求本体而不是请求代理对象即可。
 
 ## 代理和本体接口的一致性
 
@@ -586,7 +586,7 @@ var proxySynchronousFile = (function() {
 
 ## 虚拟代理在惰性加载中的应用
 
-假设有一个文件`miniConsole.js`，我们并不想一开始就加载，我们希望再有必要的时候才开始加载它，在加载之前，为了能让用户正常地使用里面的 API，通常我们的解决方案是用一个占位的 miniConsole 代理对象来给用户提前使用， 这个代理对象提供给用户的接口， 跟实际的 miniConsole 是一样的。等用户按下 F2 唤出控制台的时候， 才开始加载真正的 miniConsole.js 的代码， 加载完成之后将遍历 miniConsole 代理对象中的缓存函数队列， 同时依次执行它们。
+假设有一个文件`miniConsole.js`，我们并不想一开始就加载，我们希望在有必要的时候才开始加载它，在加载之前，为了能让用户正常地使用里面的 API，通常我们的解决方案是用一个占位的 miniConsole 代理对象来给用户提前使用， 这个代理对象提供给用户的接口， 跟实际的 miniConsole 是一样的。等用户按下 F2 唤出控制台的时候， 才开始加载真正的 miniConsole.js 的代码， 加载完成之后将遍历 miniConsole 代理对象中的缓存函数队列， 同时依次执行它们。
 
 ```js
 var miniConsole = (function(){
@@ -853,9 +853,9 @@ var getUploadObj = function() {
 }
 ```
 
-看看上面的代码，为了得到一个 upload 对象，这个 getUploadObj 函数里充斥了 try，catch 已经 if 条件分支。第一很难元旦，第二严重违反开闭元组。后来我们还增加支持了一些另外的上传方式，比如 HTML5，这时候唯一的办法是继续往 getUploadObj 函数里增加条件分支。
+看看上面的代码，为了得到一个 upload 对象，这个 getUploadObj 函数里充斥了 try，catch 已经 if 条件分支。第一很阅读，第二严重违反开闭原则。后来我们还增加支持了一些另外的上传方式，比如 HTML5，这时候唯一的办法是继续往 getUploadObj 函数里增加条件分支。
 
-现在来梳理一下问题，目前一共有 3 种可能的上传的方式，我们不知道目前正在使用的浏览器支持哪几种。就好比我们有一个钥匙串，我们想打开一扇门但是不知道该使用哪把钥匙，于是从第二把开始，迭代钥匙串进行尝试，直到找到了正确的钥匙为止。
+现在来梳理一下问题，目前一共有 3 种可能的上传的方式，我们不知道目前正在使用的浏览器支持哪几种。就好比我们有一个钥匙串，我们想打开一扇门但是不知道该使用哪把钥匙，于是从第一把开始，迭代钥匙串进行尝试，直到找到了正确的钥匙为止。
 
 我们把每种获取 upload 对象的方法都封装在各自的函数里，然后使用迭代器，迭代获取这些 upload 对象，直到获取到一个可用的为止：
 
@@ -905,17 +905,17 @@ var uploadObj = iteratorUploadObj(
 )
 ```
 
-# 发布——订阅模式
+# 发布—订阅模式
 
-发布——订阅模式又叫观察者模式，它定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所以依赖于它的对象都将得到通知。在 JavaScript 开发中，我们一般用事件模型来代替传统的发布——订阅模式。
+发布—订阅模式又叫观察者模式，它定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所以依赖于它的对象都将得到通知。在 JavaScript 开发中，我们一般用事件模型来代替传统的发布—订阅模式。
 
-发布——订阅模式可以广泛应用于异步编程，代替传递回调函数的方案。
+发布—订阅模式可以广泛应用于异步编程，代替传递回调函数的方案。
 
-发布——订阅模式可以取代对象之间硬编码的通知机制，一个对象不用再显示地调用另外一个对象的某个接口。
+发布—订阅模式可以取代对象之间硬编码的通知机制，一个对象不用再显示地调用另外一个对象的某个接口。
 
 ## DOM 事件
 
-只要我们曾经在 DOM 节点上面绑定过事件函数，我们就使用过发布——订阅模式。我们可以随意增加或删除订阅者，增加任何订阅者都不会影响发布者代码的编码：
+只要我们曾经在 DOM 节点上面绑定过事件函数，我们就使用过发布—订阅模式。我们可以随意增加或删除订阅者，增加任何订阅者都不会影响发布者代码的编码：
 
 ```js
 document.body.addEventListener(
@@ -944,21 +944,21 @@ document.body.click() // 模拟用户点击
 
 ## 自定义事件
 
-现在看看如何一步步实现发布——定于模式：
+现在看看如何一步步实现发布—订阅模式：
 
 1.  指定发布者。
-2.  给发布者添加一个缓冲列表，存放回调函数通知订阅者。
+2.  给发布者添加一个缓存列表，存放回调函数通知订阅者。
 3.  发布消息时，发布者遍历缓存列表，依次触发订阅者的回调函数。
 
 ```js
 var salesOffices = {} // 定义发布者
 salesOffices.clientList = [] // 缓存列表， 存放订阅者的回调函数
+// 增加订阅者
 salesOffices.listen = function(fn) {
-  // 增加订阅者
   this.clientList.push(fn) // 订阅的消息添加进缓存列表
 }
+// 发布消息
 salesOffices.trigger = function() {
-  // 发布消息
   for (var i = 0, fn; (fn = this.clientList[i++]); ) {
     fn.apply(this, arguments)
   }
@@ -982,6 +982,462 @@ salesOffices.trigger(2000000, 88) // 输出： 200万， 88平方米
 salesOffices.trigger(3000000, 110) // 输出：300 万，110 平方米
 ```
 
-改进代码，是订阅者只接收其感兴趣的消息，而不是全部接收：
+改进代码，使订阅者只接收其感兴趣的消息，而不是全部接收：
 
+```js
+var salesOffices = {}
+salesOffices.clientList = [] // 缓存列表，存放订阅者的回调函数
+
+salesOffices.listen = function(key, fn) {
+  // 如果还没有订阅过此类消息，给该类消息创建一个缓存列表
+  if (!this.clientList[key]) {
+    this.clientList[key] = []
+  }
+  this.clientList[key].push(fn) // 订阅的消息添加进消息缓存列表
+}
+
+// 发布消息
+salesOffices.trigger = function() {
+  var key = Array.prototype.shift.call(arguments), // 取出消息类型
+    fns = this.clientList[key] // 取出该消息对应的回调函数集合
+  // 如果没有订阅该消息，则返回
+  if (!fns || fns.length === 0) {
+    return false
+  }
+  for (var i = 0, fn; (fn = fns[i++]); ) {
+    fn.apply(this, arguments) // arguments 是发布消息时附送的参数
+  }
+}
+
+// 小明订阅88 平方米房子的消息
+salesOffices.listen('squareMeter88', function(price) {
+  console.log('价格= ' + price) // 输出： 2000000
+})
+
+// 小红订阅110 平方米房子的消息
+salesOffices.listen('squareMeter110', function(price) {
+  console.log('价格= ' + price) // 输出： 3000000
+})
+
+salesOffices.trigger('squareMeter88', 2000000) // 发布88 平方米房子的价格
+salesOffices.trigger('squareMeter110', 3000000) // 发布110 平方米房子的价格
 ```
+
+## 发布—订阅模式的通用实现
+
+我们把发布—订阅的功能提取出来，放在一个单独的对象内，通过 installEvent 函数为其他对象添加发布—订阅的功能：
+
+```js
+//我们把发布—订阅的功能提取出来，放在一个单独的对象内：
+var event = {
+  clientList: [],
+  listen: function(key, fn) {
+    if (!this.clientList[key]) {
+      this.clientList[key] = []
+    }
+    this.clientList[key].push(fn) // 订阅的消息添加进缓存列表
+  },
+  trigger: function() {
+    var key = Array.prototype.shift.call(arguments), // (1);
+      fns = this.clientList[key]
+    if (!fns || fns.length === 0) {
+      // 如果没有绑定对应的消息
+      return false
+    }
+    for (var i = 0, fn; (fn = fns[i++]); ) {
+      fn.apply(this, arguments) // (2) // arguments 是trigger 时带上的参数
+    }
+  }
+}
+
+var installEvent = function(obj) {
+  //注： for in 循环会遍历所有的属性，包括原型链上的
+  for (var i in event) {
+    obj[i] = event[i]
+  }
+}
+//再来测试一番，我们给售楼处对象salesOffices 动态增加发布—订阅功能：
+var salesOffices = {}
+installEvent(salesOffices)
+// 小明订阅消息
+salesOffices.listen('squareMeter88', function(price) {
+  console.log('价格= ' + price)
+})
+// 小红订阅消息
+salesOffices.listen('squareMeter100', function(price) {
+  console.log('价格= ' + price)
+})
+salesOffices.trigger('squareMeter88', 2000000) // 输出：2000000
+salesOffices.trigger('squareMeter100', 3000000) // 输出：3000000
+```
+
+## 取消订阅事件
+
+我们给 event 对象增加 remove 方法：
+
+```js
+event.remove = function(key, fn) {
+  var fns = this.clientList[key]
+  // 如果key 对应的消息没有被人订阅，则直接返回
+  if (!fns) {
+    return false
+  }
+  // 如果没有传入具体的回调函数，表示需要取消key 对应消息的所有订阅
+  if (!fn) {
+    fns && (fns.length = 0)
+  } else {
+    // 反向遍历订阅的回调函数列表
+    for (var l = fns.length - 1; l >= 0; l--) {
+      var _fn = fns[l]
+      if (_fn === fn) {
+        fns.splice(l, 1) // 删除订阅者的回调函数
+      }
+    }
+  }
+}
+
+var salesOffices = {}
+var installEvent = function(obj) {
+  for (var i in event) {
+    obj[i] = event[i]
+  }
+}
+
+installEvent(salesOffices)
+
+// 小明订阅消息
+salesOffices.listen(
+  'squareMeter88',
+  (fn1 = function(price) {
+    console.log('价格= ' + price)
+  })
+)
+
+// 小红订阅消息
+salesOffices.listen(
+  'squareMeter88',
+  (fn2 = function(price) {
+    console.log('价格= ' + price)
+  })
+)
+
+salesOffices.remove('squareMeter88', fn1) // 删除小明的订阅
+salesOffices.trigger('squareMeter88', 2000000) // 输出：2000000
+```
+
+## 真实的例子——网站登录
+
+假如我们正在开发一个商城网站， 网站里有 header 头部、 nav 导航、 消息列表、 购物车等模块。 这几个模块的渲染有一个共同的前提条件， 就是必须先用 ajax 异步请求获取用户的登录信息。
+
+至于 ajax 请求什么时候能成功返回用户信息， 这点我们没有办法确定。但现在还不足以说服我们在此使用发布—订阅模式， 因为异步的问题通常也可以用回调函数来解决。
+
+更重要的一点是， 我们不知道除了 header 头部、 nav 导航、 消息列表、 购物车之外， 将来还有哪些模块需要使用这些用户信息。 如果它们和用户信息模块产生了强耦合， 比如下面这样的形式：
+
+```js
+login.succ(function(data) {
+  header.setAvatar(data.avatar) // 设置header模块的头像
+  nav.setAvatar(data.avatar) // 设置导航模块的头像
+  message.refresh() // 刷新消息列表
+  cart.refresh() // 刷新购物车列表
+})
+```
+
+现在登录模块是我们负责编写的， 但我们还必须了解 header 模块里设置头像的方法叫 setAvatar、 购物车模块里刷新的方法叫 refresh， 这种耦合性会使程序变得僵硬， header 模块不能随意再改变 setAvatar 的方法名， 它自身的名字也不能被改为 header1、 header2。 这是针对具体实现编程的典型例子， 针对具体实现编程是不被赞同的。
+
+等到有一天， 项目中又新增了一个收货地址管理的模块， 这个模块本来是另一个同事所写的， 而此时你正在马来西亚度假， 但是他却不得不给你打电话： “Hi， 登录之后麻烦刷新一下收货地址列表。 ”于是你又翻开你 3 个月前写的登录模块， 在最后部分加上这行代码：
+
+```js
+login.succ(function(data) {
+  header.setAvatar(data.avatar)
+  nav.setAvatar(data.avatar)
+  message.refresh()
+  cart.refresh()
+  address.refresh() // 增加这行代码
+})
+```
+
+我们就会越来越疲于应付这些突如其来的业务要求， 要么跳槽了事， 要么必须来重构这些代码。
+
+用发布—订阅模式重写之后， 对用户信息感兴趣的业务模块将自行订阅登录成功的消息事件。 当登录成功时， 登录模块只需要发布登录成功的消息， 而业务方接受到消息之后， 就会开始进行各自的业务处理， 登录模块并不关心业务方究竟要做什么， 也不想去了解它们的内部细节。 改善后的代码如下：
+
+```js
+// 登录成功
+$.ajax('http:// xxx.com?login', function(data) {
+  login.trigger('loginSucc', data) // 发布登录成功的消息
+})
+```
+
+各模块监听登录成功的消息：
+
+```js
+// header模块
+var header = (function() {
+  login.listen('loginSucc', function(data) {
+    header.setAvatar(data.avatar)
+  })
+  return {
+    setAvatar: function(data) {
+      console.log('设置header模块的头像')
+    }
+  }
+})()
+// nav模块
+var nav = (function() {
+  login.listen('loginSucc', function(data) {
+    nav.setAvatar(data.avatar)
+  })
+  return {
+    setAvatar: function(avatar) {
+      console.log('设置nav模块的头像')
+    }
+  }
+})()
+```
+
+## 全局的发布—订阅对象
+
+回想下刚刚实现的发布—订阅模式， 我们给售楼处对象和登录对象都添加了订阅和发布的功能， 这里存在两个小问题：
+
+1.  我们给每个发布者对象都添加了 listen 和 trigger 方法， 以及一个缓存列表 clientList，这其实是一种资源浪费。
+2.  小明跟售楼处对象还是存在一定的耦合性， 小明至少要知道售楼处对象的名字是 salesOffices， 才能顺利的订阅到事件。
+
+发布—订阅模式可以用一个全局的 Event 对象来实现， 订阅者不需要了解消息来自哪个发布者， 发布者也不知道消息会推送给哪些订阅者， Event 作为一个类似“中介者”的角色， 把订阅者和发布者联系起来。 见如下代码：
+
+```js
+var Event = (function() {
+  var clientList = {},
+    listen,
+    trigger,
+    remove
+  listen = function(key, fn) {
+    if (!clientList[key]) {
+      clientList[key] = []
+    }
+    clientList[key].push(fn)
+  }
+  trigger = function() {
+    var key = Array.prototype.shift.call(arguments),
+      fns = clientList[key]
+    if (!fns || fns.length === 0) {
+      return false
+    }
+    for (var i = 0, fn; (fn = fns[i++]); ) {
+      fn.apply(this, arguments)
+    }
+  }
+  remove = function(key, fn) {
+    var fns = clientList[key]
+    if (!fns) {
+      return false
+    }
+    if (!fn) {
+      fns && (fns.length = 0)
+    } else {
+      for (var l = fns.length - 1; l >= 0; l--) {
+        var _fn = fns[l]
+        if (_fn === fn) {
+          fns.splice(l, 1)
+        }
+      }
+    }
+  }
+  return {
+    listen: listen,
+    trigger: trigger,
+    remove: remove
+  }
+})()
+
+// 小红订阅消息
+Event.listen('squareMeter88', function(price) {
+  console.log('价格= ' + price) // 输出：'价格=2000000'
+})
+
+Event.trigger('squareMeter88', 2000000) // 售楼处发布消息
+```
+
+## 模块间通信
+
+比如现在有两个模块， a 模块里面有一个按钮， 每次点击按钮之后， b 模块里的 div 中会显示按钮的总点击次数， 我们用全局发布—订阅模式完成下面的代码， 使得 a 模块和 b 模块可以在保持封装性的前提下进行通信:
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <button id="count">点我</button>
+  <div id="show"></div>
+</body>
+<script type="text/JavaScript">
+  var a = (function(){
+    var count = 0;
+    var button = document.getElementById( 'count' );
+    button.onclick = function(){
+      Event.trigger( 'add', count++ );
+    }
+  })();
+  var b = (function(){
+    var div = document.getElementById( 'show' );
+    Event.listen( 'add', function( count ){
+      div.innerHTML = count;
+    });
+  })();
+</script>
+</html>
+```
+
+但在这里我们要留意另一个问题， 模块之间如果用了太多的全局发布—订阅模式来通信， 那么模块与模块之间的联系就被隐藏到了背后。 我们最终会搞不清楚消息来自哪个模块， 或者消息会流向哪些模块， 这又会给我们的维护带来一些麻烦。
+
+## 先发布再订阅
+
+这种需求在实际项目中是存在的， 比如在之前的商城网站中， 获取到用户信息之后才能渲染用户导航模块， 而获取用户信息的操作是一个 ajax 异步请求。 当 ajax 请求成功返回之后会发布一个事件， 在此之前订阅了此事件的用户导航模块可以接收到这些用户信息。
+
+但是这只是理想的状况， 因为异步的原因， 我们不能保证 ajax 请求返回的时间， 有时候它返回得比较快， 而此时用户导航模块的代码还没有加载好（还没有订阅相应事件） ， 特别是在用了一些模块化惰性加载的技术后， 这是很可能发生的事情。
+
+为了满足这个需求， 我们要建立一个存放离线事件的堆栈， 当事件发布的时候， 如果此时还没有订阅者来订阅这个事件， 我们暂时把发布事件的动作包裹在一个函数里， 这些包装函数将被存入堆栈中，等到终于有对象来订阅此事件的时候， 我们将遍历堆栈并且依次执行这些包装函数， 也就是重新发布里面的事件。 当然离线事件的生命周期只有一次，比如模块加载好后就可以完成先订阅再发布， 所以刚才的操作我们只能进行一次。
+
+## 全局事件的命名冲突
+
+全局的发布—订阅对象里只有一个 clinetList 来存放消息名和回调函数， 大家都通过它来订阅和发布各种消息， 久而久之， 难免会出现事件名冲突的情况， 所以我们还可以给 Event 对象提供创建命名空间的功能。
+
+```js
+/************** 先发布后订阅 ********************/
+Event.trigger('click', 1)
+Event.listen('click', function(a) {
+  console.log(a) // 输出： 1
+})
+/************** 使用命名空间 ********************/
+Event.create('namespace1').listen('click', function(a) {
+  console.log(a) // 输出： 1
+})
+Event.create('namespace1').trigger('click', 1)
+Event.create('namespace2').listen('click', function(a) {
+  console.log(a) // 输出： 2
+})
+Event.create('namespace2').trigger('click', 2)
+```
+
+具体实现代码如下：
+
+```js
+var Event = (function() {
+  var Event,
+    _default = 'default'
+  Event = (function() {
+    var _listen,
+      _trigger,
+      _remove,
+      _shift = Array.prototype.shift,
+      _unshift = Array.prototype.unshift,
+      namespaceCache = {},
+      _create,
+      each = function(ary, fn) {
+        var ret
+        for (var i = 0, l = ary.length; i < l; i++) {
+          var n = ary[i]
+          ret = fn.call(n, i, n)
+        }
+        return ret
+      }
+    _listen = function(key, fn, cache) {
+      if (!cache[key]) {
+        cache[key] = []
+      }
+      cache[key].push(fn)
+    }
+    _remove = function(key, cache, fn) {
+      if (cache[key]) {
+        if (fn) {
+          for (var i = cache[key].length; i >= 0; i--) {
+            if (cache[key][i] === fn) {
+              cache[key].splice(i, 1)
+            }
+          }
+        } else {
+          cache[key] = []
+        }
+      }
+    }
+    _trigger = function() {
+      var cache = _shift.call(arguments),
+        key = _shift.call(arguments),
+        args = arguments,
+        _self = this,
+        ret,
+        stack = cache[key]
+      if (!stack || !stack.length) {
+        return
+      }
+      return each(stack, function() {
+        return this.apply(_self, args)
+      })
+    }
+    _create = function(namespace) {
+      var namespace = namespace || _default
+      var cache = {},
+        offlineStack = [], // 离线事件
+        ret = {
+          listen: function(key, fn) {
+            _listen(key, fn, cache)
+            if (offlineStack === null) {
+              return
+            }
+            each(offlineStack, function() {
+              this()
+            })
+            offlineStack = null
+          },
+          remove: function(key, fn) {
+            _remove(key, cache, fn)
+          },
+          trigger: function() {
+            var fn,
+              args,
+              _self = this
+            _unshift.call(arguments, cache)
+            args = arguments
+            fn = function() {
+              return _trigger.apply(_self, args)
+            }
+            if (offlineStack) {
+              return offlineStack.push(fn)
+            }
+            return fn()
+          }
+        }
+      return namespace
+        ? namespaceCache[namespace]
+          ? namespaceCache[namespace]
+          : (namespaceCache[namespace] = ret)
+        : ret
+    }
+    return {
+      create: _create,
+      remove: function(key, fn) {
+        var event = this.create()
+        event.remove(key, fn)
+      },
+      listen: function(key, fn) {
+        var event = this.create()
+        event.listen(key, fn)
+      },
+      trigger: function() {
+        var event = this.create()
+        event.trigger.apply(this, arguments)
+      }
+    }
+  })()
+  return Event
+})()
+```
+
+## JavaScript 实现发布—订阅模式的便利性
+
+在 Java 中实现一个自己的发布—订阅模式， 通常会把订阅者对象自身当成引用传入发布者对象中， 同时订阅者对象还需提供一个名为诸如 update 的方法， 供发布者对象在适合的时候调用。而在 JavaScript 中，我们用注册回调函数的形式来代替传统的发布—订阅模式， 显得更加优雅和简单。
+
+另外， 在 JavaScript 中， 我们无需去选择使用推模型还是拉模型。 推模型是指在事件发生时， 发布者一次性把所有更改的状态和数据都推送给订阅者。 拉模型不同的地方是， 发布者仅仅通知订阅者事件已经发生了， 此外发布者要提供一些公开的接口供订阅者来主动拉取数据。 拉模型的好处是可以让订阅者“按需获取”， 但同时有可能让发布者变成一个“门户大开”的对象， 同时增加了代码量和复杂度。
+
+刚好在 JavaScript 中， arguments 可以很方便地表示参数列表， 所以我们一般都会选择推模型， 使用 Function.prototype.apply 方法把所有参数都推送给订阅者。
+
+发布—订阅模式的优点非常明显， 一为时间上的解耦， 二为对象之间的解耦。 它的应用非常广泛， 既可以用在异步编程中， 也可以帮助我们完成更松耦合的代码编写。 发布—订阅模式还可以用来帮助实现一些别的设计模式， 比如中介者模式。 从架构上来看， 无论是 MVC 还是 MVVM， 都少不了发布—订阅模式的参与， 而且 JavaScript 本身也是一门基于事件驱动的语言。
+
+当然， 发布—订阅模式也不是完全没有缺点。 创建订阅者本身要消耗一定的时间和内存， 而且当你订阅一个消息后， 也许此消息最后都未发生， 但这个订阅者会始终存在于内存中。 另外， 发布—订阅模式虽然可以弱化对象之间的联系， 但如果过度使用的话， 对象和对象之间的必要联系也将被深埋在背后， 会导致程序难以跟踪维护和理解。 特别是有多个发布者和订阅者嵌套到一起的时候， 要跟踪一个 bug 不是件轻松的事情。
