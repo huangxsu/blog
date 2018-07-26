@@ -1,5 +1,5 @@
 ---
-title: Javascript数据结构（下）
+title: Javascript数据结构之树
 date: 2018-07-02 20:55:01
 mathjax: true
 tags:
@@ -7,9 +7,10 @@ tags:
 - 数据结构
 - 树
 - 二叉查找树
+- 平衡二叉树/AVL树
 ---
 
-在 **[Javascript 数据结构（上）](/2018/06/22/data-structure)** 这篇文章中我们学习了数据结构的初级算法：链表、队列、栈、哈希表、堆、优先队列和字典树。本文继续介绍数据结构的高级算法：二叉查找树。完整代码可到 **[Github](https://github.com/PennySuu/javascript-algorithms)** 上查看。**To Be Continued**
+在 **[Javascript 数据结构之初级](/2018/06/22/data-structure)** 这篇文章中我们学习了数据结构的初级算法：链表、队列、栈、哈希表、堆、优先队列和字典树。本文继续介绍数据结构的高级算法：二叉查找树、平衡二叉树。完整代码可到 **[Github](https://github.com/PennySuu/javascript-algorithms)** 上查看。**To Be Continued**
 
 <!--more-->
 
@@ -115,7 +116,13 @@ export default class BinaryTreeNode {
    */
   get height() {
     return Math.max(this.leftHeight, this.rightHeight)
-  }turn (this.leftHeight === this.rightHeight)
+  }
+  /**
+   * 平衡因子
+   * @return {number}
+   */
+  get balanceFactor() {
+    return this.leftHeight - this.rightHeight
   }
   /**
    * 获取父节点的兄弟节点
@@ -256,6 +263,9 @@ export default class BinaryTreeNode {
 如下图，左边的树是二叉查找树，但右边的树则不是，因为左子树中存在一个节点项 `7` 比根节点大。
 
 {% asset_img adt.png 两棵二叉树（只有左边的树是查找树） %}
+
+1.  **[Inserting on BST on YouTube](https://www.youtube.com/watch?v=wcIRPqTR3Kc&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=9&t=0s)**
+2.  **[BST 交互式可视化效果](https://www.cs.usfca.edu/~galles/visualization/BST.html)**
 
 ## 操作
 
@@ -448,5 +458,9 @@ export default class BinarySearchTree {
   }
 }
 ```
+
+# 平衡二叉树/ AVL 树
+
+
 
 **未完待续**

@@ -1,5 +1,5 @@
 ---
-title: Javascript数据结构（上）
+title: Javascript数据结构之初级
 date: 2018-06-22 16:53:12
 tags:
 - JavaScript 
@@ -877,7 +877,7 @@ export default class Trie {
 | 哈希表   | -    | n    | n      | n      | 如果是完美哈希函数花费是 O(1) |
 | 堆       | n    | n    | log(n) | log(n) | 访问堆顶元素的值 O(1)         |
 
-数据结构的初级算法就先介绍到这里。之后会继续更新数据结构的高级算法。
+数据结构的初级算法就先介绍到这里。数据结构的高级算法请到**[Javascript数据结构之树](/2018/07/02/js-data-structure/)**。
 
 # 参考文献
 
