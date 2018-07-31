@@ -8,9 +8,10 @@ tags:
 - 树
 - 二叉查找树
 - 平衡二叉树/AVL树
+- 红黑树
 ---
 
-在 **[Javascript 数据结构之初级](/2018/06/22/data-structure)** 这篇文章中我们学习了数据结构的初级算法：链表、队列、栈、哈希表、堆、优先队列和字典树。本文继续介绍数据结构的高级算法：二叉查找树、平衡二叉树。完整代码可到 **[Github](https://github.com/PennySuu/javascript-algorithms)** 上查看。**To Be Continued**
+在 **[Javascript 数据结构之初级](/2018/06/22/data-structure)** 这篇文章中我们学习了数据结构的初级算法：链表、队列、栈、哈希表、堆、优先队列和字典树。本文继续介绍数据结构的高级算法：二叉查找树、平衡二叉树和红黑树。完整代码可到 **[Github](https://github.com/PennySuu/javascript-algorithms)** 上查看。**To Be Continued**
 
 <!--more-->
 
@@ -671,6 +672,115 @@ rotateRightLeft(rootNode) {
 ```
 
 JavaScript 实现 **平衡二叉树** 数据结构的核心代码：**[AVLTree.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/tree/avl-tree/AVLTree.js)**
+
+# 红黑树 Red Black Tree
+
+红黑树是一种自平衡的二叉排序树，它是 1972 年由鲁道夫·贝尔发明的。在红黑树上的操作有着良好的最坏情况下的运行时间，即它可以在 O($log_2(n)$) 时间内完成查找、插入和删除操作。
+
+红黑树是一种每个节点都带有颜色属性的二叉查找树，颜色是红色或黑色。可以把一颗红黑树视为一颗扩充的二叉树，用外部节点表示空指针。红黑树除了具有二叉排序树的所有性质之外，还具有以下三点性质：
+
+1.  根节点和所有外部节点的颜色都是黑色
+2.  从根节点到外部节点的路径上没有两个连续的红色节点
+3.  从根节点到外部节点的所有路径上都包含相同数目的黑色节点
+
+如下图是一颗红黑树，长方形的标有 NIL 的节点是外部节点。
+
+{% asset_img red-black-tree.png  %}
+
+## 查找
+
+每颗红黑树都是一颗二叉排序树，因此在对红黑树进行查找时，可以采用运用普通二叉树上的查找算法，查找过程不需要颜色信息。
+
+对于普通二叉排序树进行查找的时间复杂度为 O(n)，n 为二叉排序树的深度，对于红黑树则为 O($log_2(n)$)。由于在查找普通二叉排序树、AVL 树和红黑树时，所用代码是相同的，并且在最坏情况下，AVL 树的深度最小，因此，在那些以查找为主的应用程序中，在最坏情况下，AVL 树都能获得最好的时间复杂度。
+
+## 插入
+
+首先使用二叉排序树的插入算法将一个节点插入到红黑树中，该节点将作为新的叶子节点插入到红黑树中某一外部节点位置。在插入过程中需要为新节点设置颜色。
+
+若插入前红黑树为空树，则新插入的节点将成为根节点，根据性质 1，根节点必须要黑色；若插入前红黑树不为空树，将新节点的颜色设为黑色，将违反性质 3，从根节点到外部节点的路径上的黑色节点个数不等。因此，新节点必须设为红色，这就有可能违反红黑树的性质 2，出现连续两个红色节点，故需要重新平衡。
+
+若将新节点标为红色，与性质 2 冲突，说明新节点的父节点为红色，则父节点一定不是根节点，因为根节点是黑色的，所以存在祖父节点为黑色。
+
+学过 AVL 树之后，红黑树的平衡调整将变得很容易理解，首先我们判断新节点的叔叔节点的颜色，如果叔叔节点是红色，我们只需要改变颜色；如果叔叔节点是黑色，我们需要根据具体情况旋转处理再改变颜色。下面让我们先看看叔叔节点是红色的情况。
+
+## 叔叔节点为红色
+
+节点说明：`g`祖父（grandparent）节点，`p`父（parent）节点，`u`叔叔（uncle）节点，`x`新节点。
+
+调整：`p` 和 `u` 设为黑色，`g` 设为红色，如果 `g` 为根据点，则 `g` 保持黑色不变。因此当`g`是根节点时，红黑树从根节点到外部节点的路径上的黑色节点个数增加 1。
+
+1、 LL 型：`p` 是 `g` 的左孩子，`x` 是 `p` 的左孩子
+
+{% asset_img LLr.png %}
+
+2、 LR 型：`p` 是 `g` 的左孩子，`x` 是 `p` 的右孩子
+
+{% asset_img LRr.png %}
+
+3、 RR 型：`p` 是 `g` 的右孩子，`x` 是 `p` 的右孩子
+
+{% asset_img RRr.png %}
+
+4、RL 型：`p` 是 `g` 的右孩子，`x` 是 `p` 的左孩子
+
+{% asset_img RLr.png %}
+
+若因为改变`g`的颜色产生了不平衡现在，则`g`作为新的`x`节点，继续进行再平衡处理，让我们看看代码是如何实现的：
+
+```js
+balance(node) {
+  // 如果是根节点，什么都不需要改变
+  if (this.nodeComparator.equal(node, this.root)) {
+    return
+  }
+  // 如果新节点的父节点是黑色，新节点是红色，树是平衡的
+  if (this.isNodeBlack(node.parent)) {
+    return
+  }
+  // 新节点的祖父节点
+  const grandParent = node.parent.parent
+  // 新节点有叔叔节点，且叔叔节点是红色，改变颜色即可
+  if (node.uncle && this.isNodeRed(node.uncle)) {
+    // 叔叔节点和父节点变为黑色
+    this.makeNodeBlack(node.uncle)
+    this.makeNodeBlack(node.parent)
+
+    // 如果祖父节点不是根节点，祖父节点变为红色
+    if (!this.nodeComparator.equal(grandParent, this.root)) {
+      this.makeNodeRed(grandParent)
+    } else {
+      // 如果祖父节点是根节点，不需要改变颜色
+      return
+    }
+    // 继续检查树的平衡性
+    this.balance(grandParent)
+  }
+  // 如果叔叔节点是黑色，或者没有叔叔节点（外部节点也是黑色），需要先旋转后变色
+  else if (!node.uncle || this.isNodeBlack(node.uncle)) {
+    //下一节中进行讲解
+  }
+}
+```
+
+## 叔叔节点为黑色
+
+调整：先根据树形进行相应的调整，调整的方式和上一章将过的 AVL 树一样的，再将子树的新根节点与旧根节点的颜色进行替换。
+
+1、 LL 型：`p` 是 `g` 的左孩子，`x` 是 `p` 的左孩子
+
+{% asset_img LLb.png %}
+
+2、 LR 型：`p` 是 `g` 的左孩子，`x` 是 `p` 的右孩子
+
+{% asset_img LRb.png %}
+
+3、 RR 型：`p` 是 `g` 的右孩子，`x` 是 `p` 的右孩子
+
+{% asset_img RRb.png %}
+
+4、RL 型：`p` 是 `g` 的右孩子，`x` 是 `p` 的左孩子
+
+{% asset_img RLb.png %}
 
 # 参考文献
 
