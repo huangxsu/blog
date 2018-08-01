@@ -144,7 +144,7 @@ export default class BinaryTreeNode {
     // 判断祖父节点的左节点是否是父节点
     if (this.nodeComparator.equal(this.parent, this.parent.parent.left)) {
       // 父节点的兄弟节点是右节点
-      return ths.parent.parent.right
+      return this.parent.parent.right
     }
     // 父节点的兄弟节点是左节点
     return this.parent.parent.left
@@ -687,6 +687,10 @@ JavaScript 实现 **平衡二叉树** 数据结构的核心代码：**[AVLTree.j
 
 {% asset_img red-black-tree.png  %}
 
+1.  [Red Black Tree Insertion by Tushar Roy YouTube](https://www.youtube.com/watch?v=UaLIHuR1t8Q&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=63)
+2.  [Red Black Tree Deletion by Tushar Roy YouTube](https://www.youtube.com/watch?v=CTvfzU_uNKE&t=0s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=64)
+3.  [Red Black Tree 交互式可视化效果](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+
 ## 查找
 
 每颗红黑树都是一颗二叉排序树，因此在对红黑树进行查找时，可以采用运用普通二叉树上的查找算法，查找过程不需要颜色信息。
@@ -764,7 +768,7 @@ balance(node) {
 
 ## 叔叔节点为黑色
 
-调整：先根据树形进行相应的调整，调整的方式和上一章将过的 AVL 树一样的，再将子树的新根节点与旧根节点的颜色进行替换。
+调整：先根据树形进行相应的调整，调整的方式和上一章将过的 AVL 树一样的，再将子树的新根节点与旧根节点的颜色进行替换，并结束重新平衡过程。
 
 1、 LL 型：`p` 是 `g` 的左孩子，`x` 是 `p` 的左孩子
 
@@ -782,8 +786,63 @@ balance(node) {
 
 {% asset_img RLb.png %}
 
+让我们看看代码是如何实现的：
 
+```js
+balance(node) {
+  // 省略...
+  // 如果叔叔节点是黑色，或者没有叔叔节点（外部节点也是黑色），需要先旋转后变色
+  else if (!node.uncle || this.isNodeBlack(node.uncle)) {
+    // 有祖父节点时才需要进行下列操作
+    if (grandParent) {
+      // 新的祖父节点
+      let newGrandParent
+      // 如果父节点是祖父节点的左孩子
+      if (this.nodeComparator.equal(grandParent.left, node.parent)) {
+        // 如果新节点是父节点的左孩子
+        if (this.nodeComparator.equal(node.parent.left, node)) {
+          // 进行LL型旋转
+          newGrandParent = this.leftLeftRotation(grandParent)
+        } else {
+          // 否则进行LR型旋转
+          newGrandParent = this.leftRightRotation(grandParent)
+        }
+      }
+      // 如果父节点是祖父节点的右孩子
+      else {
+        // 如果新节点是父节点的右孩子
+        if (this.nodeComparator.equal(node.parent.right, node)) {
+          // 进行RR型旋转
+          newGrandParent = this.rightRightRotation(grandParent)
+        } else {
+          // 进行RL型旋转
+          newGrandParent = this.rightLeftRotation(grandParent)
+        }
+      }
+      // 如果新的祖父节点是根节点，设为黑色
+      if (newGrandParent && newGrandParent.parent === null) {
+        this.root = newGrandParent
+        this.makeNodeBlack(this.root)
+      }
+    }
+  }
+}
+```
+
+JavaScript 实现 **红黑树** 数据结构的核心代码：**[RedBlackTree.js](https://github.com/PennySuu/javascript-algorithms/blob/master/src/data-structures/tree/red-black-tree/RedBlackTree.js)**
+
+# 时间复杂度
+
+| 数据结构   | 访问   | 查找   | 插入   | 删除   | 备注 |
+| ---------- | ------ | ------ | ------ | ------ | ---- |
+| 二叉查找树 | n      | n      | n      | n      |      |
+| AVL 树     | log(n) | log(n) | log(n) | log(n) |      |
+| 红黑树     | log(n) | log(n) | log(n) | log(n) | -    |
+
+数据结构树的介绍到这里就先高一段落，后续还会继续介绍更复杂的数据结构， **TO BE CONTINUED**。
 
 # 参考文献
 
 1.  **[数据结构——C 语言描述](http://mooc.chaoxing.com/nodedetailcontroller/visitnodedetail?knowledgeId=519743)**
+1.  **[Trekhleb javascript-algorithms Github](https://github.com/trekhleb/javascript-algorithms)**
+1.  《数据结构——Java 语言描述》 第 1 版，作者：刘小晶，清华大学出版社
