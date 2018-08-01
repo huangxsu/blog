@@ -1,6 +1,6 @@
 ---
 title: Javascript数据结构之树
-date: 2018-07-02 20:55:01
+date: 2018-08-01 20:55:01
 mathjax: true
 tags:
 - JavaScript 
@@ -11,7 +11,7 @@ tags:
 - 红黑树
 ---
 
-在 **[Javascript 数据结构之初级](/2018/06/22/data-structure)** 这篇文章中我们学习了数据结构的初级算法：链表、队列、栈、哈希表、堆、优先队列和字典树。本文继续介绍数据结构的高级算法：二叉查找树、平衡二叉树和红黑树。完整代码可到 **[Github](https://github.com/PennySuu/javascript-algorithms)** 上查看。**To Be Continued**
+在 **[Javascript 数据结构之初级](/2018/06/22/data-structure)** 这篇文章中我们学习了数据结构的初级算法：链表、队列、栈、哈希表、堆、优先队列和字典树。本文继续介绍数据结构的高级算法：二叉查找树、平衡二叉树和红黑树。完整代码可到 **[Github](https://github.com/PennySuu/javascript-algorithms)** 上查看。
 
 <!--more-->
 
@@ -839,7 +839,7 @@ JavaScript 实现 **红黑树** 数据结构的核心代码：**[RedBlackTree.js
 | AVL 树     | log(n) | log(n) | log(n) | log(n) |      |
 | 红黑树     | log(n) | log(n) | log(n) | log(n) | -    |
 
-数据结构树的介绍到这里就先高一段落，后续还会继续介绍更复杂的数据结构， **TO BE CONTINUED**。
+数据结构树的介绍到这里就先告一段落，后续还会继续介绍， **TO BE CONTINUED**。
 
 # 参考文献
 
