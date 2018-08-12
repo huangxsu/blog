@@ -10,7 +10,7 @@ tags:
 - 发布—订阅模式
 ---
 
-《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式和发布—订阅模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。
+《JavaScript 设计模式与开发实践》，作者：曾探，读书笔记。本文介绍几种设计模式：策略模式、代理模式、迭代器模式和发布—订阅模式。本文中所有源代码存放在**[Github](https://github.com/PennySuu/js-design-pattern-exmaple-from-book)**。JavaScript 设计模式（3）已完成，**[点击查看](/2018/08/01/js-design-pattern/)**。
 
 <!--more-->
 
