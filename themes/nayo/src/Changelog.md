@@ -62,7 +62,7 @@
 ## [0.1.8]
 
 ### Added
-- 重新支持 Lazyload.js
+- 支持 Lazyload.js
 
 ### Changed
 - 重做了部分样式
@@ -72,7 +72,7 @@
 ### Added
 - 代码类型提示
 
-### Removeed
+### Removed
 - busuanzi
 - category page
 

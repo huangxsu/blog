@@ -2,7 +2,11 @@
 
 a concise theme for hexo.
 
-预览 [preview](http://lemonreds.github.io) | 常见问题 [common issues](http://synch.site/2018/02/08/hexo-theme-nayo/)
+预览 [preview](http://synch.site/) | 常见问题 [common issues](http://synch.site/2018/02/08/hexo-theme-nayo/) | 更新日志 [ChangeLog](https://github.com/Lemonreds/hexo-theme-nayo/blob/master/src/Changelog.md)
+
+## Preview
+
+![Where is my image?](https://github.com/Lemonreds/hexo-theme-nayo/blob/master/src/nayo.png)
 
 ## Installation
 
@@ -33,19 +37,18 @@ theme: Nayo
 
 ## Modify theme 
 
-修改主题。
+0. 基于jquery,stylus,ejs和参照hexo文档
 
-install dependencies
+1. install dependencies [npm安装依赖]
 ```
 npm install 
 ```
-
-modify theme
+2. modify theme [开发环境]
 ```
 npm run dev
 ```
 
-build once
+3. build once [打包一次文件] 
 ```
 npm run build
 ```
