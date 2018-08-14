@@ -10,20 +10,18 @@ tags:
 本篇介绍一些关于webpack构建优化的内容，当然，抛开实际使用场景来谈优化意义不大，某些方法还需要结合实际情况来使用。
 # 构建速度
 ## 官方文档
-官方文档关于构建速度的优化有**[如下建议](https://webpack.js.org/guides/build-performance/)**：
-
-{% asset_img doc.png 官方文档 %}
+官方文档关于构建速度的优化有**[请看这里](https://webpack.js.org/guides/build-performance/)**
 
 我们的目标：在保证构建 **结果正确（构建结果与优化前基本一致或更优）的前提** 下，减少构建时间
 
 ## 主要手段
-- 减少资源搜索时间
+- 限制范围
 - 减少代码体积
 - 使用缓存
 - 多线程
 - 其他
 
-## 减少资源搜索时间
+## 限制范围
 1.限制loader只处理特定的目录
 ```js
 module.exports = {
@@ -74,6 +72,7 @@ module.exports = {
 ### 使用 DllPlugin/DllReferencePlugin **[文档](https://webpack.js.org/plugins/dll-plugin)**
 1. 新建一个单独的 webpack 配置文件，比如 webpack.dll.config.js
 2. 在这个配置文件中，使用 webpack DllPlugin 生成 manifest.json 文件和 Dll 模块文件。也可以引入诸如 uglifyPlugin 对第三方依赖进行压缩等处理。
+
 ```js
 import path from 'path';
 import webpack from 'webpack';
@@ -102,6 +101,7 @@ const config = {
 }
 ```
 3. 在正常的 webpack 配置文件中，使用 webpack DllReferencePlugin 解析上一步生成的 manifest.json
+
 ```js
 new webpack.DllReferencePlugin({
     context: path.join(__dirname),
@@ -122,7 +122,8 @@ module: {
 ```
 还可以使用 `cache-loader` 启用持久化缓存
 ## 多线程
-### happypack
+### happypack **[文档](https://github.com/amireh/happypack)**
+happypack 是 webpack 的一个插件，目的是通过多进程模型，来加速代码构建 **[具体原理](http://taobaofed.org/blog/2016/12/08/happypack-source-code-analysis)**
 ```js
 var HappyPack = require('happypack'),
   os = require('os'),
@@ -171,7 +172,7 @@ plugins: [
 - AggressiveMergingPlugin
 - ModuleConcatenationPlugin
 
-### devtool: 
+### devtool
 不同的 devtool 的设置，会导致不同的性能差异。
 `inline-source-map`会增加编译时间，带`eval`的设置（或者直接关闭）具有最好的性能，但并不能帮助你调试代码。
 如果你能接受稍差一些的 mapping 质量，可以使用 cheap-source-map 选项来提高性能，使用 eval-source-map 配置进行增量编译。
@@ -189,9 +190,9 @@ plugins: [
 
 # 构建结果优化
 ## 主要手段
-- 代码分析
-
-## CommonsChunkPlugin的使用
+- 代码（chunk）分析
+- 根据结果进行包大小，缓存优化
+## CommonsChunkPlugin的使用  **[文档](https://webpack.js.org/plugins/commons-chunk-plugin)**
 ### chunk类型:
 
 - entry chunk：含有webpack runtime代码的模块代码集合。
@@ -210,7 +211,7 @@ plugins: [
 
 ### 通常步骤：
 通过webpack-bundle-analyzer分析目前构建的包
-{% asset_img vendor.png only vendor %}
+{% asset_img none.png 提取公共模块前 %}
 参考配置
 ```js
 new webpack.optimize.CommonsChunkPlugin({
@@ -246,6 +247,9 @@ new webpack.optimize.CommonsChunkPlugin({
 2. 从所有entry chunk（index）中提取出node_modules里的模块放入chunk vendor中。index此时变为normal chunk。
 3. 从所有entry chunk（vendor）中提取出路径含有react的模块，放入chunk lib。
 4. 新建一个manifest chunk，不放入任何模块（minChunks:infinity）。由于manifest是此时唯一的entry chunk，则runtime代码放入manifest。
+
+提取后如图：
+{% asset_img vendor+lib+async+manifest.png 提取公共模块后 %}
 
 ## treeshaking
 - 使用 ES2015 模块语法（即 `import` 和 `export`）
@@ -288,11 +292,11 @@ import 'core-js/modules/web.dom.iterable';
 
 ## 最后思考一个问题：不同entry模块或按需加载的异步模块需不需要提取通用模块？
 
-vendor+lib 10529kb
-{% asset_img vendor+lib.png vendor+lib %}
-vendor+lib+async 11324kb
-{% asset_img vendor+lib+async.png vendor+lib+async %}
+只打vendor，首屏加载 vendor + index + homepage = 7.97mb + 379.81kb + 1.7mb = 10281.89kb
+{% asset_img vendor.png vendor %}
+提取异步通用模块vendor+async，首屏加载 vendor + index + async-vendor + homepage = 7.97mb + 382.92kb + 1.97mb + 336.18kb = 10897.66kb > 10281.89kb
+{% asset_img vendor+async.png vendor+async %}
 
 需要分场景讨论：
 - 在线加载：如果通用模块提取粒度过小，会导致首页首屏需要的文件变多，很多可能是首屏用不到的，导致首屏过慢，二级或三级页面加载会大幅提升。所以这个就需要根据业务场景做权衡，控制通用模块提取的粒度。
-- 离线包：如果移动端页面都做了离线化的处理，离线之后，加载本地的js文件，与网络无关，基本上可以忽略文件大小，所以更关注整个离线包的大小。离线包越小，耗费用户的流量就越小，用户体验更好，所以离线化的场景是非常适合最小粒提取通用模块的，即将所有entry模块和异步加载模块的引用大于2的模块都提取，这样能获得最小的输出文件，最小的离线包。
+- 离线包：如果移动端页面都做了离线化的处理，离线之后，加载本地的js文件，与网络无关，所以更关注整个离线包的大小。离线包越小，耗费用户的流量就越小，用户体验更好，所以离线化的场景是非常适合最小粒提取通用模块的，即将所有entry模块和异步加载模块的引用大于2的模块都提取，这样能获得最小的输出文件，最小的离线包。
