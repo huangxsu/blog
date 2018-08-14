@@ -6,8 +6,11 @@ tags:
 - build performance
 - CommonsChunkPlugin
 ---
-# 前言
-本篇介绍一些关于webpack构建优化的内容，当然，抛开实际使用场景来谈优化意义不大，某些方法还需要结合实际情况来使用。
+
+本篇介绍一些关于webpack构建优化的内容，里面部分源于 **[官方文档](https://webpack.js.org/guides/build-performance/)** 的建议，部分为日常开发经验总结。当然，抛开实际使用场景来谈优化意义不大，某些方法还需要结合实际情况来使用。
+
+<!--more-->
+
 # 构建速度
 ## 官方文档
 官方文档关于构建速度的优化有**[请看这里](https://webpack.js.org/guides/build-performance/)**
