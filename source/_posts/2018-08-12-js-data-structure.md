@@ -696,3 +696,30 @@ export default class Graph {
 最终我们得到了任意两点间最短路径的矩阵$A^{4}$，可以看出，矩阵的每一行数据为该点到其他顶点的最短路径。从上述过程中，我们发现，矩阵$A^{1}$由$A^{0}$而来，$A^{2}$由$A^{1}$而来...由此我们可以得到如下公式：
 
 $A^{k}\left [ i,j \right ]= $ min {$A^{k-1}\left [ i,j \right ], A^{k}\left [ i,k \right ]+A^{k}\left [ k,j \right ]$}
+
+# 拓扑排序
+
+拓扑排序（Topological Sorting）是一个有向无环图（DAG, Directed Acyclic Graph）的所有顶点的线性序列。且该序列必须满足下面两个条件：
+
+1. 每个顶点出现且只出现一次。
+
+2. 若存在一条从顶点 A 到顶点 B 的路径，那么在序列中顶点 A 出现在顶点 B 的前面。
+
+实现拓扑排序的具体步骤：
+
+1、 从 DAG 图中选择一个 没有前驱（即入度为 0）的顶点并输出。
+2、 从图中删除该顶点和所有以它为起点的有向边。
+3、 重复 1 和 2 直到当前的 DAG 图为空或当前图中不存在无前驱的顶点为止。后一种情况说明有向图中必然存在环。
+
+{% asset_img tp.png %}
+
+于是，得到拓扑排序后的结果是 { 1, 2, 4, 3, 5 }。通常，一个有向无环图可以有一个或多个拓扑排序序列。
+
+# 参考文献
+
+1. **[克鲁斯克尔算法-维基百科](https://zh.wikipedia.org/wiki/%E5%85%8B%E9%B2%81%E6%96%AF%E5%85%8B%E5%B0%94%E6%BC%94%E7%AE%97%E6%B3%95)**
+2. **[普里姆算法-维基百科](https://zh.wikipedia.org/wiki/%E6%99%AE%E6%9E%97%E5%A7%86%E7%AE%97%E6%B3%95)**
+3. **[最短路问题-维基百科](https://zh.wikipedia.org/wiki/%E6%9C%80%E7%9F%AD%E8%B7%AF%E9%97%AE%E9%A2%98)**
+4. **[戴克斯特拉算法-维基百科](https://zh.wikipedia.org/wiki/%E6%88%B4%E5%85%8B%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95)**
+5. **[Floyd-Warshall 算法-维基百科](https://zh.wikipedia.org/wiki/Floyd-Warshall%E7%AE%97%E6%B3%95)**
+6. **[拓扑排序 CSDN](https://blog.csdn.net/lisonglisonglisong/article/details/45543451)**
