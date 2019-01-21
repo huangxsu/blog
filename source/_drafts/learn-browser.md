@@ -274,11 +274,7 @@ document.body.addEventListener('touchstart', event => {
 通过`passive:true`参数，可以提示浏览器，合成器可以不用等待，直接继续合成。请见 **[Improving Scroll Performance with Passive Event Listeners](https://developers.google.com/web/updates/2016/06/passive-event-listeners)**
 
 ```js
-document.body.addEventListener(
-  'touchmove',
-  event => {},
-  { passive: true }
-)
+document.body.addEventListener('touchmove', event => {}, { passive: true })
 ```
 
 不是所有的事件都可以 preventDefault，我们可以通过 event.cancelable 判断事件是否可以取消默认事件。
