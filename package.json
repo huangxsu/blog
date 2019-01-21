@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "server": "hexo server -p 5000 --draft",
+    "start": "hexo server -p 5000 --draft",
+    "server": "hexo server -p 5000",
     "generate": "hexo generate"
   },
   "license": "GPL-3.0",
