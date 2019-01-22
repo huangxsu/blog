@@ -1,5 +1,5 @@
 ---
-title: DNS入门
+title: DNS 入门
 tags: DNS
 ---
 
@@ -11,15 +11,83 @@ tags: DNS
 
 DNS，是 Domain Name System 的简称，作用是根据域名查询 IP 地址。互联网上连接的每台设备都有自己唯一的 IP 地址，就好像我们每家每户都有自己唯一的地址一样。想访问某台设备上的资源，必须知道它的 IP 地址，就好像我们想去拜访某位朋友，需要知道朋友家的地址一样。而 IP 地址是由一连串的数字组成，对我们来说记住许许多多的数字可能不是件容易的事。DNS 的出现，帮我们解决了这样的问题，你可以把它想象成一本巨大的电话本。
 
-DNS 的一大特点是：分层分布式。下面让我们先来看一个短片，了解一下 DNS 是如何工作的：
-
-# DNS 是如何工作的
+DNS 的一大特点是：分层分布式。下面让我们先来看一个短片：
 
 {% owl youtube 72snZctFFtA %}
 
+# DNS 是如何工作的
 
+通过短片，我们知道，域名`www.huangxsu.com`实际 解析为`www.huangxsu.com.root`，简写为`www.huangxsu.com.`，所有的域名尾部，都有一个根域名，根域名对所有域名来说是一样的，平时都省略`.root`。
+
+这里有一个很好的英文漫画，讲述了 DNS 的工作原理，**[How DNS works](https://howdns.works/ep1/)**。
+
+当你在浏览器输入`www.huangxsu.com`时，浏览器首先在自己的 DNS 缓存中查找是否有这条记录。当浏览器缓存中没有这条记录时，浏览器会询问操作系统( OS )是否有这条记录。
+
+{% asset_img chrome-dns.png %}
+
+_chrome 清除 DNS 缓存页面_
+
+OS 检测计算机系统的 HOST 文件和 DNS 缓存，当没有结果时，OS 继续询问 DNS 服务器。
+
+{% asset_img os-dns.png 700 %}
+
+_查看操作系统（windows） DNS 缓存_
+
+## DNS 服务器
+
+DNS 服务器，也叫域名解析服务器（resolving name server）。
+
+计算机必须知道 DNS 服务器的 IP 地址，否则上不了网。通过 DNS 服务器，才能知道某个域名的 IP 地址。
+
+{% asset_img resolving-name-server.jpg %}
+
+DNS 服务器的 IP 地址，可能是动态的，每次上网时由网关分配，叫做 DHCP 机制；也有可能是事先知道的固定地址。
+
+DNS 服务器的 IP 地址通常由 ISP 提供，有一些公网的 DNS 服务器，也是可以使用的，比如 Google 的`8.8.8.8`。
+
+DNS 服务器内配置了根服务器(root server)的地址，以便当它不知道某个域名的 IP 地址时，可以向根服务器询问。同时，它还会将查询到的结果缓存起来提高查询效率。
+
+## 域名的层级
+
+之前我们提到，每个域名都有一个根域名（root)，根域名的下一级，叫做“顶级域名”（top-level domain，缩写为 TLD），比如`.com`、`.org`；再下一级叫做“次级域名”（second-level domain，缩写为 SLD），比如`www.huangxsu.com`里的`huangxsu`，这一级域名是用户可以注册的；再下一级是主机名（host），比如`www.huangxsu.com`里的`www`，又称为“三级域名”，这是用户在自己的域里为服务器分配的名称，是用户可以任意分配的。
+
+```text
+主机名.次级域名.顶级域名.根域名
+
+host.sld.tld.root
+```
+
+## 根域名服务器 Root Name Server
+
+根域名服务器由 ICANN（Internet Corporation for Assigned Names and Numbers）组织授权给很多组织控制。目前，共有 13 组根域名服务器，从`A.ROOT-SERVERS.NET`到`M.ROOT-SERVERS.NET`。每组根域名都有自己的镜像，同组镜像的 IP 地址相同，最近的镜像优先处理请求。
+
+DNS 服务器根据域名的层级，进行分级查询。 所谓“分级查询”，就是从根域名开始，依次查询每一级域名的域名服务器，直到查到最终的 IP 地址，过程大致如下：
+
+1、 根域名服务器并不知道某域名的 IP 地址，但是它知道顶级域名（TLD Name Server）的域名服务器和地址。比如向根域名服务器请求`www.huangxsu.com`的 IP 地址时，它知道`com`（TLD）域名服务器的地址。当 `resolving name server`，后面简称为 `resolver`，得到`com`的地址后，首先将结果进行缓存，然后继续向 TLD 服务器发起请求。
+
+2、 当`resolver`向顶级域名服务器请求`www.huangxsu.com`的 IP 地址，顶级域名服务器也不知道，但是它知道次级域名服务器`huangxsu.com`的地址。
+
+3、 `resolver`继续向次级域名服务器发送请求，次级域名服务器找到了`www`主机名的记录，得到了 IP 地址，并将结果返回给`resolver`。
+
+能够将域名转换为 IP 地址的域名服务器，也可以称为权威域名服务器（Authoritative Name Server）
+
+{% asset_img how_dns_works.jpg %}
+
+## 注册域名 Domain Registrar
+
+根域名和顶级域名都是由 ICANN 分配，那么顶级域名服务器是如何知道`huangxsu.com`存在于某个次级域名服务器的呢？
+
+当你注册购买一个域名后，域名注册商将更新 Authoritative Name Server ，你注册的域名，并通知 TLD Name Server 更新记录。
+
+# 使用 dig
+
+使用工具 dig 可以显示整个查询过程。**[如何在 windows10 上安装 dig](https://nil.uniza.sk/how-install-dig-dns-tool-windows-10)**。**[在线 dig 工具](https://toolbox.googleapps.com/apps/dig/)**。
+
+# DNS 的记录类型
 
 # 参考文献
 
 1. **[DNS 原理入门](http://www.ruanyifeng.com/blog/2016/06/dns.html)**
 2. **[An Introduction to DNS Terminology, Components, and Concepts](https://www.digitalocean.com/community/tutorials/an-introduction-to-dns-terminology-components-and-concepts)**
+3. **[How DNS works](https://howdns.works/ep1/)**
+4. **[浅谈浏览器、操作系统 DNS 缓存时间](https://www.cloudxns.net/Support/detail/id/2503.html)**
