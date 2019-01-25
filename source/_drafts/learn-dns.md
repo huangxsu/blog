@@ -79,11 +79,40 @@ DNS 服务器根据域名的层级，进行分级查询。 所谓“分级查询
 
 当你注册购买一个域名后，域名注册商将更新 Authoritative Name Server ，你注册的域名，并通知 TLD Name Server 更新记录。
 
+# DNS 的记录类型
+
+保存在 Name Server 的记录有很多种类型，接下来介绍几种常见的类型。
+
+## SOA
+
+SOA（Start Of Authority）记录保存着与域名相关的一些重要的信息，比如管理员的邮件地址，域名最后更新的时间，时隔多久刷新等。
+
+一个 SOA 记录可能是下面所示的：
+
+```code
+domain.com.  IN SOA ns1.domain.com. admin.domain.com. (
+  12083   ; serial number
+  3h      ; refresh interval
+  30m     ; retry interval
+  3w      ; expiry period
+  1h      ; negative TTL
+)
+```
+
+## A & AAAAA
+
+A 与 AAAA 都是域名到 IP 地址的映射记录， `A`代表 IPv4 IP 地址，`AAAA`代表 IPv6 IP 地址。
+
+```code
+host     IN      A       IPv4_address
+host     IN      AAAA    IPv6_address
+```
+
+## CNAME
+
 # 使用 dig
 
-使用工具 dig 可以显示整个查询过程。**[如何在 windows10 上安装 dig](https://nil.uniza.sk/how-install-dig-dns-tool-windows-10)**。**[在线 dig 工具](https://toolbox.googleapps.com/apps/dig/)**。
-
-# DNS 的记录类型
+使用工具 dig 可以显示完整的 DNS 查询过程。**[如何在 windows10 上安装 dig](https://nil.uniza.sk/how-install-dig-dns-tool-windows-10)**。**[在线 dig 工具](https://toolbox.googleapps.com/apps/dig/)**。
 
 # 参考文献
 
