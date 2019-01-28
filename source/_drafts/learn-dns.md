@@ -110,6 +110,17 @@ host     IN      AAAA    IPv6_address
 
 ## CNAME
 
+CNAME（Canonical Name），返回另一个域名，即当前查询的域名是另一个域名的别称。
+
+```code
+facebook.github.io. 3370    IN  CNAME   github.map.fastly.net.
+github.map.fastly.net.  600 IN  A   103.245.222.133
+```
+
+## MX
+
+MX（Mail exchange），
+
 # 使用 dig
 
 使用工具 dig 可以显示完整的 DNS 查询过程。**[如何在 windows10 上安装 dig](https://nil.uniza.sk/how-install-dig-dns-tool-windows-10)**。**[在线 dig 工具](https://toolbox.googleapps.com/apps/dig/)**。
