@@ -119,7 +119,38 @@ github.map.fastly.net.  600 IN  A   103.245.222.133
 
 ## MX
 
-MX（Mail exchange），
+MX（Mail exchange），返回接收电子邮件的服务器地址。
+
+```code
+        IN  MX  10  mail1.domain.com.
+        IN  MX  50  mail2.domain.com.
+mail1   IN  A       111.111.111.111
+mail2   IN  A       222.222.222.222
+```
+
+域名前的数字代表邮件记录的优先级，数字值越小优先级越高。
+
+## NS
+
+NS（Name Server），域名服务器记录，返回保存下一级域名信息的服务器地址，该记录只能设置为域名，不能设置为 IP 地址。一个域名通常有多条 NS 记录。
+
+{% asset_img name-server.png 700 %}
+
+## PTR
+
+PTR（Pointer Record），逆向查询记录，用于从 IP 地址查询域名。PRT 记录是 A 记录或 AAAA 记录的逆序，它的根从`.arpa`开始。
+
+比如：一个 A 记录中的 IP 地址`192.30.252.153`，那么 PTR 记录则是：
+
+```code
+153.252.30.192.in-addr.arpa. 2580 IN PTR lb-192-30-252-153-iad.github.com.
+```
+
+比如：Google 的 IPv6 DNS 服务器的 IP 地址是 `2001:4860:4860::8888`，对应的 PRT 记录是：
+
+```code
+8.8.8.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.8.4.0.6.8.4.1.0.0.2.ip6.arpa. 86400IN PTR google-public-dns-a.google.com.
+```
 
 # 使用 dig
 
