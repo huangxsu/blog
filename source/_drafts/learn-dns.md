@@ -63,7 +63,7 @@ host.sld.tld.root
 
 DNS 服务器根据域名的层级，进行分级查询。 所谓“分级查询”，就是从根域名开始，依次查询每一级域名的域名服务器，直到查到最终的 IP 地址，过程大致如下：
 
-1、 根域名服务器并不知道某域名的 IP 地址，但是它知道顶级域名（TLD Name Server）的域名服务器和地址。比如向根域名服务器请求`www.huangxsu.com`的 IP 地址时，它知道`com`（TLD）域名服务器的地址。当 `resolving name server`，后面简称为 `resolver`，得到`com`的地址后，首先将结果进行缓存，然后继续向 TLD 服务器发起请求。
+1、 根域名服务器并不知道某域名的 IP 地址，但是它知道顶级域名（TLD Name Server）的域名服务器和地址。比如向根域名服务器请求`www.huangxsu.com`的 IP 地址时，它知道`com`（TLD）域名服务器的地址。当 `resolving name server`（域名解析服务器），后面简称为 `resolver`，得到`com`的地址后，首先将结果进行缓存，然后继续向 TLD 服务器发起请求。
 
 2、 当`resolver`向顶级域名服务器请求`www.huangxsu.com`的 IP 地址，顶级域名服务器也不知道，但是它知道次级域名服务器`huangxsu.com`的地址。
 
