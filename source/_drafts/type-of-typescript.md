@@ -156,6 +156,93 @@ create(false) // Error
 create(undefined) // Error
 ```
 
+# 联合类型
+
+联合类型表示取值可以为多种类型中的一种，使用`|`分隔每个类型：
+
+```ts
+let myFavoriteNumber: string | number
+myFavoriteNumber = 'seven'
+myFavoriteNumber = 7
+
+myFavoriteNumber = true
+// index.ts(2,1): error TS2322: Type 'boolean' is not assignable to type 'string | number'.
+//   Type 'boolean' is not assignable to type 'number'.
+```
+
+当 TS 不确定一个联合类型的变量到底是哪个类型的时候，你只能访问共有的属性或方法：
+
+```ts
+function getLength(something: string | number): number {
+  return something.length
+}
+
+// index.ts(2,22): error TS2339: Property 'length' does not exist on type 'string | number'.
+//   Property 'length' does not exist on type 'number'.
+```
+
+# 类型断言
+
+类型断言（Type Assertion）指手动指定一个值的类型。语法为`<类型>值`或`值 as 类型`。
+
+上一节中讲到，联合类型的变量在不确定是哪个类型时，只能访问共有的属性或方法。但有时，确实需要在不确定类型的情况下，访问其中一种类型的属性或方法，比如：
+
+```ts
+function getLength(something: string | number): number {
+  if (something.length) {
+    return something.length
+  } else {
+    return something.toString().length
+  }
+}
+
+// index.ts(2,19): error TS2339: Property 'length' does not exist on type 'string | number'.
+//   Property 'length' does not exist on type 'number'.
+// index.ts(3,26): error TS2339: Property 'length' does not exist on type 'string | number'.
+//   Property 'length' does not exist on type 'number'.
+```
+
+你可以使用类型断言来解决上述问题：
+
+```ts
+function getLength(something: string | number): number {
+  if ((something as string).length) {
+    return (something as string).length
+  }
+  return something.toString().length
+}
+```
+
+注意：你不能断言一个不存在与联合类型中的类型：
+
+```ts
+function toBoolean(something: string | number): boolean {
+  return <boolean>something
+}
+
+// index.ts(2,10): error TS2352: Type 'string | number' cannot be converted to type 'boolean'.
+//   Type 'number' is not comparable to type 'boolean'.
+```
+
+# 类型推论
+
+如果没有明确的指定类型，TS 会依照类型推论（Type Inference）的规则推断出一个类型。
+
+```ts
+let foo = 123 // foo 是 'number'
+let bar = 'hello' // bar 是 'string'
+
+foo = bar // Error: 不能将 'string' 赋值给 `number`
+```
+
+当需要从几个表达式中推断类型时，会根据所以表达式的类型推断出一个最合适的通用类型，比如：
+
+```ts
+let x = [0, 1, null]
+```
+
+为了推断`x`的类型，必须考虑所有元素的类型，所以类型推断的结果是联合数字类型`(number|null)[]`。
+
 # 枚举
 
 `enum`类型是对 JS 标准数据类型的一个补充。你可以使用枚举定义一些带名字的常量。TS 支持数字和基于字符串的枚举。
@@ -287,3 +374,34 @@ var directions = [0 /* Up */, 1 /* Down */, 2 /* Left */, 3 /* Right */]
 ```
 
 # 泛型
+
+泛型（Generics）是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性。
+
+设计泛型的关键目的是在成员之间提供有意义的约束，这些成员可以是：
+
+- 类的实例成员
+- 类的方法
+- 函数参数
+- 函数返回值
+
+下面来创建一个使用泛型的例子：identity 函数。这个函数会返回任何传入它的值：
+
+```ts
+function identity<T>(arg: T): T {
+  return arg
+}
+```
+
+`identity`函数名后添加了`<T>`——类型变量`T`。`T`可以捕获用户传入的类型，之后就可以使用这个类`T`，当做返回值类型。
+
+泛型函数可以使用两种方法调用，第一种是传入所有的参数，包括类型参数：
+
+```ts
+let output = identity<string>('myString')
+```
+
+第二种是利用类型推断确定`T`的类型：
+
+```ts
+let output = identity('myString')
+```
