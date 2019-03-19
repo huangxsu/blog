@@ -156,6 +156,133 @@ create(false) // Error
 create(undefined) // Error
 ```
 
+# 对象的类型
+
+在 TS 中，使用接口来定义对象的类型。接口是对行为的抽象，除了可用于对类的一部分行为进行抽象外，也常用于对对象形状进行描述。
+
+```ts
+interface Person {
+  name: string
+  age: number
+}
+let tom: Person = {
+  name: 'Tom',
+  age: 25
+}
+```
+
+在上例中，变量`tom`的类似是`Person`，这就意味着`tom`的形状必须和接口`Person`一致，不能多也不能少，如下两个定义都是不允许的：
+
+```ts
+let tom: Person = {
+  name: 'Tom'
+}
+
+let tom: Person = {
+  name: 'Tom',
+  age: 25,
+  gender: 'male'
+}
+```
+
+## 可选属性
+
+可选属性在定义接口的属性名后加`?`，即使有可选属性，仍然不允许添加未定义的属性：
+
+```ts
+interface Person {
+  name: string
+  age?: number
+}
+```
+
+## 任意属性
+
+```ts
+interface Person {
+  name: string
+  age?: number
+  [propName: string]: any
+}
+```
+
+`[propName: string]`定义了任意属性的 key 的类型应是`string`，value 值的类型必须是其他确定属性、可选属性的超类。
+
+```ts
+interface Person {
+  name: string
+  age?: number
+  [propName: string]: string
+}
+
+let tom: Person = {
+  name: 'Tom',
+  age: 25,
+  gender: 'male'
+}
+```
+
+上例中，任意属性的值允许是 `string`，但是可选属性 `age` 的值却是 `number`，`number` 不是 `string` 的子属性，所以报错了。
+
+## 只读属性
+
+只读属性通过在接口对象属性名前加`readonly`定义，在声明属性时就开始进行约束了，而不是第一次赋值时：
+
+```ts
+interface Person {
+  readonly id: number
+  name: string
+  age?: number
+  [propName: string]: any
+}
+
+let tom: Person = {
+  name: 'Tom',
+  gender: 'male'
+}
+
+tom.id = 89757
+
+// index.ts(8,5): error TS2322: Type '{ name: string; gender: string; }' is not assignable to type 'Person'.
+//   Property 'id' is missing in type '{ name: string; gender: string; }'.
+// index.ts(13,5): error TS2540: Cannot assign to 'id' because it is a constant or a read-only property.
+```
+
+# 函数的类型
+
+一个函数有输入和输出，要再 TS 中对其进行约束，需要把输入和输出都考虑到。
+
+## 函数声明
+
+```ts
+function sum(x: number, y: number): number {
+  return x + y
+}
+```
+
+## 函数表达式
+
+```ts
+let sum = function(x: number, y: number): number {
+  return x + y
+}
+```
+
+上面的代码只是对等号右侧的匿名函数进行了定义，而等号左侧的`sum`，是通过赋值操作进行类型推论推断出来的，如果我们手动给`sum`添加类型，应该是这样的：
+
+```ts
+let sum: (x: number, y: number) => number = function(
+  x: number,
+  y: number
+): number {
+  return x + y
+}
+```
+
+在 TS 的类型定义中，`=>`用来表示函数的定义，左边是输入类型，需要用括号括起来，右边是输出类型。
+
+在 ES6 中，`=>`是箭头函数。
+
 # 联合类型
 
 联合类型表示取值可以为多种类型中的一种，使用`|`分隔每个类型：
@@ -242,6 +369,23 @@ let x = [0, 1, null]
 ```
 
 为了推断`x`的类型，必须考虑所有元素的类型，所以类型推断的结果是联合数字类型`(number|null)[]`。
+
+# 类型别名
+
+类型别名使用`type`给一个类型创建新名字，例如：
+
+```ts
+type Name = string
+type NameResolver = () => string
+type NameOrResolver = Name | NameOrResolver
+function getName(n: NameOrResolver): Name {
+  if (typeof n === 'string') {
+    return n
+  } else {
+    return n()
+  }
+}
+```
 
 # 枚举
 
@@ -405,3 +549,9 @@ let output = identity<string>('myString')
 ```ts
 let output = identity('myString')
 ```
+
+# 参考文献
+
+1. **[TypeScript 官方文档](https://www.tslang.cn/docs/handbook/basic-types.html)**
+2. **[TypeScript 入门教程 by xcatliu](https://ts.xcatliu.com/)**
+3. **[深入理解 TypeScript by 三毛](https://jkchao.github.io/typescript-book-chinese/)**
