@@ -15,16 +15,25 @@ import Lazyload from './lazyload'
 const $ = require('expose-loader?$!./jquery.js')
 
 
-
 $(function () {
 
 
-    let init = (funcs => {
+  let init = (funcs => {
 
-        for (let fn of funcs) {
-            fn.init()
-        }
+    for (let fn of funcs) {
+      fn.init()
+    }
 
-    })([Index, Mobile, Search, Anm, Post, Lazyload, Hover, Gallery])
+  })([Index, Mobile, Search, Anm, Post, Lazyload, Hover, Gallery])
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('./sw.js')
+      .then(function () {
+        console.log('service Worker Registered')
+      }).catch(function (error) {
+      console.log(error)
+    })
+  }
 
 })
