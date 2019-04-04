@@ -109,8 +109,3 @@ imagemin:
   multipass: true
   pngquant: true
   progressive: true
-
-# video
-owl:
-  css: default
-  file: owl.css
