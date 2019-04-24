@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "hexo server -p 5000 --draft",
+    "publish": "hexo publish",
     "server": "hexo server -p 5000",
     "generate": "hexo generate"
   },
