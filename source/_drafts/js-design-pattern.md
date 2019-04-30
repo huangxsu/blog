@@ -26,7 +26,54 @@ tags:
 {% asset_img Command.jpg %}
 
 
+```html
+<button type="button" id="on">On</button>
+<button type="button" id="off">Off</button>
+```
 
+```js
+  var on = document.getElementById('on')
+  var off = document.getElementById('off')
+
+  var setCommand = function (button, command) {
+    button.onclick = function () {
+      command.execute()
+    }
+  }
+
+  var MenuBar = {
+    on: function () {
+      console.log('on')
+    },
+    off: function () {
+      console.log('off')
+    }
+  }
+
+  class OnMenuBarCommand {
+    constructor(receiver) {
+      this.receiver = receiver
+    }
+    execute() {
+      this.receiver.on()
+    }
+  }
+
+  class OffMenuBarCommand {
+    constructor(receiver) {
+      this.receiver = receiver
+    }
+    execute() {
+      this.receiver.off()
+    }
+  }
+
+  var onMenuBarCommand = new OnMenuBarCommand(MenuBar)
+  var offMenuBarCommand = new OffMenuBarCommand(MenuBar)
+
+  setCommand(on, onMenuBarCommand)
+  setCommand(off, offMenuBarCommand)
+```
 
 除了这两点之外， 命令模式还支持撤销、 排队等操作， 本章稍后将会详细讲解。
 
